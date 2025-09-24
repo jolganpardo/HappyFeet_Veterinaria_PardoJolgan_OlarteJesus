@@ -1,8 +1,10 @@
--- =========== TABLAS DE CONSULTA (LOOKUP TABLES) ===========
-​
+create database Happy_Feet;
+
+use Happy_Feet;
+
 CREATE TABLE especies (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) UNIQUE NOT NULL -- Ej: 'Perro', 'Gato', 'Ave'
+    nombre VARCHAR(100) UNIQUE NOT NULL
 );
 ​
 CREATE TABLE razas (
@@ -106,3 +108,41 @@ CREATE TABLE items_factura (
     FOREIGN KEY (factura_id) REFERENCES facturas(id),
     FOREIGN KEY (producto_id) REFERENCES inventario(id)
 );
+
+CREATE TABLE proveedores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    contacto VARCHAR(100),
+    telefono VARCHAR(20),
+    email VARCHAR(100),
+    direccion VARCHAR(255)
+);
+
+ALTER TABLE inventario
+ADD proveedor_id INT,
+ADD FOREIGN KEY (proveedor_id) REFERENCES proveedores(id);
+
+CREATE TABLE veterinarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(255) NOT NULL,
+    especialidad VARCHAR(100),
+    telefono VARCHAR(20),
+    email VARCHAR(100)
+);
+
+ALTER TABLE citas
+ADD veterinario_id INT,
+ADD FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id);
+
+CREATE TABLE servicios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) UNIQUE NOT NULL,
+    precio DECIMAL(10,2) NOT NULL
+);
+
+ALTER TABLE items_factura
+ADD servicio_id INT,
+ADD FOREIGN KEY (servicio_id) REFERENCES servicios(id);
+
+ALTER TABLE inventario
+ADD fecha_ultima_compra DATE;
