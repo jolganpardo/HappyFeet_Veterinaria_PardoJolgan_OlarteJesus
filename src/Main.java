@@ -1,5 +1,4 @@
-import com.sun.jdi.connect.spi.Connection;
-import model.ConexionSingleton;
+import model.dao.ConexionSingleton;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
