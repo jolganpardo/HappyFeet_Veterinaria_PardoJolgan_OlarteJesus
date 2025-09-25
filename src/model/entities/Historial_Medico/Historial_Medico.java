@@ -1,0 +1,90 @@
+package model.entities.Historial_Medico;
+
+import model.entities.Mascotas.Mascotas;
+
+import java.time.LocalDate;
+
+public class Historial_Medico {
+    private Integer id;
+    private Mascotas mascota_id;
+    private LocalDate fecha_evento;
+    private Evento_Tipos evento_tipo_id;
+    private String descripcion;
+    private String diagnostico;
+    private String tratamiento_recomendado;
+
+    public Historial_Medico(Integer id, Mascotas mascota_id, LocalDate fecha_evento, Evento_Tipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
+        this.id = id;
+        this.mascota_id = mascota_id;
+        this.fecha_evento = fecha_evento;
+        this.evento_tipo_id = evento_tipo_id;
+        this.descripcion = descripcion;
+        this.diagnostico = diagnostico;
+        this.tratamiento_recomendado = tratamiento_recomendado;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Mascotas getMascota_id() {
+        return mascota_id;
+    }
+
+    public void setMascota_id(Mascotas mascota_id) {
+        this.mascota_id = mascota_id;
+    }
+
+    public LocalDate getFecha_evento() {
+        return fecha_evento;
+    }
+
+    public void setFecha_evento(LocalDate fecha_evento) {
+        this.fecha_evento = fecha_evento;
+    }
+
+    public Evento_Tipos getEvento_tipo_id() {
+        return evento_tipo_id;
+    }
+
+    public void setEvento_tipo_id(Evento_Tipos evento_tipo_id) {
+        this.evento_tipo_id = evento_tipo_id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDiagnostico() {
+        return diagnostico;
+    }
+
+    public void setDiagnostico(String diagnostico) {
+        this.diagnostico = diagnostico;
+    }
+
+    public String getTratamiento_recomendado() {
+        return tratamiento_recomendado;
+    }
+
+    public void setTratamiento_recomendado(String tratamiento_recomendado) {
+        this.tratamiento_recomendado = tratamiento_recomendado;
+    }
+
+    @Override
+    public String toString() {
+        return "Historial_MedicoDAO{" +
+                "id=" + id +
+                ", mascota_id=" + mascota_id +
+                ", fecha_evento=" + fecha_evento +
+                ", evento_tipo_id=" + evento_tipo_id +
+                ", descripcion='" + descripcion + '\'' +
+                ", diagnostico='" + diagnostico + '\'' +
+                ", tratamiento_recomendado='" + tratamiento_recomendado + '\'' +
+                '}';
+    }
+}
