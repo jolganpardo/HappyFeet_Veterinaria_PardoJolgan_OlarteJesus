@@ -1,4 +1,6 @@
-package model.dao;
+package model.dao.Razas;
+
+import model.dao.Especies.Especie;
 
 public class Raza {
     //Declaracion de variables

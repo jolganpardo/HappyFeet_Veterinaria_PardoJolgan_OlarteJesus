@@ -1,4 +1,4 @@
-package model.dao;
+package model.dao.Duenos;
 
 public class Dueno {
     //Declaracion de variables

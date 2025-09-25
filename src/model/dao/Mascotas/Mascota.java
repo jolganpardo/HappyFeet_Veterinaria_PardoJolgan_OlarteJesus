@@ -1,4 +1,7 @@
-package model.dao;
+package model.dao.Mascotas;
+
+import model.dao.Duenos.Dueno;
+import model.dao.Razas.Raza;
 
 import java.time.LocalDate;
 import java.time.Period;

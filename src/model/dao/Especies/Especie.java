@@ -1,4 +1,4 @@
-package model.dao;
+package model.dao.Especies;
 
 public class Especie {
     //Declaracion de variables
