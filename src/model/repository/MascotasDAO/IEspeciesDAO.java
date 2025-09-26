@@ -1,13 +1,13 @@
 package model.repository.MascotasDAO;
 
-import model.entities.Mascotas.Especies;
+import model.entities.Mascotas.Especie;
 
 import java.util.List;
 
 public interface IEspeciesDAO {
-    void agregarEspecie(Especies especie);
-    Especies obtenerPorId(Integer id);
-    List<Especies> obtenerTodos();
-    void actualizarEspecie(Especies especie);
+    void agregarEspecie(Especie especie);
+    Especie obtenerPorId(Integer id);
+    List<Especie> obtenerTodos();
+    void actualizarEspecie(Especie especie);
     void eliminarEspecie(Integer id);
 }

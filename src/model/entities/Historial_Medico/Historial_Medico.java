@@ -1,19 +1,19 @@
 package model.entities.Historial_Medico;
 
-import model.entities.Mascotas.Mascotas;
+import model.entities.Mascotas.Mascota;
 
 import java.time.LocalDate;
 
 public class Historial_Medico {
     private Integer id;
-    private Mascotas mascota_id;
+    private Mascota mascota_id;
     private LocalDate fecha_evento;
     private Evento_Tipos evento_tipo_id;
     private String descripcion;
     private String diagnostico;
     private String tratamiento_recomendado;
 
-    public Historial_Medico(Integer id, Mascotas mascota_id, LocalDate fecha_evento, Evento_Tipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
+    public Historial_Medico(Integer id, Mascota mascota_id, LocalDate fecha_evento, Evento_Tipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
         this.id = id;
         this.mascota_id = mascota_id;
         this.fecha_evento = fecha_evento;
@@ -27,11 +27,11 @@ public class Historial_Medico {
         return id;
     }
 
-    public Mascotas getMascota_id() {
+    public Mascota getMascota_id() {
         return mascota_id;
     }
 
-    public void setMascota_id(Mascotas mascota_id) {
+    public void setMascota_id(Mascota mascota_id) {
         this.mascota_id = mascota_id;
     }
 

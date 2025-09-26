@@ -2,8 +2,6 @@ package model.repository.duenosDAO;
 
 import model.ConexionSingleton;
 import model.entities.Duenos.Dueno;
-import model.entities.Mascotas.Mascotas;
-import model.entities.Mascotas.Razas;
 
 import java.sql.*;
 import java.util.ArrayList;

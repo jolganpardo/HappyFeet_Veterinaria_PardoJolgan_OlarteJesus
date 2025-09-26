@@ -1,19 +1,19 @@
 package model.entities.Citas;
 
-import model.entities.Mascotas.Mascotas;
+import model.entities.Mascotas.Mascota;
 import model.entities.Veterinarios.Veterinarios;
 
 import java.time.LocalDate;
 
 public class Citas {
     private Integer id;
-    private Mascotas mascota_id;
+    private Mascota mascota_id;
     private LocalDate fecha_hora;
     private String motivo;
     private Cita_Estados estado_id;
     private Veterinarios veterianrio_id;
 
-    public Citas(Integer id, Mascotas mascota_id, LocalDate fecha_hora, String motivo, Cita_Estados estado_id, Veterinarios veterianrio_id) {
+    public Citas(Integer id, Mascota mascota_id, LocalDate fecha_hora, String motivo, Cita_Estados estado_id, Veterinarios veterianrio_id) {
         this.id = id;
         this.mascota_id = mascota_id;
         this.fecha_hora = fecha_hora;
@@ -26,11 +26,11 @@ public class Citas {
         return id;
     }
 
-    public Mascotas getMascota_id() {
+    public Mascota getMascota_id() {
         return mascota_id;
     }
 
-    public void setMascota_id(Mascotas mascota_id) {
+    public void setMascota_id(Mascota mascota_id) {
         this.mascota_id = mascota_id;
     }
 

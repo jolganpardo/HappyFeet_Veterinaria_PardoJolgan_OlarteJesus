@@ -1,11 +1,11 @@
 package model.entities.Mascotas;
 
-public class Razas {
+public class Raza {
     private Integer id;
-    private Especies especie_id; // relación con Especie
+    private Especie especie_id; // relación con Especie
     private String nombre;
 
-    public Razas(Integer id, Especies especie_id, String nombre) {
+    public Raza(Integer id, Especie especie_id, String nombre) {
         this.id = id;
         this.especie_id = especie_id;
         this.nombre = nombre;
@@ -27,11 +27,11 @@ public class Razas {
         this.nombre = nombre;
     }
 
-    public Especies getEspecie_id() {
+    public Especie getEspecie_id() {
         return especie_id;
     }
 
-    public void setEspecie_id(Especies especie_id) {
+    public void setEspecie_id(Especie especie_id) {
         this.especie_id = especie_id;
     }
 

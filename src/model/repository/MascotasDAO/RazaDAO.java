@@ -1,8 +1,8 @@
 package model.repository.MascotasDAO;
 
 import model.ConexionSingleton;
-import model.entities.Mascotas.Especies;
-import model.entities.Mascotas.Razas;
+import model.entities.Mascotas.Especie;
+import model.entities.Mascotas.Raza;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class RazaDAO implements IRazasDAO {
     public RazaDAO() { con = ConexionSingleton.getInstance().getConnection();}
 
     @Override
-    public void agregarRaza(Razas raza) {
+    public void agregarRaza(Raza raza) {
         String sql = "INSERT INTO razas (especie_id, nombre) VALUES (?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -27,7 +27,7 @@ public class RazaDAO implements IRazasDAO {
     }
 
     @Override
-    public void actualizarRaza(Razas raza) {
+    public void actualizarRaza(Raza raza) {
         String sql = "UPDATE razas SET nombre = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
@@ -58,8 +58,8 @@ public class RazaDAO implements IRazasDAO {
     }
 
     @Override
-    public Razas obtenerPorId(int id) {
-        Razas raza = null;
+    public Raza obtenerPorId(int id) {
+        Raza raza = null;
 
         String sql = "SELECT * FROM razas WHERE id = ?";
 
@@ -68,8 +68,8 @@ public class RazaDAO implements IRazasDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    raza = new Razas(rs.getInt("id"),
-                            new Especies(rs.getInt("especie_id"), null),
+                    raza = new Raza(rs.getInt("id"),
+                            new Especie(rs.getInt("especie_id"), null),
                             rs.getString("nombre"));
 
                 }
@@ -81,15 +81,15 @@ public class RazaDAO implements IRazasDAO {
     }
 
     @Override
-    public List<Razas> obtenerTodos() {
-        List<Razas> lst = new ArrayList<>();
+    public List<Raza> obtenerTodos() {
+        List<Raza> lst = new ArrayList<>();
         String sql = "SELECT * FROM razas";
 
         try (Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Razas raza = new Razas(rs.getInt("id"),
-                        new Especies(rs.getInt("especie_id"), null),
+                Raza raza = new Raza(rs.getInt("id"),
+                        new Especie(rs.getInt("especie_id"), null),
                         rs.getString("nombre"));
                 lst.add(raza);
 
@@ -101,8 +101,8 @@ public class RazaDAO implements IRazasDAO {
     }
 
     @Override
-    public List<Razas> obtenerPorEspecieId(Integer especieId) {
-        List<Razas> lst = new ArrayList<>();
+    public List<Raza> obtenerPorEspecieId(Integer especieId) {
+        List<Raza> lst = new ArrayList<>();
         String sql = "SELECT * FROM razas WHERE especie_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -110,8 +110,8 @@ public class RazaDAO implements IRazasDAO {
             pstmt.setInt(1, especieId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Razas raza = new Razas(rs.getInt("id"),
-                            new Especies(rs.getInt("especie_id"), null),
+                    Raza raza = new Raza(rs.getInt("id"),
+                            new Especie(rs.getInt("especie_id"), null),
                             rs.getString("nombre"));
                     lst.add(raza);
 

@@ -1,7 +1,7 @@
 package model.repository.MascotasDAO;
 
 import model.ConexionSingleton;
-import model.entities.Mascotas.Especies;
+import model.entities.Mascotas.Especie;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class EspecieDAO implements IEspeciesDAO{
     public EspecieDAO() {con = ConexionSingleton.getInstance().getConnection();}
 
     @Override
-    public void agregarEspecie(Especies especie) {
+    public void agregarEspecie(Especie especie) {
         String sql = "INSERT INTO especies (nombre) VALUES (?) ";
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setString(1,especie.getNombre());
@@ -23,15 +23,15 @@ public class EspecieDAO implements IEspeciesDAO{
     }
 
     @Override
-    public Especies obtenerPorId(Integer id) {
-        Especies especie = null;
+    public Especie obtenerPorId(Integer id) {
+        Especie especie = null;
         String sql = "SELECT * FROM especies WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()){
                 while (rs.next()) {
-                    especie = new Especies(rs.getInt("id"),
+                    especie = new Especie(rs.getInt("id"),
                             rs.getString("nombre"));
                 }
             }
@@ -43,15 +43,15 @@ public class EspecieDAO implements IEspeciesDAO{
     }
 
     @Override
-    public List<Especies>  obtenerTodos() {
-        List<Especies> lst = new ArrayList<>();
+    public List<Especie>  obtenerTodos() {
+        List<Especie> lst = new ArrayList<>();
         String sql = "SELECT * FROM especies";
 
         try (Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql)) {
 
             while(rs.next()) {
-                Especies especie = new Especies(rs.getInt("id"),
+                Especie especie = new Especie(rs.getInt("id"),
                         rs.getString("nombre"));
 
                 lst.add(especie);
@@ -63,7 +63,7 @@ public class EspecieDAO implements IEspeciesDAO{
     }
 
     @Override
-    public void actualizarEspecie(Especies especie) {
+    public void actualizarEspecie(Especie especie) {
         String sql = "UPDATE especies SET nombre = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
