@@ -1,4 +1,3 @@
-import com.sun.jdi.connect.spi.Connection;
 import model.ConexionSingleton;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or

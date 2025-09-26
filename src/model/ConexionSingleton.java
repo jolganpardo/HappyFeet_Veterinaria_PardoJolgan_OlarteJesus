@@ -7,7 +7,7 @@ public class ConexionSingleton {
     private static String host = "jdbc:mysql://localhost:3306/";
     private static String user = "root";
     private static String pass = "4824";
-    private static String bd = "happy_feet";
+    private static String bd = "Happy_Feet";
     private static String strConn = host + bd;
 
     private static Connection connection;
