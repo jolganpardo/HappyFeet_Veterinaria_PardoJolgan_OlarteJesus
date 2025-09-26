@@ -78,7 +78,7 @@ public class MascotaDAO implements IMascotasDAO {
                 lst.add(mascota);
             }
         } catch(SQLException e) {
-            throw new RuntimeException("Error al consultar todos las mascotas" + "\n" + e);
+            throw new RuntimeException("Error al consultar todas las mascotas" + "\n" + e.getMessage());
         }
         return lst;
     }
