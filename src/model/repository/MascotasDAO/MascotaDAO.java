@@ -15,7 +15,7 @@ public class MascotaDAO implements IMascotasDAO {
 
     @Override
     public void agregarMascota(Mascota mascota) {
-        String sql = "INSERT INTO mascotas (dueno_id, nombre, raza_id, fecha_nacimiento, sexo, url_foto, estado)" +
+        String sql = "INSERT INTO mascota (dueno_id, nombre, raza_id, fecha_nacimiento, sexo, url_foto, estado)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
@@ -36,7 +36,7 @@ public class MascotaDAO implements IMascotasDAO {
     public Mascota obtenerPorId(Integer id) {
         Mascota mascota = null;
 
-        String sql = "SELECT * FROM mascotas WHERE id = ?";
+        String sql = "SELECT * FROM mascota WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -63,7 +63,7 @@ public class MascotaDAO implements IMascotasDAO {
     @Override
     public List<Mascota> obtenerTodos() {
         List<Mascota> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas";
+        String sql = "SELECT * FROM mascota";
 
         try (Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
@@ -87,7 +87,7 @@ public class MascotaDAO implements IMascotasDAO {
 
     @Override
     public void actualizarMascota(Mascota mascota) {
-        String sql = "UPDATE mascotas SET dueno_id = ?, nombre = ?, raza_id = ?, fecha_nacimiento = ?, sexo = ?, url_foto = ?, estado = ? WHERE id = ?";
+        String sql = "UPDATE mascota SET dueno_id = ?, nombre = ?, raza_id = ?, fecha_nacimiento = ?, sexo = ?, url_foto = ?, estado = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
@@ -107,7 +107,7 @@ public class MascotaDAO implements IMascotasDAO {
 
     @Override
     public void cambiarEstadoMascota(Integer id) {
-        String sql = "UPDATE mascotas SET estado = 'INACTIVA' where id = ?";
+        String sql = "UPDATE mascota SET estado = 'INACTIVA' where id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -121,7 +121,7 @@ public class MascotaDAO implements IMascotasDAO {
     @Override
     public List<Mascota> obtenerPorDuenoId(Integer duenoId) {
         List<Mascota> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE dueno_id = ?";
+        String sql = "SELECT * FROM mascota WHERE dueno_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -151,7 +151,7 @@ public class MascotaDAO implements IMascotasDAO {
     @Override
     public List<Mascota> obtenerPorRazaId(Integer razaId) {
         List<Mascota> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE raza_id = ?";
+        String sql = "SELECT * FROM mascota WHERE raza_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -183,7 +183,7 @@ public class MascotaDAO implements IMascotasDAO {
     @Override
     public List<Mascotas> obtenerPorEspecieId(Integer especieId) {
         List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE especie_id = ?";
+        String sql = "SELECT * FROM mascota WHERE especie_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 

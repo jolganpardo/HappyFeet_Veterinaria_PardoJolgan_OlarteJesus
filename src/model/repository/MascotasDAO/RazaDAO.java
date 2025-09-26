@@ -14,7 +14,7 @@ public class RazaDAO implements IRazasDAO {
 
     @Override
     public void agregarRaza(Raza raza) {
-        String sql = "INSERT INTO razas (especie_id, nombre) VALUES (?, ?)";
+        String sql = "INSERT INTO raza (especie_id, nombre) VALUES (?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, raza.getEspecie_id().getId());
@@ -28,7 +28,7 @@ public class RazaDAO implements IRazasDAO {
 
     @Override
     public void actualizarRaza(Raza raza) {
-        String sql = "UPDATE razas SET nombre = ? WHERE id = ?";
+        String sql = "UPDATE raza SET nombre = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setString(1, raza.getNombre());
@@ -42,7 +42,7 @@ public class RazaDAO implements IRazasDAO {
 
     @Override
     public void eliminarRaza(int id) {
-        String sql = "DELETE FROM razas WHERE id = ?";
+        String sql = "DELETE FROM raza WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -61,7 +61,7 @@ public class RazaDAO implements IRazasDAO {
     public Raza obtenerPorId(int id) {
         Raza raza = null;
 
-        String sql = "SELECT * FROM razas WHERE id = ?";
+        String sql = "SELECT * FROM raza WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setInt(1, id);
@@ -83,7 +83,7 @@ public class RazaDAO implements IRazasDAO {
     @Override
     public List<Raza> obtenerTodos() {
         List<Raza> lst = new ArrayList<>();
-        String sql = "SELECT * FROM razas";
+        String sql = "SELECT * FROM raza";
 
         try (Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
@@ -103,7 +103,7 @@ public class RazaDAO implements IRazasDAO {
     @Override
     public List<Raza> obtenerPorEspecieId(Integer especieId) {
         List<Raza> lst = new ArrayList<>();
-        String sql = "SELECT * FROM razas WHERE especie_id = ?";
+        String sql = "SELECT * FROM raza WHERE especie_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 

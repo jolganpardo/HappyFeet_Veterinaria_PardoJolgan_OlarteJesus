@@ -13,7 +13,7 @@ public class EspecieDAO implements IEspeciesDAO{
 
     @Override
     public void agregarEspecie(Especie especie) {
-        String sql = "INSERT INTO especies (nombre) VALUES (?) ";
+        String sql = "INSERT INTO especie (nombre) VALUES (?) ";
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setString(1,especie.getNombre());
             pstmt.executeUpdate();
@@ -25,7 +25,7 @@ public class EspecieDAO implements IEspeciesDAO{
     @Override
     public Especie obtenerPorId(Integer id) {
         Especie especie = null;
-        String sql = "SELECT * FROM especies WHERE id = ?";
+        String sql = "SELECT * FROM especie WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setInt(1, id);
@@ -45,7 +45,7 @@ public class EspecieDAO implements IEspeciesDAO{
     @Override
     public List<Especie>  obtenerTodos() {
         List<Especie> lst = new ArrayList<>();
-        String sql = "SELECT * FROM especies";
+        String sql = "SELECT * FROM especie";
 
         try (Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql)) {
@@ -64,7 +64,7 @@ public class EspecieDAO implements IEspeciesDAO{
 
     @Override
     public void actualizarEspecie(Especie especie) {
-        String sql = "UPDATE especies SET nombre = ? WHERE id = ?";
+        String sql = "UPDATE especie SET nombre = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)){
             pstmt.setString(1, especie.getNombre());
@@ -77,7 +77,7 @@ public class EspecieDAO implements IEspeciesDAO{
 
     @Override
     public void eliminarEspecie(Integer id) {
-        String sql = "DELETE FROM especies WHERE id = ?";
+        String sql = "DELETE FROM especie WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);

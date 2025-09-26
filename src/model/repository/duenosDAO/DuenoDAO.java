@@ -13,7 +13,7 @@ public class DuenoDAO implements IDuenosDAO {
 
     @Override
     public void agregarDueno(Dueno dueno) {
-        String sql  = "INSERT INTO duenos (nombre_completo, documento_identidad, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
+        String sql  = "INSERT INTO dueno (nombre_completo, documento_identidad, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, dueno.getNombre_completo());
@@ -33,7 +33,7 @@ public class DuenoDAO implements IDuenosDAO {
     public Dueno buscarPorId(int id) {
         Dueno dueno = null;
 
-        String sql = "SELECT * FROM duenos WHERE id = ?";
+        String sql = "SELECT * FROM dueno WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -57,7 +57,7 @@ public class DuenoDAO implements IDuenosDAO {
     @Override
     public List<Dueno> listarDuenos() {
         List<Dueno> lst = new ArrayList<>();
-        String sql = "SELECT * FROM duenos";
+        String sql = "SELECT * FROM dueno";
 
         try (Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -78,7 +78,7 @@ public class DuenoDAO implements IDuenosDAO {
 
     @Override
     public void actualizarDuenos(Dueno dueno) {
-        String sql = "UPDATE duenos SET nombre_completo = ?, documento_identidad = ?, direccion = ?, telefono = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE dueno SET nombre_completo = ?, documento_identidad = ?, direccion = ?, telefono = ?, email = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, dueno.getNombre_completo());
@@ -96,7 +96,7 @@ public class DuenoDAO implements IDuenosDAO {
 
     @Override
     public void eliminarDueno(int id) {
-        String sql = "DELETE FROM duenos WHERE id = ?";
+        String sql = "DELETE FROM dueno WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);

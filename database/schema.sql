@@ -29,7 +29,7 @@ CREATE TABLE cita_estados (
 -- ========================
 
 -- Dueños de mascotas
-CREATE TABLE duenos (
+CREATE TABLE dueno (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_completo VARCHAR(255) NOT NULL,
     documento_identidad VARCHAR(20) UNIQUE,
@@ -39,7 +39,7 @@ CREATE TABLE duenos (
 );
 
 -- Veterinarios
-CREATE TABLE veterinarios (
+CREATE TABLE veterinario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_completo VARCHAR(100) NOT NULL,
     especialidad VARCHAR(100),
@@ -48,13 +48,13 @@ CREATE TABLE veterinarios (
 );
 
 -- Especies
-CREATE TABLE especies (
+CREATE TABLE especie (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL -- Ej: Perro, Gato, Ave
 );
 
 -- Razas
-CREATE TABLE razas (
+CREATE TABLE raza (
     id INT AUTO_INCREMENT PRIMARY KEY,
     especie_id INT,
     nombre VARCHAR(100) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE razas (
 );
 
 -- Mascotas
-CREATE TABLE mascotas (
+CREATE TABLE mascota (
     id INT AUTO_INCREMENT PRIMARY KEY,
     dueno_id INT,
     raza_id INT,
@@ -78,7 +78,7 @@ CREATE TABLE mascotas (
 );
 
 -- Adopciones
-CREATE TABLE adopciones (
+CREATE TABLE adopcion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mascota_id INT NOT NULL,
     estado ENUM('Disponible','Reservada','En Proceso','Adoptada','No Disponible') DEFAULT 'Disponible',
@@ -124,7 +124,7 @@ CREATE TABLE inventario (
 -- CITAS / SERVICIOS
 -- ========================
 
-CREATE TABLE citas (
+CREATE TABLE cita (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mascota_id INT,
     fecha_hora DATETIME NOT NULL,
@@ -140,7 +140,7 @@ CREATE TABLE citas (
 -- FACTURACIÓN / VENTAS
 -- ========================
 
-CREATE TABLE facturas (
+CREATE TABLE factura (
     id INT AUTO_INCREMENT PRIMARY KEY,
     dueno_id INT,
     fecha_emision DATETIME NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE items_factura (
 -- ========================
 -- PROVEEDORES
 -- ========================
-CREATE TABLE proveedores (
+CREATE TABLE proveedor (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_empresa VARCHAR(100) NOT NULL,
     contacto VARCHAR(100),
