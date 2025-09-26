@@ -71,7 +71,7 @@ CREATE TABLE mascotas (
     especie_id INT,
     sexo ENUM('Macho','Hembra'),
     url_foto VARCHAR(255),
-    microchip INT UNIQUE,
+    microchip VARCHAR(20) UNIQUE,
     FOREIGN KEY (especie_id) REFERENCES especies(id),
     FOREIGN KEY (dueno_id) REFERENCES duenos(id) ON DELETE CASCADE,
     FOREIGN KEY (raza_id) REFERENCES razas(id)
@@ -130,6 +130,8 @@ CREATE TABLE citas (
     fecha_hora DATETIME NOT NULL,
     motivo VARCHAR(255),
     estado_id INT,
+    veterinario_id INT,
+    FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id),
     FOREIGN KEY (mascota_id) REFERENCES mascotas(id),
     FOREIGN KEY (estado_id) REFERENCES cita_estados(id)
 );
@@ -158,5 +160,22 @@ CREATE TABLE items_factura (
     FOREIGN KEY (factura_id) REFERENCES facturas(id) ON DELETE CASCADE,
     FOREIGN KEY (producto_id) REFERENCES inventario(id)
 );
+
+-- ========================
+-- PROVEEDORES
+-- ========================
+CREATE TABLE proveedores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_empresa VARCHAR(100) NOT NULL,
+    contacto VARCHAR(100),
+    telefono VARCHAR(20),
+    email VARCHAR(100),
+    direccion VARCHAR(150)
+);
+
+ALTER TABLE inventario
+ADD COLUMN proveedor_id INT,
+ADD FOREIGN KEY (proveedor_id) REFERENCES proveedores(id);
+
 
 ALTER TABLE mascotas ADD estado ENUM('ACTIVA', 'INACTIVA') DEFAULT 'ACTIVA';
