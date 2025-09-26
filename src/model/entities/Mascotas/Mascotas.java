@@ -2,6 +2,7 @@ package model.entities.Mascotas;
 
 import model.entities.Duenos.Dueno;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Mascotas {
@@ -10,10 +11,11 @@ public class Mascotas {
     private String nombre;
     private Razas raza_id;
     private LocalDate fecha_nacimiento;
-    private String sexo; // "M" o "F"
+    private String sexo; // "Macho" o "Hembra"
     private String url_foto;
+    private String estado; // "Activo" o "Inactivo"
 
-    public Mascotas(Integer id, Dueno duenos_id, String nombre, Razas raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto) {
+    public Mascotas(Integer id, Dueno duenos_id, String nombre, Razas raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto, String estado) {
         this.id = id;
         this.duenos_id = duenos_id;
         this.nombre = nombre;
@@ -21,6 +23,7 @@ public class Mascotas {
         this.fecha_nacimiento = fecha_nacimiento;
         this.sexo = sexo;
         this.url_foto = url_foto;
+        this.estado = estado;
     }
 
     public Integer getId() {
@@ -74,6 +77,14 @@ public class Mascotas {
     public void setUrl_foto(String url_foto) {
         this.url_foto = url_foto;
     }
+
+    public Integer getDueno_id() {return  duenos_id.getId();}
+
+    public String getUrl_image() {return  url_foto;}
+
+    public String getEstado() {return estado;}
+
+    public void setEstado(String estado) {this.estado = estado;}
 
     @Override
     public String toString() {

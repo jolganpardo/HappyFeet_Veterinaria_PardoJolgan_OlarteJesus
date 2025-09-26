@@ -2,13 +2,13 @@ package model.entities.Mascotas;
 
 public class Razas {
     private Integer id;
-    private String nombre;
     private Especies especie_id; // relación con Especie
+    private String nombre;
 
-    public Razas(Integer id, String nombre, Especies especie_id) {
+    public Razas(Integer id, Especies especie_id, String nombre) {
         this.id = id;
-        this.nombre = nombre;
         this.especie_id = especie_id;
+        this.nombre = nombre;
     }
 
     public Integer getId() {
