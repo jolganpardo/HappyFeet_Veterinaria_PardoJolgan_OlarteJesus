@@ -1,10 +1,10 @@
-package model.entities.Citas;
+package model.entities.Inventario;
 
-public class Cita_Estados {
+public class ProductoTipo {
     private Integer id;
     private String nombre;
 
-    public Cita_Estados(Integer id, String nombre) {
+    public ProductoTipo(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
@@ -23,10 +23,9 @@ public class Cita_Estados {
 
     @Override
     public String toString() {
-        return "Cita_EstadosDAO{" +
+        return "Producto_Tipo{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 '}';
-
     }
 }

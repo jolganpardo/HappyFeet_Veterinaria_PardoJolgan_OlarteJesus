@@ -1,7 +1,6 @@
 package model.repository.InventarioDAO;
 
 import model.entities.Inventario.Inventario;
-
 import java.util.List;
 
 public interface IInventarioDAO {

@@ -1,19 +1,19 @@
 package model.entities.Citas;
 
 import model.entities.Mascotas.Mascota;
-import model.entities.Veterinarios.Veterinarios;
+import model.entities.Veterinarios.Veterinario;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class Citas {
+public class Cita {
     private Integer id;
     private Mascota mascota_id;
-    private LocalDate fecha_hora;
+    private LocalDateTime fecha_hora;
     private String motivo;
-    private Cita_Estados estado_id;
-    private Veterinarios veterianrio_id;
+    private CitaEstado estado_id;
+    private Veterinario veterianrio_id;
 
-    public Citas(Integer id, Mascota mascota_id, LocalDate fecha_hora, String motivo, Cita_Estados estado_id, Veterinarios veterianrio_id) {
+    public Cita(Integer id, Mascota mascota_id, LocalDateTime fecha_hora, String motivo, CitaEstado estado_id, Veterinario veterianrio_id) {
         this.id = id;
         this.mascota_id = mascota_id;
         this.fecha_hora = fecha_hora;
@@ -34,11 +34,11 @@ public class Citas {
         this.mascota_id = mascota_id;
     }
 
-    public LocalDate getFecha_hora() {
+    public LocalDateTime getFecha_hora() {
         return fecha_hora;
     }
 
-    public void setFecha_hora(LocalDate fecha_hora) {
+    public void setFecha_hora(LocalDateTime fecha_hora) {
         this.fecha_hora = fecha_hora;
     }
 
@@ -50,19 +50,19 @@ public class Citas {
         this.motivo = motivo;
     }
 
-    public Cita_Estados getEstado_id() {
+    public CitaEstado getEstado_id() {
         return estado_id;
     }
 
-    public void setEstado_id(Cita_Estados estado_id) {
+    public void setEstado_id(CitaEstado estado_id) {
         this.estado_id = estado_id;
     }
 
-    public Veterinarios getVeterianrio_id() {
+    public Veterinario getVeterianrio_id() {
         return veterianrio_id;
     }
 
-    public void setVeterianrio_id(Veterinarios veterianrio_id) {
+    public void setVeterianrio_id(Veterinario veterianrio_id) {
         this.veterianrio_id = veterianrio_id;
     }
 

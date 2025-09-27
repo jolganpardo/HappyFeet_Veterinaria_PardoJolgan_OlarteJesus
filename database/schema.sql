@@ -1,5 +1,5 @@
-drop database Happy_Feet;
-create database Happy_Feet;
+drop database if exists Happy_Feet;
+create database if not exists Happy_Feet;
 USE Happy_Feet;
 
 -- ========================
@@ -7,19 +7,19 @@ USE Happy_Feet;
 -- ========================
 
 -- Tipo de producto
-CREATE TABLE producto_tipos (
+CREATE TABLE producto_tipo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre ENUM('Medicamento','Vacuna','Insumo Médico','Alimento','Otro') UNIQUE NOT NULL
 );
 
 -- Tipo de evento médico
-CREATE TABLE evento_tipos (
+CREATE TABLE evento_tipo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre ENUM('Vacunación','Consulta','Cirugía','Desparasitación','Control','Emergencia','Hospitalización') UNIQUE NOT NULL
 );
 
 -- Estado de cita
-CREATE TABLE cita_estados (
+CREATE TABLE cita_estado (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre ENUM('Programada','En Proceso','Finalizada','Cancelada','No Asistió') UNIQUE NOT NULL
 );
@@ -58,7 +58,7 @@ CREATE TABLE raza (
     id INT AUTO_INCREMENT PRIMARY KEY,
     especie_id INT,
     nombre VARCHAR(100) NOT NULL,
-    FOREIGN KEY (especie_id) REFERENCES especies(id)
+    FOREIGN KEY (especie_id) REFERENCES especie(id)
 );
 
 -- Mascotas
@@ -72,9 +72,9 @@ CREATE TABLE mascota (
     sexo ENUM('Macho','Hembra'),
     url_foto VARCHAR(255),
     microchip VARCHAR(20) UNIQUE,
-    FOREIGN KEY (especie_id) REFERENCES especies(id),
-    FOREIGN KEY (dueno_id) REFERENCES duenos(id) ON DELETE CASCADE,
-    FOREIGN KEY (raza_id) REFERENCES razas(id)
+    FOREIGN KEY (especie_id) REFERENCES especie(id),
+    FOREIGN KEY (dueno_id) REFERENCES dueno(id) ON DELETE CASCADE,
+    FOREIGN KEY (raza_id) REFERENCES raza(id)
 );
 
 -- Adopciones
@@ -84,7 +84,7 @@ CREATE TABLE adopcion (
     estado ENUM('Disponible','Reservada','En Proceso','Adoptada','No Disponible') DEFAULT 'Disponible',
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE,
-    FOREIGN KEY (mascota_id) REFERENCES mascotas(id) ON DELETE CASCADE
+    FOREIGN KEY (mascota_id) REFERENCES mascota(id) ON DELETE CASCADE
 );
 
 -- Historial médico
@@ -97,9 +97,9 @@ CREATE TABLE historial_medico (
     descripcion TEXT,
     diagnostico TEXT,
     tratamiento_recomendado TEXT,
-    FOREIGN KEY (mascota_id) REFERENCES mascotas(id) ON DELETE CASCADE,
-    FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id),
-    FOREIGN KEY (evento_tipo_id) REFERENCES evento_tipos(id)
+    FOREIGN KEY (mascota_id) REFERENCES mascota(id) ON DELETE CASCADE,
+    FOREIGN KEY (veterinario_id) REFERENCES veterinario(id),
+    FOREIGN KEY (evento_tipo_id) REFERENCES evento_tipo(id)
 );
 
 -- ========================
@@ -117,7 +117,7 @@ CREATE TABLE inventario (
     stock_minimo INT NOT NULL,
     fecha_vencimiento DATE,
     precio_venta DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (producto_tipo_id) REFERENCES producto_tipos(id)
+    FOREIGN KEY (producto_tipo_id) REFERENCES producto_tipo(id)
 );
 
 -- ========================
@@ -131,9 +131,9 @@ CREATE TABLE cita (
     motivo VARCHAR(255),
     estado_id INT,
     veterinario_id INT,
-    FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id),
-    FOREIGN KEY (mascota_id) REFERENCES mascotas(id),
-    FOREIGN KEY (estado_id) REFERENCES cita_estados(id)
+    FOREIGN KEY (veterinario_id) REFERENCES veterinario(id),
+    FOREIGN KEY (mascota_id) REFERENCES mascota(id),
+    FOREIGN KEY (estado_id) REFERENCES cita_estado(id)
 );
 
 -- ========================
@@ -146,7 +146,7 @@ CREATE TABLE factura (
     fecha_emision DATETIME NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     metodo_pago ENUM('Efectivo','Tarjeta Débito','Tarjeta Crédito','Transferencia','Cheque') NOT NULL,
-    FOREIGN KEY (dueno_id) REFERENCES duenos(id)
+    FOREIGN KEY (dueno_id) REFERENCES dueno(id)
 );
 
 CREATE TABLE items_factura (
@@ -157,7 +157,7 @@ CREATE TABLE items_factura (
     cantidad INT NOT NULL,
     precio_unitario DECIMAL(10,2) NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (factura_id) REFERENCES facturas(id) ON DELETE CASCADE,
+    FOREIGN KEY (factura_id) REFERENCES factura(id) ON DELETE CASCADE,
     FOREIGN KEY (producto_id) REFERENCES inventario(id)
 );
 
@@ -175,7 +175,7 @@ CREATE TABLE proveedor (
 
 ALTER TABLE inventario
 ADD COLUMN proveedor_id INT,
-ADD FOREIGN KEY (proveedor_id) REFERENCES proveedores(id);
+ADD FOREIGN KEY (proveedor_id) REFERENCES proveedor(id);
 
 
-ALTER TABLE mascotas ADD estado ENUM('ACTIVA', 'INACTIVA') DEFAULT 'ACTIVA';
+ALTER TABLE mascota ADD estado ENUM('ACTIVA', 'INACTIVA') DEFAULT 'ACTIVA';

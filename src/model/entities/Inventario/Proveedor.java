@@ -1,6 +1,6 @@
 package model.entities.Inventario;
 
-public class Proveedores {
+public class Proveedor {
     private Integer id;
     private String nombre;
     private String contacto;
@@ -8,7 +8,7 @@ public class Proveedores {
     private String email;
     private String direccion;
 
-    public Proveedores(Integer id, String nombre, String contacto, String telefono, String email, String direccion) {
+    public Proveedor(Integer id, String nombre, String contacto, String telefono, String email, String direccion) {
         this.id = id;
         this.nombre = nombre;
         this.contacto = contacto;
