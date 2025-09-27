@@ -1,10 +1,10 @@
-package model.entities.Historial_Medico;
+package model.entities.Citas;
 
-public class Evento_Tipos {
+public class CitaEstado {
     private Integer id;
     private String nombre;
 
-    public Evento_Tipos(Integer id, String nombre) {
+    public CitaEstado(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
@@ -23,9 +23,10 @@ public class Evento_Tipos {
 
     @Override
     public String toString() {
-        return "Evento_TiposDAO{" +
+        return "Cita_EstadosDAO{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 '}';
+
     }
 }

@@ -1,21 +1,24 @@
 package model.entities.Historial_Medico;
 
-import model.entities.Mascotas.Mascotas;
+import model.entities.Mascotas.Mascota;
+import model.entities.Veterinarios.Veterinario;
 
 import java.time.LocalDate;
 
-public class Historial_Medico {
+public class HistorialMedico {
     private Integer id;
-    private Mascotas mascota_id;
+    private Mascota mascota_id;
+    private Veterinario veterinario_id;
     private LocalDate fecha_evento;
-    private Evento_Tipos evento_tipo_id;
+    private EventoTipos evento_tipo_id;
     private String descripcion;
     private String diagnostico;
     private String tratamiento_recomendado;
 
-    public Historial_Medico(Integer id, Mascotas mascota_id, LocalDate fecha_evento, Evento_Tipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
+    public HistorialMedico(Integer id, Mascota mascota_id, Veterinario veterinario_id, LocalDate fecha_evento, EventoTipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
         this.id = id;
         this.mascota_id = mascota_id;
+        this.veterinario_id = veterinario_id;
         this.fecha_evento = fecha_evento;
         this.evento_tipo_id = evento_tipo_id;
         this.descripcion = descripcion;
@@ -27,13 +30,17 @@ public class Historial_Medico {
         return id;
     }
 
-    public Mascotas getMascota_id() {
+    public Mascota getMascota_id() {
         return mascota_id;
     }
 
-    public void setMascota_id(Mascotas mascota_id) {
+    public void setMascota_id(Mascota mascota_id) {
         this.mascota_id = mascota_id;
     }
+
+    public Veterinario getVeterinario_id() {return veterinario_id;}
+
+    public void setVeterinario_id(Veterinario veterinario_id) {this.veterinario_id = veterinario_id;}
 
     public LocalDate getFecha_evento() {
         return fecha_evento;
@@ -43,11 +50,11 @@ public class Historial_Medico {
         this.fecha_evento = fecha_evento;
     }
 
-    public Evento_Tipos getEvento_tipo_id() {
+    public EventoTipos getEvento_tipo_id() {
         return evento_tipo_id;
     }
 
-    public void setEvento_tipo_id(Evento_Tipos evento_tipo_id) {
+    public void setEvento_tipo_id(EventoTipos evento_tipo_id) {
         this.evento_tipo_id = evento_tipo_id;
     }
 

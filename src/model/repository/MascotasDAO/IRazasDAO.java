@@ -1,15 +1,14 @@
 package model.repository.MascotasDAO;
 
-import model.entities.Mascotas.Mascotas;
-import model.entities.Mascotas.Razas;
+import model.entities.Mascotas.Raza;
 
 import java.util.List;
 
 public interface IRazasDAO {
-    void agregarRaza(Razas raza);
-    void actualizarRaza(Razas raza);
+    void agregarRaza(Raza raza);
+    void actualizarRaza(Raza raza);
     void eliminarRaza(int id);
-    Razas obtenerPorId(int id);
-    List<Razas> obtenerTodos();
-    List<Razas> obtenerPorEspecieId(Integer especieId);
+    Raza obtenerPorId(int id);
+    List<Raza> obtenerTodos();
+    List<Raza> obtenerPorEspecieId(Integer especieId);
 }

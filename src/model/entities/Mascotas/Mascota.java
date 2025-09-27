@@ -2,20 +2,20 @@ package model.entities.Mascotas;
 
 import model.entities.Duenos.Dueno;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
-public class Mascotas {
+public class Mascota {
     private Integer id;
     private Dueno duenos_id;
     private String nombre;
-    private Razas raza_id;
+    private Raza raza_id;
     private LocalDate fecha_nacimiento;
     private String sexo; // "Macho" o "Hembra"
     private String url_foto;
+    private String microchip;
     private String estado; // "Activo" o "Inactivo"
 
-    public Mascotas(Integer id, Dueno duenos_id, String nombre, Razas raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto, String estado) {
+    public Mascota(Integer id, Dueno duenos_id, String nombre, Raza raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto, String microchip, String estado) {
         this.id = id;
         this.duenos_id = duenos_id;
         this.nombre = nombre;
@@ -23,6 +23,7 @@ public class Mascotas {
         this.fecha_nacimiento = fecha_nacimiento;
         this.sexo = sexo;
         this.url_foto = url_foto;
+        this.microchip = microchip;
         this.estado = estado;
     }
 
@@ -46,11 +47,11 @@ public class Mascotas {
         this.nombre = nombre;
     }
 
-    public Razas getRaza_id() {
+    public Raza getRaza_id() {
         return raza_id;
     }
 
-    public void setRaza_id(Razas raza_id) {
+    public void setRaza_id(Raza raza_id) {
         this.raza_id = raza_id;
     }
 
@@ -86,6 +87,15 @@ public class Mascotas {
 
     public void setEstado(String estado) {this.estado = estado;}
 
+    public void setMicrochip(String microchip) {this.microchip = microchip;}
+
+    public String getMicrochip() {
+        if (microchip != null) {
+            return microchip;
+        }
+        return "M-" + id;
+    }
+
     @Override
     public String toString() {
         return "MascotasDAO{" +
@@ -96,6 +106,8 @@ public class Mascotas {
                 ", fecha_nacimiento=" + fecha_nacimiento +
                 ", sexo='" + sexo + '\'' +
                 ", url_foto='" + url_foto + '\'' +
+                ", microchip='" + microchip + '\'' +
+                ", estado='" + estado + '\'' +
                 '}';
     }
 }

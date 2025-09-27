@@ -1,22 +1,23 @@
 package model.entities.Inventario;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Inventario {
     private Integer id;
     private String nombre_producto;
-    private Producto_Tipo producto_tipo_id;
+    private ProductoTipo producto_tipo_id;
     private String descripcion;
     private String fabricante;
     private String lote;
     private Integer cantidad_stock;
     private Integer stock_minimo;
     private LocalDate fecha_vencimiento;
-    private Integer precio_venta;
-    private Proveedores proveedores_id;
+    private Double precio_venta;
+    private Proveedor proveedor_id;
     private LocalDate fecha_ultima_compra;
 
-    public Inventario(Integer id, String nombre_producto, Producto_Tipo producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Integer precio_venta, Proveedores proveedores_id, LocalDate fecha_ultima_compra) {
+    public Inventario(Integer id, String nombre_producto, ProductoTipo producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Double precio_venta, Proveedor proveedor_id, LocalDate fecha_ultima_compra) {
         this.id = id;
         this.nombre_producto = nombre_producto;
         this.producto_tipo_id = producto_tipo_id;
@@ -27,7 +28,7 @@ public class Inventario {
         this.stock_minimo = stock_minimo;
         this.fecha_vencimiento = fecha_vencimiento;
         this.precio_venta = precio_venta;
-        this.proveedores_id = proveedores_id;
+        this.proveedor_id = proveedor_id;
         this.fecha_ultima_compra = fecha_ultima_compra;
     }
 
@@ -43,11 +44,11 @@ public class Inventario {
         this.nombre_producto = nombre_producto;
     }
 
-    public Producto_Tipo getProducto_tipo_id() {
+    public ProductoTipo getProducto_tipo_id() {
         return producto_tipo_id;
     }
 
-    public void setProducto_tipo_id(Producto_Tipo producto_tipo_id) {
+    public void setProducto_tipo_id(ProductoTipo producto_tipo_id) {
         this.producto_tipo_id = producto_tipo_id;
     }
 
@@ -99,20 +100,20 @@ public class Inventario {
         this.fecha_vencimiento = fecha_vencimiento;
     }
 
-    public Integer getPrecio_venta() {
+    public Double getPrecio_venta() {
         return precio_venta;
     }
 
-    public void setPrecio_venta(Integer precio_venta) {
+    public void setPrecio_venta(Double precio_venta) {
         this.precio_venta = precio_venta;
     }
 
-    public Proveedores getProveedores_id() {
-        return proveedores_id;
+    public Proveedor getProveedor_id() {
+        return proveedor_id;
     }
 
-    public void setProveedores_id(Proveedores proveedores_id) {
-        this.proveedores_id = proveedores_id;
+    public void setProveedor_id(Proveedor proveedor_id) {
+        this.proveedor_id = proveedor_id;
     }
 
     public LocalDate getFecha_ultima_compra() {
@@ -136,7 +137,7 @@ public class Inventario {
                 ", stock_minimo=" + stock_minimo +
                 ", fecha_vencimiento=" + fecha_vencimiento +
                 ", precio_venta=" + precio_venta +
-                ", proveedores_id=" + proveedores_id +
+                ", proveedores_id=" + proveedor_id +
                 ", fecha_ultima_compra=" + fecha_ultima_compra +
                 '}';
     }

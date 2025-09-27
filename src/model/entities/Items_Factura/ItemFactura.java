@@ -1,18 +1,17 @@
 package model.entities.Items_Factura;
 
-import model.entities.Inventario.Producto_Tipo;
+import model.entities.Inventario.ProductoTipo;
 
-public class Items_Factura {
+public class ItemFactura {
     private Integer id;
     private Facturas factura_id;
-    private Producto_Tipo producto_id;
+    private ProductoTipo producto_id;
     private String servicio_descripcion;
     private Integer cantidad;
     private Integer precio_unitario;
     private Integer subtotal;
-    private Servicios servicios_id;
 
-    public Items_Factura(Integer id, Facturas factura_id, Producto_Tipo producto_id, String servicio_descripcion, Integer cantidad, Integer precio_unitario, Integer subtotal, Servicios servicios_id) {
+    public ItemFactura(Integer id, Facturas factura_id, ProductoTipo producto_id, String servicio_descripcion, Integer cantidad, Integer precio_unitario, Integer subtotal) {
         this.id = id;
         this.factura_id = factura_id;
         this.producto_id = producto_id;
@@ -20,12 +19,13 @@ public class Items_Factura {
         this.cantidad = cantidad;
         this.precio_unitario = precio_unitario;
         this.subtotal = subtotal;
-        this.servicios_id = servicios_id;
     }
 
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {this.id = id;}
 
     public Facturas getFactura_id() {
         return factura_id;
@@ -35,11 +35,11 @@ public class Items_Factura {
         this.factura_id = factura_id;
     }
 
-    public Producto_Tipo getProducto_id() {
+    public ProductoTipo getProducto_id() {
         return producto_id;
     }
 
-    public void setProducto_id(Producto_Tipo producto_id) {
+    public void setProducto_id(ProductoTipo producto_id) {
         this.producto_id = producto_id;
     }
 
@@ -75,14 +75,6 @@ public class Items_Factura {
         this.subtotal = subtotal;
     }
 
-    public Servicios getServicios_id() {
-        return servicios_id;
-    }
-
-    public void setServicios_id(Servicios servicios_id) {
-        this.servicios_id = servicios_id;
-    }
-
     @Override
     public String toString() {
         return "Items_Factura{" +
@@ -93,7 +85,6 @@ public class Items_Factura {
                 ", cantidad=" + cantidad +
                 ", precio_unitario=" + precio_unitario +
                 ", subtotal=" + subtotal +
-                ", servicios_id=" + servicios_id +
                 '}';
     }
 }

@@ -2,8 +2,8 @@ package model.repository.MascotasDAO;
 
 import model.ConexionSingleton;
 import model.entities.Duenos.Dueno;
-import model.entities.Mascotas.Mascotas;
-import model.entities.Mascotas.Razas;
+import model.entities.Mascotas.Mascota;
+import model.entities.Mascotas.Raza;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class MascotaDAO implements IMascotasDAO {
     public MascotaDAO() {con = ConexionSingleton.getInstance().getConnection();}
 
     @Override
-    public void agregarMascota(Mascotas mascota) {
-        String sql = "INSERT INTO mascotas (dueno_id, nombre, raza_id, fecha_nacimiento, sexo, url_foto, estado)" +
+    public void agregarMascota(Mascota mascota) {
+        String sql = "INSERT INTO mascota (dueno_id, nombre, raza_id, fecha_nacimiento, sexo, url_foto, estado)" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
@@ -33,23 +33,24 @@ public class MascotaDAO implements IMascotasDAO {
     }
 
     @Override
-    public Mascotas obtenerPorId(Integer id) {
-        Mascotas mascota = null;
+    public Mascota obtenerPorId(Integer id) {
+        Mascota mascota = null;
 
-        String sql = "SELECT * FROM mascotas WHERE id = ?";
+        String sql = "SELECT * FROM mascota WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    mascota = new Mascotas(rs.getInt("id"),
+                    mascota = new Mascota(rs.getInt("id"),
                             new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
                             rs.getString("nombre"),
-                            new Razas(rs.getInt("raza_id"), null, null),
+                            new Raza(rs.getInt("raza_id"), null, null),
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
+                            rs.getString("microchip"),
                             rs.getString("estado"));
                 }
             }
@@ -60,20 +61,21 @@ public class MascotaDAO implements IMascotasDAO {
     }
 
     @Override
-    public List<Mascotas> obtenerTodos() {
-        List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas";
+    public List<Mascota> obtenerTodos() {
+        List<Mascota> lst = new ArrayList<>();
+        String sql = "SELECT * FROM mascota";
 
         try (Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Mascotas mascota = new Mascotas(rs.getInt("id"),
+                Mascota mascota = new Mascota(rs.getInt("id"),
                         new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
                         rs.getString("nombre"),
-                        new Razas(rs.getInt("raza_id"), null, null),
+                        new Raza(rs.getInt("raza_id"), null, null),
                         rs.getDate("fecha_nacimiento").toLocalDate(),
                         rs.getString("sexo"),
                         rs.getString("url_foto"),
+                        rs.getString("microchip"),
                         rs.getString("estado"));
                 lst.add(mascota);
             }
@@ -84,8 +86,8 @@ public class MascotaDAO implements IMascotasDAO {
     }
 
     @Override
-    public void actualizarMascota(Mascotas mascota) {
-        String sql = "UPDATE mascotas SET dueno_id = ?, nombre = ?, raza_id = ?, fecha_nacimiento = ?, sexo = ?, url_foto = ?, estado = ? WHERE id = ?";
+    public void actualizarMascota(Mascota mascota) {
+        String sql = "UPDATE mascota SET dueno_id = ?, nombre = ?, raza_id = ?, fecha_nacimiento = ?, sexo = ?, url_foto = ?, estado = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
@@ -105,7 +107,7 @@ public class MascotaDAO implements IMascotasDAO {
 
     @Override
     public void cambiarEstadoMascota(Integer id) {
-        String sql = "UPDATE mascotas SET estado = 'INACTIVA' where id = ?";
+        String sql = "UPDATE mascota SET estado = 'INACTIVA' where id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -117,9 +119,9 @@ public class MascotaDAO implements IMascotasDAO {
     }
 
     @Override
-    public List<Mascotas> obtenerPorDuenoId(Integer duenoId) {
-        List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE dueno_id = ?";
+    public List<Mascota> obtenerPorDuenoId(Integer duenoId) {
+        List<Mascota> lst = new ArrayList<>();
+        String sql = "SELECT * FROM mascota WHERE dueno_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -127,13 +129,14 @@ public class MascotaDAO implements IMascotasDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    Mascotas mascota = new Mascotas(rs.getInt("id"),
+                    Mascota mascota = new Mascota(rs.getInt("id"),
                             new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
                             rs.getString("nombre"),
-                            new Razas(rs.getInt("raza_id"), null, null),
+                            new Raza(rs.getInt("raza_id"), null, null),
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
+                            rs.getString("microchip"),
                             rs.getString("estado"));
                     lst.add(mascota);
 
@@ -146,9 +149,9 @@ public class MascotaDAO implements IMascotasDAO {
     }
 
     @Override
-    public List<Mascotas> obtenerPorRazaId(Integer razaId) {
-        List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE raza_id = ?";
+    public List<Mascota> obtenerPorRazaId(Integer razaId) {
+        List<Mascota> lst = new ArrayList<>();
+        String sql = "SELECT * FROM mascota WHERE raza_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -156,13 +159,14 @@ public class MascotaDAO implements IMascotasDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
 
                 while (rs.next()) {
-                    Mascotas mascota = new Mascotas(rs.getInt("id"),
+                    Mascota mascota = new Mascota(rs.getInt("id"),
                             new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
                             rs.getString("nombre"),
-                            new Razas(rs.getInt("raza_id"), null, null),
+                            new Raza(rs.getInt("raza_id"), null, null),
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
+                            rs.getString("microchip"),
                             rs.getString("estado"));
                     lst.add(mascota);
 
@@ -173,11 +177,13 @@ public class MascotaDAO implements IMascotasDAO {
         }
         return lst;
     }
+
+    // Borrador de obtenerPorEspecieId
     /*
     @Override
     public List<Mascotas> obtenerPorEspecieId(Integer especieId) {
         List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascotas WHERE especie_id = ?";
+        String sql = "SELECT * FROM mascota WHERE especie_id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -192,6 +198,7 @@ public class MascotaDAO implements IMascotasDAO {
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
+                            rs.getString("microchip"),
                             rs.getString("estado"));
                     lst.add(mascota);
 

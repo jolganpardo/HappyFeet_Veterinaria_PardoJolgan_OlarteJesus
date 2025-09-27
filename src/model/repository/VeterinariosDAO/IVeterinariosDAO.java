@@ -1,13 +1,13 @@
 package model.repository.VeterinariosDAO;
 
-import model.entities.Veterinarios.Veterinarios;
+import model.entities.Veterinarios.Veterinario;
 
 import java.util.List;
 
 public interface IVeterinariosDAO {
-    void insertar(Veterinarios veterinario);
-    void actualizar(Veterinarios veterinario);
+    void insertar(Veterinario veterinario);
+    void actualizar(Veterinario veterinario);
     void eliminar(Integer id);
-    Veterinarios buscarPorId(Integer id);
-    List<Veterinarios> listarTodos();
+    Veterinario buscarPorId(Integer id);
+    List<Veterinario> listarTodos();
 }

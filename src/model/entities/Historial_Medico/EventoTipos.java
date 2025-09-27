@@ -1,14 +1,12 @@
-package model.entities.Items_Factura;
+package model.entities.Historial_Medico;
 
-public class Servicios {
+public class EventoTipos {
     private Integer id;
     private String nombre;
-    private Integer precio;
 
-    public Servicios(Integer id, String nombre, Integer precio) {
+    public EventoTipos(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.precio = precio;
     }
 
     public Integer getId() {
@@ -23,20 +21,11 @@ public class Servicios {
         this.nombre = nombre;
     }
 
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Integer precio) {
-        this.precio = precio;
-    }
-
     @Override
     public String toString() {
-        return "Servicios{" +
+        return "Evento_TiposDAO{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", precio=" + precio +
                 '}';
     }
 }

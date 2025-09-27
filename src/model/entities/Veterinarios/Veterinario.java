@@ -1,13 +1,13 @@
 package model.entities.Veterinarios;
 
-public class Veterinarios {
+public class Veterinario {
     private Integer id;
     private String nombre_completo;
     private String especialidad;
     private String telefono;
     private String email;
 
-    public Veterinarios(Integer id, String nombre_completo, String especialidad, String telefono, String email) {
+    public Veterinario(Integer id, String nombre_completo, String especialidad, String telefono, String email) {
         this.id = id;
         this.nombre_completo = nombre_completo;
         this.especialidad = especialidad;

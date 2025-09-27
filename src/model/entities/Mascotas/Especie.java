@@ -1,10 +1,10 @@
 package model.entities.Mascotas;
 
-public class Especies {
+public class Especie {
     private Integer id;
     private String nombre;
 
-    public Especies(Integer id, String nombre) {
+    public Especie(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
