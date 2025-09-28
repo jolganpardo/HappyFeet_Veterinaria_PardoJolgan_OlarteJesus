@@ -2,17 +2,24 @@ package view.dueno;
 
 import controller.duenoController.DuenoController;
 import model.repository.duenosDAO.DuenoDAO;
+import model.repository.duenosDAO.IDuenosDAO;
 
 import java.util.Scanner;
 
 public class MenuDueno {
-    DuenoDAO duenoDAO = new DuenoDAO();
-    Scanner input = new Scanner(System.in);
-    DuenoController duenoController = new DuenoController(duenoDAO, input);
+    private IDuenosDAO duenoDAO; // Usamos la interfaz
+    private DuenoController duenoController;
+    private Scanner input;
 
-    public void mostrarMenuDueno(){
+    public MenuDueno() {
+        this.duenoDAO = new DuenoDAO();
+        this.input = new Scanner(System.in);
+        this.duenoController = new DuenoController(duenoDAO, input);
+    }
+
+    public void mostrarMenuDueno() {
         int opcion;
-        do{
+        do {
             System.out.print("""
                 \n=== MENU DUEÑO ===
                 1. Insertar nuevo dueño.
@@ -20,11 +27,12 @@ public class MenuDueno {
                 3. Listar todos los dueños.
                 4. Actualizar dueño.
                 5. Eliminar dueño.
-                0. Salir del menu de dueño.
+                0. Salir del menú de dueño.
                 Selecciona una opción:
                 """);
             opcion = input.nextInt();
             input.nextLine();
+
             switch (opcion) {
                 case 1:
                     duenoController.agregarDueno();
@@ -48,6 +56,7 @@ public class MenuDueno {
                 default:
                     System.out.println("Opcion no valida.");
             }
-        }while (opcion != 0);
+        } while (opcion != 0);
+        input.close();
     }
 }

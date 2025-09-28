@@ -2,14 +2,16 @@ package controller.duenoController;
 
 import model.entities.Duenos.Dueno;
 import model.repository.duenosDAO.DuenoDAO;
+import model.repository.duenosDAO.IDuenosDAO;
+
 import java.util.Scanner;
 
 public class DuenoController {
-    private DuenoDAO duenoDAO;
+    private IDuenosDAO iduenoDAO;
     private Scanner input;
 
-    public DuenoController(DuenoDAO duenoDAO, Scanner input) {
-        this.duenoDAO = duenoDAO;
+    public DuenoController(IDuenosDAO iduenoDAO, Scanner input) {
+        this.iduenoDAO = iduenoDAO;
         this.input = input;
     }
 
@@ -26,7 +28,7 @@ public class DuenoController {
         String email = input.nextLine();
 
         Dueno nuevo = new Dueno(null, nombre, doc, dir, tel, email);
-        duenoDAO.agregarDueno(nuevo);
+        iduenoDAO.agregarDueno(nuevo);
         System.out.println("Dueño insertado con éxito.");
     }
 
@@ -34,7 +36,7 @@ public class DuenoController {
         System.out.print("ID del dueño: ");
         int id = input.nextInt();
         input.nextLine();
-        Dueno dueno = duenoDAO.buscarPorId(id);
+        Dueno dueno = iduenoDAO.buscarPorId(id);
         if (dueno != null) {
             System.out.println("🔎 Dueño encontrado: " + dueno);
         } else {
@@ -44,7 +46,7 @@ public class DuenoController {
 
     public void listarDuenos() {
         System.out.println("\n📋 Lista de dueños:");
-        for (Dueno d : duenoDAO.listarDuenos()) {
+        for (Dueno d : iduenoDAO.listarDuenos()) {
             System.out.println(d);
         }
     }
@@ -53,7 +55,7 @@ public class DuenoController {
         System.out.print("ID del dueño a actualizar: ");
         int id = input.nextInt();
         input.nextLine();
-        Dueno dueno = duenoDAO.buscarPorId(id);
+        Dueno dueno = iduenoDAO.buscarPorId(id);
         if (dueno != null) {
             System.out.print("Nuevo nombre completo (" + dueno.getNombre_completo() + "): ");
             String nuevoNombre = input.nextLine();
@@ -71,7 +73,7 @@ public class DuenoController {
             String nuevoEmail = input.nextLine();
             if (!nuevoEmail.isEmpty()) dueno.setEmail(nuevoEmail);
 
-            duenoDAO.actualizarDuenos(dueno);
+            iduenoDAO.actualizarDuenos(dueno);
             System.out.println("Dueño actualizado con éxito.");
         } else {
             System.out.println("No existe dueño con ese ID.");
@@ -82,9 +84,9 @@ public class DuenoController {
         System.out.print("ID del dueño a eliminar: ");
         int id = input.nextInt();
         input.nextLine();
-        Dueno dueno = duenoDAO.buscarPorId(id);
+        Dueno dueno = iduenoDAO.buscarPorId(id);
         if (dueno != null) {
-            duenoDAO.eliminarDueno(id);
+            iduenoDAO.eliminarDueno(id);
             System.out.println("🗑️Dueño eliminado con éxito.");
         } else {
             System.out.println("No existe dueño con ese ID.");
