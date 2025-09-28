@@ -23,7 +23,7 @@ public class InventarioDAO implements IInventarioDAO {
                 " proveedor_id, fecha_ultima_compra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, inventario.getNombre_producto());
-            pstmt.setInt(2, inventario.getProducto_tipo_id().getId());
+            pstmt.setInt(2, inventario.getProducto_tipo_id());
             pstmt.setString(3, inventario.getDescripcion());
             pstmt.setString(4, inventario.getFabricante());
             pstmt.setString(5, inventario.getLote());
@@ -31,7 +31,7 @@ public class InventarioDAO implements IInventarioDAO {
             pstmt.setInt(7, inventario.getStock_minimo());
             pstmt.setDate(8, inventario.getFecha_vencimiento() != null ? Date.valueOf(inventario.getFecha_vencimiento()) : null);
             pstmt.setDouble(9, inventario.getPrecio_venta());
-            pstmt.setInt(10, inventario.getProveedor_id().getId());
+            pstmt.setInt(10, inventario.getProveedor_id());
             pstmt.setDate(11, inventario.getFecha_ultima_compra() != null ? Date.valueOf(inventario.getFecha_ultima_compra()) : null);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class InventarioDAO implements IInventarioDAO {
                     inv = new Inventario(
                             rs.getInt("id"),
                             rs.getString("nombre_producto"),
-                            new ProductoTipo(rs.getInt("producto_tipo_id"), null),
+                            rs.getInt("producto_tipo_id"),
                             rs.getString("descripcion"),
                             rs.getString("fabricante"),
                             rs.getString("lote"),
@@ -58,9 +58,8 @@ public class InventarioDAO implements IInventarioDAO {
                             rs.getInt("stock_minimo"),
                             rs.getDate("fecha_vencimiento") != null ? rs.getDate("fecha_vencimiento").toLocalDate() : null,
                             rs.getDouble("precio_venta"),
-                            new Proveedor(rs.getInt("proveedor_id"), null, null, null, null, null),
-                            rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null
-                    );
+                            rs.getInt("proveedor_id"),
+                            rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null);
                 }
             }
         } catch (SQLException e) {
@@ -71,15 +70,17 @@ public class InventarioDAO implements IInventarioDAO {
 
     @Override
     public List<Inventario> obtenerTodos() {
-        List<Inventario> lista = new ArrayList<>();
+        List<Inventario> inventarios = new ArrayList<>();
         String sql = "SELECT * FROM inventario";
+
         try (Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
-                Inventario inv = new Inventario(
+                Inventario inventario = new Inventario(
                         rs.getInt("id"),
                         rs.getString("nombre_producto"),
-                        new ProductoTipo(rs.getInt("producto_tipo_id"), null),
+                        rs.getInt("producto_tipo_id"),
                         rs.getString("descripcion"),
                         rs.getString("fabricante"),
                         rs.getString("lote"),
@@ -87,16 +88,18 @@ public class InventarioDAO implements IInventarioDAO {
                         rs.getInt("stock_minimo"),
                         rs.getDate("fecha_vencimiento") != null ? rs.getDate("fecha_vencimiento").toLocalDate() : null,
                         rs.getDouble("precio_venta"),
-                        new Proveedor(rs.getInt("proveedor_id"), null, null, null, null, null),
-                        rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null
-                );
-                lista.add(inv);
+                        rs.getInt("proveedor_id"),
+                        rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null);
+                inventarios.add(inventario);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Error al consultar todos los productos del inventario", e);
         }
-        return lista;
+
+        return inventarios;
     }
+
 
     @Override
     public void actualizar(Inventario inventario) {
@@ -105,7 +108,7 @@ public class InventarioDAO implements IInventarioDAO {
                 " precio_venta = ?, proveedor_id = ?, fecha_ultima_compra = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, inventario.getNombre_producto());
-            pstmt.setInt(2, inventario.getProducto_tipo_id().getId());
+            pstmt.setInt(2, inventario.getProducto_tipo_id());
             pstmt.setString(3, inventario.getDescripcion());
             pstmt.setString(4, inventario.getFabricante());
             pstmt.setString(5, inventario.getLote());
@@ -113,7 +116,7 @@ public class InventarioDAO implements IInventarioDAO {
             pstmt.setInt(7, inventario.getStock_minimo());
             pstmt.setDate(8, inventario.getFecha_vencimiento() != null ? Date.valueOf(inventario.getFecha_vencimiento()) : null);
             pstmt.setDouble(9, inventario.getPrecio_venta());
-            pstmt.setInt(10, inventario.getProveedor_id().getId());
+            pstmt.setInt(10, inventario.getProveedor_id());
             pstmt.setDate(11, inventario.getFecha_ultima_compra() != null ? Date.valueOf(inventario.getFecha_ultima_compra()) : null);
             pstmt.setInt(12, inventario.getId());
             pstmt.executeUpdate();

@@ -21,18 +21,18 @@ public class CitaDAO implements ICitaDAO {
     public void agregarCita(Cita cita) {
         String sql = "INSERT INTO cita (mascota_id, fecha_hora, motivo, estado_id, veterinario_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, cita.getMascota_id().getId());
+            pstmt.setInt(1, cita.getMascota_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(cita.getFecha_hora()));
             pstmt.setString(3, cita.getMotivo());
 
             if (cita.getEstado_id() != null) {
-                pstmt.setInt(4, cita.getEstado_id().getId());
+                pstmt.setInt(4, cita.getEstado_id());
             } else {
                 pstmt.setNull(4, Types.INTEGER);
             }
 
             if (cita.getVeterianrio_id() != null) {
-                pstmt.setInt(5, cita.getVeterianrio_id().getId());
+                pstmt.setInt(5, cita.getVeterianrio_id());
             } else {
                 pstmt.setNull(5, Types.INTEGER);
             }
@@ -53,11 +53,11 @@ public class CitaDAO implements ICitaDAO {
                 if (rs.next()) {
                     cita = new Cita(
                             rs.getInt("id"),
-                            new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
+                            rs.getInt("mascota_id"),
                             rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("motivo"),
-                            new CitaEstado(rs.getInt("estado_id"), null),
-                            new Veterinario(rs.getInt("veterinario_id"), null, null, null, null)
+                            rs.getInt("estado_id"),
+                            rs.getInt("veterinario_id")
                     );
                 }
             }
@@ -76,11 +76,11 @@ public class CitaDAO implements ICitaDAO {
             while (rs.next()) {
                 Cita cita = new Cita(
                         rs.getInt("id"),
-                        new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
+                        rs.getInt("mascota_id"),
                         rs.getTimestamp("fecha_hora").toLocalDateTime(),
                         rs.getString("motivo"),
-                        new CitaEstado(rs.getInt("estado_id"), null),
-                        new Veterinario(rs.getInt("veterinario_id"), null, null, null, null)
+                        rs.getInt("estado_id"),
+                        rs.getInt("veterinario_id")
                 );
                 citas.add(cita);
             }
@@ -94,18 +94,18 @@ public class CitaDAO implements ICitaDAO {
     public void actualizarCita(Cita cita) {
         String sql = "UPDATE cita SET mascota_id = ?, fecha_hora = ?, motivo = ?, estado_id = ?, veterinario_id = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, cita.getMascota_id().getId());
+            pstmt.setInt(1, cita.getMascota_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(cita.getFecha_hora()));
             pstmt.setString(3, cita.getMotivo());
 
             if (cita.getEstado_id() != null) {
-                pstmt.setInt(4, cita.getEstado_id().getId());
+                pstmt.setInt(4, cita.getEstado_id());
             } else {
                 pstmt.setNull(4, Types.INTEGER);
             }
 
             if (cita.getVeterianrio_id() != null) {
-                pstmt.setInt(5, cita.getVeterianrio_id().getId());
+                pstmt.setInt(5, cita.getVeterianrio_id());
             } else {
                 pstmt.setNull(5, Types.INTEGER);
             }
@@ -138,11 +138,11 @@ public class CitaDAO implements ICitaDAO {
                 while (rs.next()) {
                     Cita cita = new Cita(
                             rs.getInt("id"),
-                            new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
+                            rs.getInt("mascota_id"),
                             rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("motivo"),
-                            new CitaEstado(rs.getInt("estado_id"), null),
-                            new Veterinario(rs.getInt("veterinario_id"), null, null, null, null)
+                            rs.getInt("estado_id"),
+                            rs.getInt("veterinario_id")
                     );
                     citas.add(cita);
                 }
@@ -163,11 +163,11 @@ public class CitaDAO implements ICitaDAO {
                 while (rs.next()) {
                     Cita cita = new Cita(
                             rs.getInt("id"),
-                            new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
+                            rs.getInt("mascota_id"),
                             rs.getTimestamp("fecha_hora").toLocalDateTime(),
                             rs.getString("motivo"),
-                            new CitaEstado(rs.getInt("estado_id"), null),
-                            new Veterinario(rs.getInt("veterinario_id"), null, null, null, null)
+                            rs.getInt("estado_id"),
+                            rs.getInt("veterinario_id")
                     );
                     citas.add(cita);
                 }
@@ -177,4 +177,5 @@ public class CitaDAO implements ICitaDAO {
         }
         return citas;
     }
+
 }

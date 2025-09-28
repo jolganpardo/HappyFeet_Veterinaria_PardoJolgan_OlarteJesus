@@ -22,10 +22,10 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
     public void agregarHistorial(HistorialMedico historial) {
         String sql = "INSERT INTO historial_medico (mascota_id, veterinario_id, fecha_evento, evento_tipo_id, descripcion, diagnostico, tratamiento_recomendado) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, historial.getMascota_id().getId());
-            pstmt.setInt(2, historial.getVeterinario_id().getId());
+            pstmt.setInt(1, historial.getMascota_id());
+            pstmt.setInt(2, historial.getVeterinario_id());
             pstmt.setDate(3, Date.valueOf(historial.getFecha_evento()));
-            pstmt.setInt(4, historial.getEvento_tipo_id().getId());
+            pstmt.setInt(4, historial.getEvento_tipo_id());
             pstmt.setString(5, historial.getDescripcion());
             pstmt.setString(6, historial.getDiagnostico());
             pstmt.setString(7, historial.getTratamiento_recomendado());
@@ -45,10 +45,10 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
                 if (rs.next()) {
                     historial = new HistorialMedico(
                             rs.getInt("id"),
-                            new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
-                            new Veterinario(rs.getInt("veterinario_id"), null, null, null, null),
+                            rs.getInt("mascota_id"),
+                            rs.getInt("veterinario_id"),
                             rs.getDate("fecha_evento").toLocalDate(),
-                            new EventoTipos(rs.getInt("evento_tipo_id"), null),
+                            rs.getInt("evento_tipo_id"),
                             rs.getString("descripcion"),
                             rs.getString("diagnostico"),
                             rs.getString("tratamiento_recomendado")
@@ -61,6 +61,7 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
         return historial;
     }
 
+
     @Override
     public List<HistorialMedico> obtenerTodos() {
         List<HistorialMedico> historiales = new ArrayList<>();
@@ -70,10 +71,10 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
             while (rs.next()) {
                 HistorialMedico historial = new HistorialMedico(
                         rs.getInt("id"),
-                        new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
-                        new Veterinario(rs.getInt("veterinario_id"), null, null, null, null),
+                        rs.getInt("mascota_id"),
+                        rs.getInt("veterinario_id"),
                         rs.getDate("fecha_evento").toLocalDate(),
-                        new EventoTipos(rs.getInt("evento_tipo_id"), null),
+                        rs.getInt("evento_tipo_id"),
                         rs.getString("descripcion"),
                         rs.getString("diagnostico"),
                         rs.getString("tratamiento_recomendado")
@@ -96,10 +97,10 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
                 while (rs.next()) {
                     HistorialMedico historial = new HistorialMedico(
                             rs.getInt("id"),
-                            new Mascota(rs.getInt("mascota_id"), null, null, null, null, null, null, null, null),
-                            new Veterinario(rs.getInt("veterinario_id"), null, null, null, null),
+                            rs.getInt("mascota_id"),
+                            rs.getInt("veterinario_id"),
                             rs.getDate("fecha_evento").toLocalDate(),
-                            new EventoTipos(rs.getInt("evento_tipo_id"), null),
+                            rs.getInt("evento_tipo_id"),
                             rs.getString("descripcion"),
                             rs.getString("diagnostico"),
                             rs.getString("tratamiento_recomendado")
@@ -117,10 +118,10 @@ public class HistorialMedicoDAO implements IHistorialMedicoDAO {
     public void actualizarHistorial(HistorialMedico historial) {
         String sql = "UPDATE historial_medico SET mascota_id = ?, veterinario_id = ?, fecha_evento = ?, evento_tipo_id = ?, descripcion = ?, diagnostico = ?, tratamiento_recomendado = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, historial.getMascota_id().getId());
-            pstmt.setInt(2, historial.getVeterinario_id().getId());
+            pstmt.setInt(1, historial.getMascota_id());
+            pstmt.setInt(2, historial.getVeterinario_id());
             pstmt.setDate(3, Date.valueOf(historial.getFecha_evento()));
-            pstmt.setInt(4, historial.getEvento_tipo_id().getId());
+            pstmt.setInt(4, historial.getEvento_tipo_id());
             pstmt.setString(5, historial.getDescripcion());
             pstmt.setString(6, historial.getDiagnostico());
             pstmt.setString(7, historial.getTratamiento_recomendado());

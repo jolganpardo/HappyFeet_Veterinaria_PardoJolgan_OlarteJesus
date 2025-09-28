@@ -32,6 +32,8 @@ public class MenuPrincipal {
 
             switch (opcion) {
                 case 1:
+                    view.dueno.MenuDueno menuDueno = new view.dueno.MenuDueno();
+                    menuDueno.mostrarMenuDueno();
                     break;
                 case 2:
                     break;

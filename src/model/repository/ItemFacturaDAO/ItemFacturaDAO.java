@@ -20,8 +20,8 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
     public void insertar(ItemFactura item) {
         String sql = "INSERT INTO items_factura (factura_id, producto_id, servicio_descripcion, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, item.getFactura_id().getId());
-            pstmt.setInt(2, item.getProducto_id() != null ? item.getProducto_id().getId() : null);
+            pstmt.setInt(1, item.getFactura_id());
+            pstmt.setInt(2, item.getProducto_id() != null ? item.getProducto_id() : null);
             pstmt.setString(3, item.getServicio_descripcion());
             pstmt.setInt(4, item.getCantidad());
             pstmt.setInt(5, item.getPrecio_unitario());
@@ -48,8 +48,8 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
                 if (rs.next()) {
                     item = new ItemFactura(
                             rs.getInt("id"),
-                            new Facturas(rs.getInt("factura_id"), null, null, 0.0, null),
-                            new ProductoTipo(rs.getInt("producto_id"), null),
+                            rs.getInt("factura_id"),
+                            rs.getInt("producto_id"),
                             rs.getString("servicio_descripcion"),
                             rs.getInt("cantidad"),
                             rs.getInt("precio_unitario"),
@@ -63,6 +63,7 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
         return item;
     }
 
+
     @Override
     public List<ItemFactura> obtenerPorFacturaId(Integer facturaId) {
         List<ItemFactura> items = new ArrayList<>();
@@ -73,8 +74,8 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
                 while (rs.next()) {
                     ItemFactura item = new ItemFactura(
                             rs.getInt("id"),
-                            new Facturas(rs.getInt("factura_id"), null, null, 0.0, null),
-                            new ProductoTipo(rs.getInt("producto_id"), null),
+                            rs.getInt("factura_id"),
+                            rs.getInt("producto_id"),
                             rs.getString("servicio_descripcion"),
                             rs.getInt("cantidad"),
                             rs.getInt("precio_unitario"),
@@ -98,8 +99,8 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
             while (rs.next()) {
                 ItemFactura item = new ItemFactura(
                         rs.getInt("id"),
-                        new Facturas(rs.getInt("factura_id"), null, null, 0.0, null),
-                        new ProductoTipo(rs.getInt("producto_id"), null),
+                        rs.getInt("factura_id"),
+                        rs.getInt("producto_id"),
                         rs.getString("servicio_descripcion"),
                         rs.getInt("cantidad"),
                         rs.getInt("precio_unitario"),
@@ -117,8 +118,8 @@ public class ItemFacturaDAO implements IItemFacturaDAO {
     public void actualizar(ItemFactura item) {
         String sql = "UPDATE items_factura SET factura_id = ?, producto_id = ?, servicio_descripcion = ?, cantidad = ?, precio_unitario = ?, subtotal = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, item.getFactura_id().getId());
-            pstmt.setInt(2, item.getProducto_id() != null ? item.getProducto_id().getId() : null);
+            pstmt.setInt(1, item.getFactura_id());
+            pstmt.setInt(2, item.getProducto_id() != null ? item.getProducto_id() : null);
             pstmt.setString(3, item.getServicio_descripcion());
             pstmt.setInt(4, item.getCantidad());
             pstmt.setInt(5, item.getPrecio_unitario());

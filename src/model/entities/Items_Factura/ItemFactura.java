@@ -4,14 +4,14 @@ import model.entities.Inventario.ProductoTipo;
 
 public class ItemFactura {
     private Integer id;
-    private Facturas factura_id;
-    private ProductoTipo producto_id;
+    private Integer factura_id;
+    private Integer producto_id;
     private String servicio_descripcion;
     private Integer cantidad;
     private Integer precio_unitario;
     private Integer subtotal;
 
-    public ItemFactura(Integer id, Facturas factura_id, ProductoTipo producto_id, String servicio_descripcion, Integer cantidad, Integer precio_unitario, Integer subtotal) {
+    public ItemFactura(Integer id, Integer factura_id, Integer producto_id, String servicio_descripcion, Integer cantidad, Integer precio_unitario, Integer subtotal) {
         this.id = id;
         this.factura_id = factura_id;
         this.producto_id = producto_id;
@@ -27,19 +27,19 @@ public class ItemFactura {
 
     public void setId(Integer id) {this.id = id;}
 
-    public Facturas getFactura_id() {
+    public Integer getFactura_id() {
         return factura_id;
     }
 
-    public void setFactura_id(Facturas factura_id) {
+    public void setFactura_id(Integer factura_id) {
         this.factura_id = factura_id;
     }
 
-    public ProductoTipo getProducto_id() {
+    public Integer getProducto_id() {
         return producto_id;
     }
 
-    public void setProducto_id(ProductoTipo producto_id) {
+    public void setProducto_id(Integer producto_id) {
         this.producto_id = producto_id;
     }
 

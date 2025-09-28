@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 public class Facturas {
     private Integer id;
-    private Dueno dueno_id;
+    private Integer dueno_id;
     private LocalDateTime fecha_emision;
     private Double total;
     private String metodo_pago;
 
-    public Facturas(Integer id, Dueno dueno_id, LocalDateTime fecha_emision, Double total, String metodo_pago) {
+    public Facturas(Integer id, Integer dueno_id, LocalDateTime fecha_emision, Double total, String metodo_pago) {
         this.id = id;
         this.dueno_id = dueno_id;
         this.fecha_emision = fecha_emision;
@@ -25,13 +25,11 @@ public class Facturas {
         return id;
     }
 
-    public void setId(Integer id) {this.id = id;}
-
-    public Dueno getDueno_id() {
+    public Integer getDueno_id() {
         return dueno_id;
     }
 
-    public void setDueno_id(Dueno dueno_id) {
+    public void setDueno_id(Integer dueno_id) {
         this.dueno_id = dueno_id;
     }
 

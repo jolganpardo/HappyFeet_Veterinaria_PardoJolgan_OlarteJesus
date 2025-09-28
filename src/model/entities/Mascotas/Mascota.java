@@ -6,16 +6,16 @@ import java.time.LocalDate;
 
 public class Mascota {
     private Integer id;
-    private Dueno duenos_id;
+    private Integer duenos_id;
     private String nombre;
-    private Raza raza_id;
+    private Integer raza_id;
     private LocalDate fecha_nacimiento;
     private String sexo; // "Macho" o "Hembra"
     private String url_foto;
     private String microchip;
     private String estado; // "Activo" o "Inactivo"
 
-    public Mascota(Integer id, Dueno duenos_id, String nombre, Raza raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto, String microchip, String estado) {
+    public Mascota(Integer id, Integer duenos_id, String nombre, Integer raza_id, LocalDate fecha_nacimiento, String sexo, String url_foto, String microchip, String estado) {
         this.id = id;
         this.duenos_id = duenos_id;
         this.nombre = nombre;
@@ -31,11 +31,11 @@ public class Mascota {
         return id;
     }
 
-    public Dueno getDuenos_id() {
+    public Integer getDuenos_id() {
         return duenos_id;
     }
 
-    public void setDuenos_id(Dueno duenos_id) {
+    public void setDuenos_id(Integer duenos_id) {
         this.duenos_id = duenos_id;
     }
 
@@ -47,11 +47,11 @@ public class Mascota {
         this.nombre = nombre;
     }
 
-    public Raza getRaza_id() {
+    public Integer getRaza_id() {
         return raza_id;
     }
 
-    public void setRaza_id(Raza raza_id) {
+    public void setRaza_id(Integer raza_id) {
         this.raza_id = raza_id;
     }
 
@@ -79,7 +79,7 @@ public class Mascota {
         this.url_foto = url_foto;
     }
 
-    public Integer getDueno_id() {return  duenos_id.getId();}
+    public Integer getDueno_id() {return  duenos_id;}
 
     public String getUrl_image() {return  url_foto;}
 

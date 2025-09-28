@@ -12,5 +12,4 @@ public interface  IMascotasDAO {
     void cambiarEstadoMascota(Integer id);
     List<Mascota> obtenerPorDuenoId(Integer duenoId);
     List<Mascota> obtenerPorRazaId(Integer razaId);
-    // List<Mascotas> obtenerPorEspecieId(Integer especieId);
 }

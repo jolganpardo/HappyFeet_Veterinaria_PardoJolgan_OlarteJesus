@@ -19,7 +19,7 @@ public class FacturaDAO implements IFacturaDAO {
     public void insertar(Facturas factura) {
         String sql = "INSERT INTO factura (dueno_id, fecha_emision, total, metodo_pago) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, factura.getDueno_id().getId());
+            pstmt.setInt(1, factura.getDueno_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(factura.getFecha_emision()));
             pstmt.setDouble(3, factura.getTotal());
             pstmt.setString(4, factura.getMetodo_pago());
@@ -27,13 +27,15 @@ public class FacturaDAO implements IFacturaDAO {
 
             try (ResultSet keys = pstmt.getGeneratedKeys()) {
                 if (keys.next()) {
-                    factura.setId(keys.getInt(1));
+                    int idGenerado = keys.getInt(1);
+                    System.out.println("Factura insertada con ID: " + idGenerado);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar factura", e);
         }
     }
+
 
     @Override
     public Facturas obtenerPorId(Integer id) {
@@ -45,7 +47,7 @@ public class FacturaDAO implements IFacturaDAO {
                 if (rs.next()) {
                     factura = new Facturas(
                             rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                            rs.getInt("dueno_id"),
                             rs.getTimestamp("fecha_emision").toLocalDateTime(),
                             rs.getDouble("total"),
                             rs.getString("metodo_pago")
@@ -58,6 +60,7 @@ public class FacturaDAO implements IFacturaDAO {
         return factura;
     }
 
+
     @Override
     public List<Facturas> obtenerTodas() {
         List<Facturas> facturas = new ArrayList<>();
@@ -67,7 +70,7 @@ public class FacturaDAO implements IFacturaDAO {
             while (rs.next()) {
                 Facturas factura = new Facturas(
                         rs.getInt("id"),
-                        new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                        rs.getInt("dueno_id"),
                         rs.getTimestamp("fecha_emision").toLocalDateTime(),
                         rs.getDouble("total"),
                         rs.getString("metodo_pago")
@@ -80,11 +83,12 @@ public class FacturaDAO implements IFacturaDAO {
         return facturas;
     }
 
+
     @Override
     public void actualizar(Facturas factura) {
         String sql = "UPDATE factura SET dueno_id = ?, fecha_emision = ?, total = ?, metodo_pago = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, factura.getDueno_id().getId());
+            pstmt.setInt(1, factura.getDueno_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(factura.getFecha_emision()));
             pstmt.setDouble(3, factura.getTotal());
             pstmt.setString(4, factura.getMetodo_pago());

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public class Inventario {
     private Integer id;
     private String nombre_producto;
-    private ProductoTipo producto_tipo_id;
+    private Integer producto_tipo_id;
     private String descripcion;
     private String fabricante;
     private String lote;
@@ -14,10 +14,10 @@ public class Inventario {
     private Integer stock_minimo;
     private LocalDate fecha_vencimiento;
     private Double precio_venta;
-    private Proveedor proveedor_id;
+    private Integer proveedor_id;
     private LocalDate fecha_ultima_compra;
 
-    public Inventario(Integer id, String nombre_producto, ProductoTipo producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Double precio_venta, Proveedor proveedor_id, LocalDate fecha_ultima_compra) {
+    public Inventario(Integer id, String nombre_producto, Integer producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Double precio_venta, Integer proveedor_id, LocalDate fecha_ultima_compra) {
         this.id = id;
         this.nombre_producto = nombre_producto;
         this.producto_tipo_id = producto_tipo_id;
@@ -44,11 +44,11 @@ public class Inventario {
         this.nombre_producto = nombre_producto;
     }
 
-    public ProductoTipo getProducto_tipo_id() {
+    public Integer getProducto_tipo_id() {
         return producto_tipo_id;
     }
 
-    public void setProducto_tipo_id(ProductoTipo producto_tipo_id) {
+    public void setProducto_tipo_id(Integer producto_tipo_id) {
         this.producto_tipo_id = producto_tipo_id;
     }
 
@@ -108,11 +108,11 @@ public class Inventario {
         this.precio_venta = precio_venta;
     }
 
-    public Proveedor getProveedor_id() {
+    public Integer getProveedor_id() {
         return proveedor_id;
     }
 
-    public void setProveedor_id(Proveedor proveedor_id) {
+    public void setProveedor_id(Integer proveedor_id) {
         this.proveedor_id = proveedor_id;
     }
 
@@ -137,7 +137,7 @@ public class Inventario {
                 ", stock_minimo=" + stock_minimo +
                 ", fecha_vencimiento=" + fecha_vencimiento +
                 ", precio_venta=" + precio_venta +
-                ", proveedores_id=" + proveedor_id +
+                ", proveedor_id=" + proveedor_id +
                 ", fecha_ultima_compra=" + fecha_ultima_compra +
                 '}';
     }

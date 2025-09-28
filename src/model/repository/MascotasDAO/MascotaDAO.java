@@ -20,7 +20,7 @@ public class MascotaDAO implements IMascotasDAO {
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
             pstmt.setString(2, mascota.getNombre());
-            pstmt.setInt(3, mascota.getRaza_id().getId());
+            pstmt.setInt(3, mascota.getRaza_id());
             pstmt.setDate(4, java.sql.Date.valueOf(mascota.getFecha_nacimiento()));
             pstmt.setString(5, mascota.getSexo());
             pstmt.setString(6, mascota.getUrl_image());
@@ -39,26 +39,31 @@ public class MascotaDAO implements IMascotasDAO {
         String sql = "SELECT * FROM mascota WHERE id = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-
             pstmt.setInt(1, id);
+
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    mascota = new Mascota(rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                if (rs.next()) {
+                    mascota = new Mascota(
+                            rs.getInt("id"),
+                            rs.getInt("dueno_id"),
                             rs.getString("nombre"),
-                            new Raza(rs.getInt("raza_id"), null, null),
-                            rs.getDate("fecha_nacimiento").toLocalDate(),
+                            rs.getInt("raza_id"),
+                            rs.getDate("fecha_nacimiento") != null ?
+                                    rs.getDate("fecha_nacimiento").toLocalDate() : null,
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
                             rs.getString("microchip"),
-                            rs.getString("estado"));
+                            rs.getString("estado")
+                    );
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al consultar la mascota con ID = " + id + "\n" + e);
+            throw new RuntimeException("Error al consultar la mascota con ID = " + id, e);
         }
+
         return mascota;
     }
+
 
     @Override
     public List<Mascota> obtenerTodos() {
@@ -66,24 +71,31 @@ public class MascotaDAO implements IMascotasDAO {
         String sql = "SELECT * FROM mascota";
 
         try (Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
-                Mascota mascota = new Mascota(rs.getInt("id"),
-                        new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                Mascota mascota = new Mascota(
+                        rs.getInt("id"),
+                        rs.getInt("dueno_id"),
                         rs.getString("nombre"),
-                        new Raza(rs.getInt("raza_id"), null, null),
-                        rs.getDate("fecha_nacimiento").toLocalDate(),
+                        rs.getInt("raza_id"),
+                        rs.getDate("fecha_nacimiento") != null ?
+                                rs.getDate("fecha_nacimiento").toLocalDate() : null,
                         rs.getString("sexo"),
                         rs.getString("url_foto"),
                         rs.getString("microchip"),
-                        rs.getString("estado"));
+                        rs.getString("estado")
+                );
                 lst.add(mascota);
             }
-        } catch(SQLException e) {
-            throw new RuntimeException("Error al consultar todas las mascotas" + "\n" + e.getMessage());
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al consultar todas las mascotas", e);
         }
+
         return lst;
     }
+
 
     @Override
     public void actualizarMascota(Mascota mascota) {
@@ -92,7 +104,7 @@ public class MascotaDAO implements IMascotasDAO {
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, mascota.getDueno_id());
             pstmt.setString(2, mascota.getNombre());
-            pstmt.setInt(3, mascota.getRaza_id().getId());
+            pstmt.setInt(3, mascota.getRaza_id());
             pstmt.setDate(4, java.sql.Date.valueOf(mascota.getFecha_nacimiento()));
             pstmt.setString(5, mascota.getSexo());
             pstmt.setString(6, mascota.getUrl_image());
@@ -130,9 +142,9 @@ public class MascotaDAO implements IMascotasDAO {
 
                 while (rs.next()) {
                     Mascota mascota = new Mascota(rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                            rs.getInt("dueno_id"),
                             rs.getString("nombre"),
-                            new Raza(rs.getInt("raza_id"), null, null),
+                            rs.getInt("raza_id"),
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
@@ -160,9 +172,9 @@ public class MascotaDAO implements IMascotasDAO {
 
                 while (rs.next()) {
                     Mascota mascota = new Mascota(rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                            rs.getInt("dueno_id"),
                             rs.getString("nombre"),
-                            new Raza(rs.getInt("raza_id"), null, null),
+                            rs.getInt("raza_id"),
                             rs.getDate("fecha_nacimiento").toLocalDate(),
                             rs.getString("sexo"),
                             rs.getString("url_foto"),
@@ -177,37 +189,4 @@ public class MascotaDAO implements IMascotasDAO {
         }
         return lst;
     }
-
-    // Borrador de obtenerPorEspecieId
-    /*
-    @Override
-    public List<Mascotas> obtenerPorEspecieId(Integer especieId) {
-        List<Mascotas> lst = new ArrayList<>();
-        String sql = "SELECT * FROM mascota WHERE especie_id = ?";
-
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-
-            pstmt.setInt(1, especieId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-
-                while (rs.next()) {
-                    Mascotas mascota = new Mascotas(rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
-                            rs.getString("nombre"),
-                            new Razas(rs.getInt("raza_id"), null, null),
-                            rs.getDate("fecha_nacimiento").toLocalDate(),
-                            rs.getString("sexo"),
-                            rs.getString("url_foto"),
-                            rs.getString("microchip"),
-                            rs.getString("estado"));
-                    lst.add(mascota);
-
-                }
-            }
-        } catch(SQLException e) {
-            throw new RuntimeException("Error al consultar las mascotas de la especie ID " + especieId + "\n" + e);
-        }
-        return lst;
-    }
-     */
 }

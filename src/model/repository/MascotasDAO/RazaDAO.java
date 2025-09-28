@@ -17,7 +17,7 @@ public class RazaDAO implements IRazasDAO {
         String sql = "INSERT INTO raza (especie_id, nombre) VALUES (?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, raza.getEspecie_id().getId());
+            pstmt.setInt(1, raza.getEspecie_id());
             pstmt.setString(2, raza.getNombre());
             pstmt.executeUpdate();
 
@@ -69,7 +69,7 @@ public class RazaDAO implements IRazasDAO {
 
                 while (rs.next()) {
                     raza = new Raza(rs.getInt("id"),
-                            new Especie(rs.getInt("especie_id"), null),
+                            rs.getInt("especie_id"),
                             rs.getString("nombre"));
 
                 }
@@ -89,7 +89,7 @@ public class RazaDAO implements IRazasDAO {
             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Raza raza = new Raza(rs.getInt("id"),
-                        new Especie(rs.getInt("especie_id"), null),
+                        rs.getInt("especie_id"),
                         rs.getString("nombre"));
                 lst.add(raza);
 
@@ -111,7 +111,7 @@ public class RazaDAO implements IRazasDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Raza raza = new Raza(rs.getInt("id"),
-                            new Especie(rs.getInt("especie_id"), null),
+                            rs.getInt("especie_id"),
                             rs.getString("nombre"));
                     lst.add(raza);
 
