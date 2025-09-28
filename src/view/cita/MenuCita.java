@@ -57,6 +57,5 @@ public class MenuCita {
                     System.out.println("Opcion no valida.");
             }
         }while (opcion != 0);
-        input.close();
     }
 }

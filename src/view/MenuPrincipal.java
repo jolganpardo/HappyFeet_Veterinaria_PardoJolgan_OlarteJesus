@@ -2,6 +2,7 @@ package view;
 
 import view.cita.MenuCita;
 import view.dueno.MenuDueno;
+import view.mascota.MenuMascota;
 import view.proveedor.MenuProveedor;
 import view.veterinario.MenuVeterinario;
 
@@ -29,8 +30,7 @@ public class MenuPrincipal {
                     6. Gestionar Facturación
                     7. Gestionar Proveedores
                     0. Salir
-                    >>Ingrese su opcion: 
-                    """);
+                    >>Ingrese su opcion:""");
 
             opcion = scanner.nextInt();
             scanner.nextLine();
@@ -41,6 +41,8 @@ public class MenuPrincipal {
                     menuDueno.mostrarMenuDueno();
                     break;
                 case 2:
+                    MenuMascota menuMascota = new MenuMascota();
+                    menuMascota.mostrarMenuMascota();
                     break;
                 case 3:
                     MenuCita menuCita = new MenuCita();

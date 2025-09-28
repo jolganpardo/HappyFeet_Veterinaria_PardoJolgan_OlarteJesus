@@ -31,7 +31,7 @@ public class CitaController {
             System.out.print("Motivo: ");
             String motivo = input.nextLine();
 
-            System.out.print("ID del estado (ej: 1=Pendiente, 2=Confirmada, 3=Cancelada): ");
+            System.out.print("ID del estado (ej: 1=Programada, 2=En Proceso, 3=Finalizada 4=Cancelada, 5=No Asistió): ");
             Integer estadoId = input.nextInt();
             input.nextLine();
 
