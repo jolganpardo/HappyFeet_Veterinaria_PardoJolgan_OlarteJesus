@@ -12,17 +12,15 @@ public class InventarioController {
         this.inventarioDAO = new InventarioDAO();
     }
 
-    // Crear
     public void agregarInventario(Inventario inventario) {
         try {
             inventarioDAO.insertar(inventario);
-            System.out.println("✅ Producto agregado al inventario correctamente.");
+            System.out.println("Producto agregado al inventario correctamente.");
         } catch (Exception e) {
-            System.out.println("❌ Error al agregar producto: " + e.getMessage());
+            System.out.println("Error al agregar producto: " + e.getMessage());
         }
     }
 
-    // Leer por ID
     public Inventario obtenerInventarioPorId(int id) {
         Inventario inventario = inventarioDAO.obtenerPorId(id);
         if (inventario != null) {
@@ -33,18 +31,16 @@ public class InventarioController {
         return inventario;
     }
 
-    // Leer todos
     public List<Inventario> obtenerTodos() {
         List<Inventario> inventarios = inventarioDAO.obtenerTodos();
         if (inventarios.isEmpty()) {
-            System.out.println("⚠️ No hay productos en el inventario.");
+            System.out.println("No hay productos en el inventario.");
         } else {
             inventarios.forEach(System.out::println);
         }
         return inventarios;
     }
 
-    // Actualizar
     public void actualizarInventario(Inventario inventario) {
         try {
             inventarioDAO.actualizar(inventario);
@@ -54,7 +50,6 @@ public class InventarioController {
         }
     }
 
-    // Eliminar
     public void eliminarInventario(int id) {
         try {
             inventarioDAO.eliminar(id);
@@ -64,23 +59,18 @@ public class InventarioController {
         }
     }
 
-    // === MÉTODOS EXTRA ÚTILES ===
-
-    // Buscar productos por tipo
     public List<Inventario> obtenerPorTipoProducto(int tipoId) {
         return inventarioDAO.obtenerTodos().stream()
                 .filter(inv -> inv.getProducto_tipo_id().equals(tipoId))
                 .toList();
     }
 
-    // Buscar productos por proveedor
     public List<Inventario> obtenerPorProveedor(int proveedorId) {
         return inventarioDAO.obtenerTodos().stream()
                 .filter(inv -> inv.getProveedor_id().equals(proveedorId))
                 .toList();
     }
 
-    // Mostrar productos por debajo del stock mínimo
     public List<Inventario> obtenerProductosBajoStock() {
         return inventarioDAO.obtenerTodos().stream()
                 .filter(inv -> inv.getCantidad_stock() < inv.getStock_minimo())
