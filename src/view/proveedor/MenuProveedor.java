@@ -25,8 +25,8 @@ public class MenuProveedor {
             System.out.print("""
                 \n=== MENU PROVEEDOR ===
                 1. Agregar proveedor
-                2. Actualizar proveedor
-                3. Eliminar proveedor
+                2. Actualizar proveedor por ID
+                3. Eliminar proveedor por ID
                 4. Buscar proveedor por ID
                 5. Listar todos los proveedores
                 0. Salir del menu de proveedores

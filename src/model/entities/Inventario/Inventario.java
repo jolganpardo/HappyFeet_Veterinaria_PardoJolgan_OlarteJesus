@@ -15,9 +15,8 @@ public class Inventario {
     private LocalDate fecha_vencimiento;
     private Double precio_venta;
     private Integer proveedor_id;
-    private LocalDate fecha_ultima_compra;
 
-    public Inventario(Integer id, String nombre_producto, Integer producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Double precio_venta, Integer proveedor_id, LocalDate fecha_ultima_compra) {
+    public Inventario(Integer id, String nombre_producto, Integer producto_tipo_id, String descripcion, String fabricante, String lote, Integer cantidad_stock, Integer stock_minimo, LocalDate fecha_vencimiento, Double precio_venta, Integer proveedor_id) {
         this.id = id;
         this.nombre_producto = nombre_producto;
         this.producto_tipo_id = producto_tipo_id;
@@ -29,7 +28,6 @@ public class Inventario {
         this.fecha_vencimiento = fecha_vencimiento;
         this.precio_venta = precio_venta;
         this.proveedor_id = proveedor_id;
-        this.fecha_ultima_compra = fecha_ultima_compra;
     }
 
     public Integer getId() {
@@ -116,13 +114,6 @@ public class Inventario {
         this.proveedor_id = proveedor_id;
     }
 
-    public LocalDate getFecha_ultima_compra() {
-        return fecha_ultima_compra;
-    }
-
-    public void setFecha_ultima_compra(LocalDate fecha_ultima_compra) {
-        this.fecha_ultima_compra = fecha_ultima_compra;
-    }
 
     @Override
     public String toString() {
@@ -138,7 +129,6 @@ public class Inventario {
                 ", fecha_vencimiento=" + fecha_vencimiento +
                 ", precio_venta=" + precio_venta +
                 ", proveedor_id=" + proveedor_id +
-                ", fecha_ultima_compra=" + fecha_ultima_compra +
                 '}';
     }
 }

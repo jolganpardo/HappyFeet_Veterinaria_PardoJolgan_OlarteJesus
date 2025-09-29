@@ -5,7 +5,7 @@ import view.MenuPrincipal;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //Comprueba la conexion a la base de datos
+        //Comprueba la conexion a la base de datosdog chow
         ConexionSingleton conn = ConexionSingleton.getInstance();
 
         MenuPrincipal menuPrincipal = new MenuPrincipal();

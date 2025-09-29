@@ -44,7 +44,7 @@ public class MenuInventario {
                 case 7 -> buscarPorProveedor();
                 case 8 -> buscarPorTipo();
                 case 0 -> System.out.println("Saliendo del menú de Inventario...");
-                default -> System.out.println("⚠️ Opción no válida, intente nuevamente.");
+                default -> System.out.println("Opción no válida, intente nuevamente.");
             }
         } while (opcion != 0);
     }
@@ -55,7 +55,7 @@ public class MenuInventario {
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
 
-        System.out.print("Tipo de producto (ID): ");
+        System.out.print("Tipo de producto (ID): 1=Medicamento, 2=Vacuna, 3=Insumo Médico, 4=Alimento, 5=Otro");
         int tipoId = scanner.nextInt(); scanner.nextLine();
 
         System.out.print("Descripción: ");
@@ -83,12 +83,9 @@ public class MenuInventario {
         System.out.print("Proveedor (ID): ");
         int proveedorId = scanner.nextInt(); scanner.nextLine();
 
-        System.out.print("Fecha de última compra (YYYY-MM-DD o enter): ");
-        String fechaCompraStr = scanner.nextLine();
-        LocalDate fechaCompra = fechaCompraStr.isEmpty() ? null : LocalDate.parse(fechaCompraStr);
 
         Inventario inv = new Inventario(null, nombre, tipoId, descripcion, fabricante, lote,
-                cantidad, minimo, fechaVenc, precio, proveedorId, fechaCompra);
+                cantidad, minimo, fechaVenc, precio, proveedorId);
 
         controller.agregarInventario(inv);
     }

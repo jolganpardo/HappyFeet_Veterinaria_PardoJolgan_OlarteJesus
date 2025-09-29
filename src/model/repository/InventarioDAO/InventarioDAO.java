@@ -20,7 +20,7 @@ public class InventarioDAO implements IInventarioDAO {
     public void insertar(Inventario inventario) {
         String sql = "INSERT INTO inventario (nombre_producto, producto_tipo_id, descripcion," +
                 " fabricante, lote, cantidad_stock, stock_minimo, fecha_vencimiento, precio_venta," +
-                " proveedor_id, fecha_ultima_compra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " proveedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, inventario.getNombre_producto());
             pstmt.setInt(2, inventario.getProducto_tipo_id());
@@ -32,7 +32,6 @@ public class InventarioDAO implements IInventarioDAO {
             pstmt.setDate(8, inventario.getFecha_vencimiento() != null ? Date.valueOf(inventario.getFecha_vencimiento()) : null);
             pstmt.setDouble(9, inventario.getPrecio_venta());
             pstmt.setInt(10, inventario.getProveedor_id());
-            pstmt.setDate(11, inventario.getFecha_ultima_compra() != null ? Date.valueOf(inventario.getFecha_ultima_compra()) : null);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar producto en inventario", e);
@@ -58,8 +57,7 @@ public class InventarioDAO implements IInventarioDAO {
                             rs.getInt("stock_minimo"),
                             rs.getDate("fecha_vencimiento") != null ? rs.getDate("fecha_vencimiento").toLocalDate() : null,
                             rs.getDouble("precio_venta"),
-                            rs.getInt("proveedor_id"),
-                            rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null);
+                            rs.getInt("proveedor_id"));
                 }
             }
         } catch (SQLException e) {
@@ -88,8 +86,7 @@ public class InventarioDAO implements IInventarioDAO {
                         rs.getInt("stock_minimo"),
                         rs.getDate("fecha_vencimiento") != null ? rs.getDate("fecha_vencimiento").toLocalDate() : null,
                         rs.getDouble("precio_venta"),
-                        rs.getInt("proveedor_id"),
-                        rs.getDate("fecha_ultima_compra") != null ? rs.getDate("fecha_ultima_compra").toLocalDate() : null);
+                        rs.getInt("proveedor_id"));
                 inventarios.add(inventario);
             }
 
@@ -100,12 +97,11 @@ public class InventarioDAO implements IInventarioDAO {
         return inventarios;
     }
 
-
     @Override
     public void actualizar(Inventario inventario) {
         String sql = "UPDATE inventario SET nombre_producto = ?, producto_tipo_id = ?, descripcion = ?," +
                 " fabricante = ?, lote = ?, cantidad_stock = ?, stock_minimo = ?, fecha_vencimiento = ?," +
-                " precio_venta = ?, proveedor_id = ?, fecha_ultima_compra = ? WHERE id = ?";
+                " precio_venta = ?, proveedor_id = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, inventario.getNombre_producto());
             pstmt.setInt(2, inventario.getProducto_tipo_id());
@@ -117,8 +113,7 @@ public class InventarioDAO implements IInventarioDAO {
             pstmt.setDate(8, inventario.getFecha_vencimiento() != null ? Date.valueOf(inventario.getFecha_vencimiento()) : null);
             pstmt.setDouble(9, inventario.getPrecio_venta());
             pstmt.setInt(10, inventario.getProveedor_id());
-            pstmt.setDate(11, inventario.getFecha_ultima_compra() != null ? Date.valueOf(inventario.getFecha_ultima_compra()) : null);
-            pstmt.setInt(12, inventario.getId());
+            pstmt.setInt(11, inventario.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error al actualizar inventario con ID " + inventario.getId(), e);
