@@ -1,7 +1,6 @@
 package controller.citaController;
 
 import model.entities.Citas.Cita;
-import model.entities.Duenos.Dueno;
 import model.repository.CitasDAO.ICitaDAO;
 
 import java.time.LocalDateTime;
@@ -18,6 +17,16 @@ public class CitaController {
         this.input = input;
     }
 
+    private boolean existeCitaConVeterinarioEnFecha(Integer veterinarioId, LocalDateTime fechaHora) {
+        List<Cita> citasVet = citaDAO.obtenerPorVeterinarioId(veterinarioId);
+        for (Cita c : citasVet) {
+            if (c.getFecha_hora().equals(fechaHora)) {
+                return true; // choque de agenda
+            }
+        }
+        return false;
+    }
+
     public void agregarCita() {
         try {
             System.out.print("ID de la mascota: ");
@@ -31,18 +40,24 @@ public class CitaController {
             System.out.print("Motivo: ");
             String motivo = input.nextLine();
 
-            System.out.print("ID del estado (ej: 1=Programada, 2=En Proceso, 3=Finalizada 4=Cancelada, 5=No Asistió): ");
+            System.out.print("ID del estado (ej: 1=Programada, 2=En Proceso, 3=Finalizada, 4=Cancelada, 5=No Asistió): ");
             Integer estadoId = input.nextInt();
             input.nextLine();
 
             System.out.print("ID del veterinario: ");
             Integer veterinarioId = input.nextInt();
+            input.nextLine();
+
+            if (existeCitaConVeterinarioEnFecha(veterinarioId, fechaHora)) {
+                System.out.println("⚠️ Error: El veterinario ya tiene una cita en esa fecha y hora.");
+                return;
+            }
 
             Cita nueva = new Cita(null, mascotaId, fechaHora, motivo, estadoId, veterinarioId);
             citaDAO.agregarCita(nueva);
-            System.out.println("Cita agregada con éxito.");
+            System.out.println("✅ Cita agregada con éxito.");
         } catch (Exception e) {
-            System.out.println("Error al agregar cita: " + e.getMessage());
+            System.out.println("❌ Error al agregar cita: " + e.getMessage());
         }
     }
 
@@ -52,17 +67,21 @@ public class CitaController {
         input.nextLine();
         Cita cita = citaDAO.obtenerPorId(id);
         if (cita != null) {
-            System.out.println("🔎Cita encontrada: " + cita);
+            System.out.println("🔎 Cita encontrada: " + cita);
         } else {
-            System.out.println("No existe cita con ese ID.");
+            System.out.println("⚠️ No existe cita con ese ID.");
         }
     }
 
     public void listarCitas() {
         List<Cita> citas = citaDAO.obtenerTodos();
-        System.out.println("\n📋 Lista de citas:");
-        for (Cita c : citas) {
-            System.out.println(c);
+        if (citas.isEmpty()) {
+            System.out.println("📭 No hay citas registradas.");
+        } else {
+            System.out.println("\n📋 Lista de citas:");
+            for (Cita c : citas) {
+                System.out.println(c);
+            }
         }
     }
 
@@ -79,17 +98,23 @@ public class CitaController {
             System.out.print("Nueva fecha y hora (yyyy-MM-dd HH:mm) (" + cita.getFecha_hora() + "): ");
             String nuevaFecha = input.nextLine();
             if (!nuevaFecha.isEmpty()) {
-                cita.setFecha_hora(LocalDateTime.parse(nuevaFecha, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                LocalDateTime nuevaFechaHora = LocalDateTime.parse(nuevaFecha, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+                if (existeCitaConVeterinarioEnFecha(cita.getVeterianrio_id(), nuevaFechaHora)) {
+                    System.out.println("⚠️ Error: El veterinario ya tiene una cita en esa fecha y hora.");
+                    return;
+                }
+                cita.setFecha_hora(nuevaFechaHora);
             }
 
             System.out.print("Nuevo estado ID (" + cita.getEstado_id() + "): ");
             String nuevoEstado = input.nextLine();
             if (!nuevoEstado.isEmpty()) cita.setEstado_id(Integer.parseInt(nuevoEstado));
 
-            citaDAO.actualizarCita(cita);
-            System.out.println("Cita actualizada con éxito.");
+            citaDAO.actualizarCita(cita); // tu DAO es void
+            System.out.println("✅ Cita actualizada con éxito.");
         } else {
-            System.out.println("No existe cita con ese ID.");
+            System.out.println("⚠️ No existe cita con ese ID.");
         }
     }
 
@@ -99,10 +124,10 @@ public class CitaController {
         input.nextLine();
         Cita cita = citaDAO.obtenerPorId(id);
         if (cita != null) {
-            citaDAO.cancelarCita(id);
-            System.out.println("🛑Cita cancelada con éxito.");
+            citaDAO.cancelarCita(id); // tu DAO es void
+            System.out.println("🛑 Cita cancelada con éxito.");
         } else {
-            System.out.println("No existe cita con ese ID.");
+            System.out.println("⚠️ No existe cita con ese ID.");
         }
     }
 
@@ -111,9 +136,13 @@ public class CitaController {
         int mascotaId = input.nextInt();
         input.nextLine();
         List<Cita> citas = citaDAO.obtenerPorMascotaId(mascotaId);
-        System.out.println("\n📋 Citas de la mascota:");
-        for (Cita c : citas) {
-            System.out.println(c);
+        if (citas.isEmpty()) {
+            System.out.println("📭 No hay citas para esta mascota.");
+        } else {
+            System.out.println("\n📋 Citas de la mascota:");
+            for (Cita c : citas) {
+                System.out.println(c);
+            }
         }
     }
 
@@ -122,9 +151,13 @@ public class CitaController {
         int vetId = input.nextInt();
         input.nextLine();
         List<Cita> citas = citaDAO.obtenerPorVeterinarioId(vetId);
-        System.out.println("\n📋 Citas del veterinario:");
-        for (Cita c : citas) {
-            System.out.println(c);
+        if (citas.isEmpty()) {
+            System.out.println("📭 No hay citas para este veterinario.");
+        } else {
+            System.out.println("\n📋 Citas del veterinario:");
+            for (Cita c : citas) {
+                System.out.println(c);
+            }
         }
     }
 }

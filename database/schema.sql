@@ -1,5 +1,8 @@
 drop database if exists Happy_Feet;
 create database if not exists Happy_Feet;
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 USE Happy_Feet;
 
 -- ========================

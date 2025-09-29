@@ -29,6 +29,7 @@ public class MenuMascota {
                     5. Cambiar estado de la mascota (Activa, Inactiva).
                     6. Mascota por ID del dueño.
                     7. Mostrar mascota por raza.
+                    8. Mostrar mascota por especie.
                     >>> Ingrese la opcion:""");
             opcion = input.nextInt();
             input.nextLine();
@@ -50,10 +51,13 @@ public class MenuMascota {
                     mascotaController.cambiarEstadoMascota();
                     break;
                 case 6:
-                    mascotaController.obtenerPorDuenoId();
+                    mascotaController.obtenerPorDuenoDocumento();
                     break;
                 case 7:
                     mascotaController.obtenerPorRazaId();
+                    break;
+                case 8:
+                    mascotaController.obtenerPorEspecieId();
                     break;
                 case 0:
                     System.out.println("Saliendo... del menu de mascotas..");
