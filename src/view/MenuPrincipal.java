@@ -2,6 +2,7 @@ package view;
 
 import view.cita.MenuCita;
 import view.dueno.MenuDueno;
+import view.inventario.MenuInventario;
 import view.mascota.MenuMascota;
 import view.proveedor.MenuProveedor;
 import view.veterinario.MenuVeterinario;
@@ -53,6 +54,8 @@ public class MenuPrincipal {
                     menuVeterinario.mostrarMenuVeterinario();
                     break;
                 case 5:
+                    MenuInventario menuInventario = new MenuInventario();
+                    menuInventario.mostrarMenu();
                     break;
                 case 6:
                     break;
