@@ -41,7 +41,7 @@ public class MenuInventario {
             System.out.print("Seleccione una opción: ");
 
             opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+            scanner.nextLine();
 
             switch (opcion) {
                 case 1 -> agregarProducto();

@@ -1,7 +1,11 @@
 package controller.citaController;
 
 import model.entities.Citas.Cita;
+import model.entities.Citas.CitaEstado;
 import model.entities.Veterinarios.Veterinario;
+import model.repository.CitasDAO.CitaEstadoDAO;
+import model.repository.VeterinariosDAO.IVeterinariosDAO;
+import model.repository.VeterinariosDAO.VeterinarioDAO;
 import service.CitaService;
 
 import java.time.LocalDateTime;
@@ -64,5 +68,44 @@ public class CitaController {
 
     public List<Cita> obtenerCitasPorVeterinario(int vetId) {
         return citaService.obtenerCitasPorVeterinario(vetId);
+    }
+
+    public void imprimirCita(Cita cita) {
+        if (cita == null) {
+            System.out.println("No se encontró la cita.");
+            return;
+        }
+
+        // DAO de veterinarios
+        IVeterinariosDAO veterinarioDAO = new VeterinarioDAO();
+        Veterinario vet = null;
+        if (cita.getVeterinario_id() != null) {
+            vet = veterinarioDAO.buscarPorId(cita.getVeterinario_id());
+        }
+
+        // DAO de estados
+        CitaEstadoDAO estadoDAO = new CitaEstadoDAO();
+        CitaEstado estado = null;
+        if (cita.getEstado_id() != null) {
+            estado = estadoDAO.obtenerPorId(cita.getEstado_id());
+        }
+
+        System.out.println("------ INFORMACION DE LA CITA ------");
+        System.out.println("ID: " + cita.getId());
+        System.out.println("Mascota ID: " + cita.getMascota_id());
+        System.out.println("Fecha y Hora: " + cita.getFecha_hora());
+        System.out.println("Motivo: " + cita.getMotivo());
+        if (estado != null) {
+            System.out.println("Estado: " + estado.getNombre());
+        } else {
+            System.out.println("Estado: No asignado");
+        }
+        System.out.println("Veterinario ID: " + cita.getVeterinario_id());
+        if (vet != null) {
+            System.out.println("Veterinario: " + vet.getNombre_completo());
+        } else {
+            System.out.println("Veterinario: No asignado");
+        }
+        System.out.println("----------------------------------");
     }
 }

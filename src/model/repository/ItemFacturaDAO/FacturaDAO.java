@@ -15,26 +15,25 @@ public class FacturaDAO implements IFacturaDAO {
     }
 
     @Override
-    public void insertar(Factura factura) {
+    public Factura insertar(Factura f) {
         String sql = "INSERT INTO factura (dueno_id, fecha_emision, total, metodo_pago) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, factura.getDueno_id());
-            pstmt.setTimestamp(2, Timestamp.valueOf(factura.getFecha_emision()));
-            pstmt.setDouble(3, factura.getTotal());
-            pstmt.setString(4, factura.getMetodo_pago());
-            pstmt.executeUpdate();
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, f.getDueno_id());
+            ps.setTimestamp(2, Timestamp.valueOf(f.getFecha_emision()));
+            ps.setDouble(3, f.getTotal());
+            ps.setString(4, f.getMetodo_pago());
 
-            try (ResultSet keys = pstmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    int idGenerado = keys.getInt(1);
-                    System.out.println("Factura insertada con ID: " + idGenerado);
-                }
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                f.setId(rs.getInt(1)); // asigna el ID generado al objeto
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar factura", e);
         }
+        return f;
     }
-
 
     @Override
     public Factura obtenerPorId(Integer id) {

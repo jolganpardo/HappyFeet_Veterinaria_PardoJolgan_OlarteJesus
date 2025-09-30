@@ -26,7 +26,7 @@ public class MenuCita {
                     1. Ingresar una cita.
                     2. Obtener cita por ID.
                     3. Mostrar todas las citas.
-                    4. Salir.
+                    0. Volver al menu principal.
                     Selecciona una opción: 
                     """);
             opcion = leerEntero();
@@ -35,10 +35,10 @@ public class MenuCita {
                 case 1 -> agregarCita();
                 case 2 -> buscarPorId();
                 case 3 -> listarCitas();
-                case 4 -> System.out.println("Saliendo del menú de citas...");
+                case 0 -> System.out.println("Saliendo del menú de citas...");
                 default -> System.out.println("Opción no válida.");
             }
-        } while (opcion != 4);
+        } while (opcion != 0);
     }
 
     private void agregarCita() {

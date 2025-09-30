@@ -4,7 +4,7 @@ import model.entities.Items_Factura.Factura;
 import java.util.List;
 
 public interface IFacturaDAO {
-    void insertar(Factura factura);
+    Factura insertar(Factura factura);
     Factura obtenerPorId(Integer id);
     List<Factura> obtenerTodas();
     void actualizar(Factura factura);

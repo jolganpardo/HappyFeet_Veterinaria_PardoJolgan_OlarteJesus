@@ -21,6 +21,10 @@ public class Factura {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getDueno_id() {
         return dueno_id;
     }

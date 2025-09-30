@@ -57,6 +57,31 @@ public class DuenoDAO implements IDuenosDAO {
     }
 
     @Override
+    public Dueno buscarPorId(int id) {
+        Dueno dueno = null;
+
+        String sql = "SELECT * FROM dueno WHERE id = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    dueno = new Dueno(rs.getInt("id"),
+                            rs.getString("nombre_completo"),
+                            rs.getString("documento_identidad"),
+                            rs.getString("direccion"),
+                            rs.getString("telefono"),
+                            rs.getString("email"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al consultar el dueño con ID: " + id + "\n" + e.getMessage());
+        }
+        return dueno;
+    }
+
+    @Override
     public List<Dueno> listarDuenos() {
         List<Dueno> lst = new ArrayList<>();
         String sql = "SELECT * FROM dueno";

@@ -12,8 +12,8 @@ public class FacturaService {
         this.facturaDAO = facturaDAO;
     }
 
-    public void agregarFactura(Factura f) {
-        facturaDAO.insertar(f);
+    public Factura agregarFactura(Factura f) {
+        return facturaDAO.insertar(f);
     }
 
     public void actualizarFactura(Factura f) {

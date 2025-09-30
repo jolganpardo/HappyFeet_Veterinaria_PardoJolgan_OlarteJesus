@@ -1,9 +1,15 @@
 package controller.facturaController;
 
+import model.entities.Duenos.Dueno;
 import model.entities.Items_Factura.Factura;
+import service.DuenoService;
 import service.FacturaService;
 import util.Validaciones;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -12,24 +18,31 @@ import java.util.Scanner;
 
 public class FacturaController {
     private final FacturaService facturaService;
+    private final DuenoService duenoService;
     private final Validaciones validador;
 
-    public FacturaController(FacturaService facturaService, Scanner input) {
+    public FacturaController(FacturaService facturaService, DuenoService duenoService, Scanner input) {
         this.facturaService = facturaService;
+        this.duenoService = duenoService;
         this.validador = new Validaciones(input);
     }
 
-    // ===== Operaciones =====
-
     public void agregarFactura() {
-        int duenoId = validador.leerEnteroPositivo("ID del dueño: ");
-        LocalDateTime fechaEmision = leerFecha("Fecha de emisión (YYYY-MM-DD): ");
+        String documentoDueno = validador.leerTexto("Documento del dueño: ");
+        Dueno dueno = duenoService.buscarPorDocumento(documentoDueno);
+
+        if (dueno == null) {
+            System.out.println("No se encontró dueño con ese documento. No se puede crear la factura.");
+            return;
+        }
+
+        LocalDateTime fechaEmision = fechaActual();
         double total = leerDouble("Total de la factura: ", 0, Double.MAX_VALUE);
         String metodoPago = leerMetodoPago();
 
-        Factura f = new Factura(null, duenoId, fechaEmision, total, metodoPago);
-        facturaService.agregarFactura(f);
-        System.out.println("Factura agregada con éxito.");
+        Factura f = new Factura(null, dueno.getId(), fechaActual(), total, metodoPago);
+        f = facturaService.agregarFactura(f);
+        imprimirFactura(f);
     }
 
     public void actualizarFactura() {
@@ -43,8 +56,12 @@ public class FacturaController {
 
         System.out.println("Deje vacío para mantener el valor actual.");
 
-        String duenoStr = leerLineaOpcional("Nuevo dueño ID (" + f.getDueno_id() + "): ");
-        if (!duenoStr.isEmpty()) f.setDueno_id(Integer.parseInt(duenoStr));
+        String documentoDueno = leerLineaOpcional("Nuevo documento del dueño (" + f.getDueno_id() + "): ");
+        if (!documentoDueno.isEmpty()) {
+            Dueno dueno = duenoService.buscarPorDocumento(documentoDueno);
+            if (dueno != null) f.setDueno_id(dueno.getId());
+            else System.out.println("No se encontró dueño con ese documento. Se mantiene el anterior.");
+        }
 
         String fechaStr = leerLineaOpcional("Nueva fecha (" + f.getFecha_emision().toLocalDate() + "): ");
         if (!fechaStr.isEmpty()) {
@@ -83,19 +100,40 @@ public class FacturaController {
     public void buscarFacturaPorId() {
         int id = validador.leerEnteroPositivo("ID de la factura: ");
         Factura f = facturaService.buscarPorId(id);
-        if (f != null) System.out.println("Factura encontrada: " + f);
+        if (f != null) imprimirFactura(f);
         else System.out.println("No existe factura con ese ID.");
     }
 
     public void listarFacturas() {
         List<Factura> lista = facturaService.listarFacturas();
-        System.out.println("\nLista de facturas:");
+        System.out.println("\n===== LISTA DE FACTURAS =====:");
         for (Factura f : lista) {
-            System.out.println(f);
+            imprimirFactura(f);
         }
     }
 
-    // ===== Métodos privados de validación =====
+    public void imprimirFactura(Factura factura) {
+        if (factura == null) {
+            System.out.println("No se encontró la factura.");
+            return;
+        }
+
+        Dueno dueno = duenoService.buscarPorId(factura.getDueno_id());
+        String nombreDueno = (dueno != null) ? dueno.getNombre_completo() : "Desconocido";
+        String documentoDueno = (dueno != null) ? dueno.getDocumento_identidad() : "Desconocido";
+
+        System.out.println("------ INFORMACION DE LA FACTURA ------");
+        System.out.println("ID: " + factura.getId());
+        System.out.println("Dueño ID: " + factura.getDueno_id());
+        System.out.println("Dueño: " + nombreDueno);
+        System.out.println("Documento: " + documentoDueno);
+        System.out.println("Fecha Emision: " + factura.getFecha_emision().toLocalDate());
+        System.out.println("Total: " + factura.getTotal());
+        System.out.println("Metodo de Pago: " + factura.getMetodo_pago());
+        System.out.println("----------------------------------");
+    }
+
+    // Validaciones específicas
     private LocalDateTime leerFecha(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -132,7 +170,7 @@ public class FacturaController {
                     3. Tarjeta Crédito
                     4. Transferencia
                     5. Cheque
-                    >>> Ingrese método de pago (1-5): 
+                    >>> Ingrese método de pago (1-5):
                     """);
             String opcion = new Scanner(System.in).nextLine().trim();
             switch (opcion) {
@@ -165,5 +203,9 @@ public class FacturaController {
     private String leerLineaOpcional(String mensaje) {
         System.out.print(mensaje);
         return new Scanner(System.in).nextLine().trim();
+    }
+
+    private LocalDateTime fechaActual() {
+        return LocalDateTime.now();
     }
 }

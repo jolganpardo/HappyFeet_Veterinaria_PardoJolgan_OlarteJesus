@@ -29,6 +29,10 @@ public class DuenoService {
         return duenoDAO.buscarPorDocumento(documento);
     }
 
+    public Dueno buscarPorId(int id) {
+        return duenoDAO.buscarPorId(id);
+    }
+
     public List<Dueno> listarDuenos() {
         return duenoDAO.listarDuenos();
     }

@@ -3,6 +3,8 @@ package view.factura;
 import controller.facturaController.FacturaController;
 import model.repository.ItemFacturaDAO.FacturaDAO;
 import model.repository.ItemFacturaDAO.IFacturaDAO;
+import model.repository.duenosDAO.DuenoDAO;
+import service.DuenoService;
 import service.FacturaService;
 
 import java.util.Scanner;
@@ -11,7 +13,8 @@ public class MenuFactura {
     private final Scanner input = new Scanner(System.in);
     private final IFacturaDAO facturaDAO = new FacturaDAO();
     private final FacturaService facturaService = new FacturaService(facturaDAO);
-    private final FacturaController facturaController = new FacturaController(facturaService, input);
+    private final DuenoService duenoService = new DuenoService(new DuenoDAO());
+    private final FacturaController facturaController = new FacturaController(facturaService, duenoService, input);
 
     public void mostrarMenuFactura() {
         int opcion;
