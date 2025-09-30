@@ -2,6 +2,7 @@ package view;
 
 import view.cita.MenuCita;
 import view.dueno.MenuDueno;
+import view.factura.MenuFactura;
 import view.inventario.MenuInventario;
 import view.mascota.MenuMascota;
 import view.proveedor.MenuProveedor;
@@ -30,6 +31,7 @@ public class MenuPrincipal {
                     5. Gestionar Inventario
                     6. Gestionar Facturación
                     7. Gestionar Proveedores
+                    8. Gestional Historial Medico
                     0. Salir
                     >>Ingrese su opcion:""");
 
@@ -58,6 +60,8 @@ public class MenuPrincipal {
                     menuInventario.mostrarMenu();
                     break;
                 case 6:
+                    MenuFactura menuFactura = new MenuFactura();
+                    menuFactura.mostrarMenuFactura();
                     break;
                 case 7:
                     MenuProveedor menuProveedor = new MenuProveedor();

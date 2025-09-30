@@ -2,8 +2,6 @@ package model.repository.ItemFacturaDAO;
 
 import model.ConexionSingleton;
 import model.entities.Items_Factura.ItemFactura;
-import model.entities.Items_Factura.Facturas;
-import model.entities.Inventario.ProductoTipo;
 
 import java.sql.*;
 import java.util.ArrayList;

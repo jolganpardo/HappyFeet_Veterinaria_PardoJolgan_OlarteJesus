@@ -1,24 +1,20 @@
 package model.entities.Items_Factura;
 
-import model.entities.Duenos.Dueno;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Facturas {
+public class Factura {
     private Integer id;
     private Integer dueno_id;
     private LocalDateTime fecha_emision;
     private Double total;
     private String metodo_pago;
 
-    public Facturas(Integer id, Integer dueno_id, LocalDateTime fecha_emision, Double total, String metodo_pago) {
+    public Factura(Integer id, Integer dueno_id, LocalDateTime fecha_emision, Double total, String metodo_pago) {
         this.id = id;
         this.dueno_id = dueno_id;
         this.fecha_emision = fecha_emision;
         this.total = total;
         this.metodo_pago = metodo_pago;
-
     }
 
     public Integer getId() {
