@@ -1,102 +1,48 @@
 package controller.mascotaController;
 
 import model.entities.Duenos.Dueno;
-import model.entities.Mascotas.Especie;
-import model.entities.Mascotas.Mascota;
-import model.entities.Mascotas.Raza;
+import model.entities.Mascotas.*;
 import model.repository.MascotasDAO.*;
-import model.repository.duenosDAO.DuenoDAO;
-import model.repository.duenosDAO.IDuenosDAO;
+import model.repository.duenosDAO.*;
 
 import java.time.LocalDate;
-import java.util.Comparator;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
 public class MascotaController {
-    private IMascotasDAO imascotasDAO;
-    private Scanner input;
 
-    public MascotaController(IMascotasDAO imascotasDAO, Scanner input) {
-        this.imascotasDAO = imascotasDAO;
+    private final IMascotasDAO mascotaDAO;
+    private final Scanner input;
+
+    public MascotaController(IMascotasDAO mascotaDAO, Scanner input) {
+        this.mascotaDAO = mascotaDAO;
         this.input = input;
     }
 
     public void agregarMascota() {
         System.out.println("=== AGREGAR MASCOTA ===");
 
-        System.out.print("Documento del dueño: ");
-        String documentoDueno = input.nextLine();
+        String documento = validarDocumentoDueno();
+        if (documento == null) return;
 
-        // Mostrar especies
-        EspecieDAO especieDAO = new EspecieDAO();
-        System.out.println("=== ESPECIES DISPONIBLES ===");
-        for (Especie especie : especieDAO.obtenerTodos()) {
-            System.out.println(especie.getId() + " - " + especie.getNombre());
-        }
-        System.out.print("Seleccione el ID de la especie (o 0 para añadir nueva): ");
-        int especieId = input.nextInt();
-        input.nextLine();
+        int especieId = validarEspecie();
+        if (especieId <= 0) return;
 
-        if (especieId == 0) {
-            System.out.print("Ingrese el nombre de la nueva especie: ");
-            String nuevaEspecie = input.nextLine();
-            Especie especie = new Especie(null, nuevaEspecie);
-            especieDAO.agregarEspecie(especie);
+        int razaId = validarRaza(especieId);
+        if (razaId <= 0) return;
 
-            // Recuperar el ID recien insertado
-            especieId = especieDAO.obtenerTodos()
-                    .stream()
-                    .filter(e -> e.getNombre().equalsIgnoreCase(nuevaEspecie))
-                    .findFirst()
-                    .get()
-                    .getId();
+        String nombre = leerTexto("Nombre de la mascota", 1, 100);
+        if (nombre == null) return;
 
-            System.out.println("Especie añadida con ID: " + especieId);
-        }
+        LocalDate fechaNacimiento = validarFecha("Fecha de nacimiento (yyyy-MM-dd)");
+        if (fechaNacimiento == null) return;
 
-        // Mostrar razas filtradas
-        RazaDAO razaDAO = new RazaDAO();
-        System.out.println("=== RAZAS DISPONIBLES ===");
-        for (Raza raza : razaDAO.obtenerPorEspecieId(especieId)) {
-            System.out.println(raza.getId() + " - " + raza.getNombre());
-        }
-        System.out.print("Seleccione el ID de la raza (o 0 para añadir nueva): ");
-        int razaId = input.nextInt();
-        input.nextLine();
+        String sexo = validarSexo();
+        if (sexo == null) return;
 
-        if (razaId == 0) {
-            System.out.print("Ingrese el nombre de la nueva raza: ");
-            String nuevaRaza = input.nextLine();
-            Raza raza = new Raza(null, especieId, nuevaRaza);
-            razaDAO.agregarRaza(raza);
-
-            // Recuperar el ID recién insertado
-            razaId = razaDAO.obtenerPorEspecieId(especieId)
-                    .stream()
-                    .filter(r -> r.getNombre().equalsIgnoreCase(nuevaRaza))
-                    .findFirst()
-                    .get()
-                    .getId();
-
-            System.out.println("Raza añadida con ID: " + razaId);
-        }
-
-        // Resto del flujo
-        System.out.print("Nombre de la mascota: ");
-        String nombre = input.nextLine();
-
-        System.out.print("Fecha de nacimiento (yyyy-MM-dd): ");
-        LocalDate fecha = LocalDate.parse(input.nextLine());
-
-        System.out.print("Sexo (Macho/Hembra): ");
-        String sexo = input.nextLine();
-
-        System.out.print("URL de la foto (opcional): ");
-        String urlFoto = input.nextLine();
-
-        System.out.print("Número de microchip (opcional, si lo deja vacío se generará automáticamente): ");
-        String microchip = input.nextLine();
+        String urlFoto = leerOpcional("URL de la foto (opcional)");
+        String microchip = validarMicrochip();
 
         Mascota mascota = new Mascota(
                 null,
@@ -104,205 +50,316 @@ public class MascotaController {
                 nombre,
                 razaId,
                 especieId,
-                fecha,
+                fechaNacimiento,
                 sexo,
                 urlFoto.isEmpty() ? null : urlFoto,
                 microchip.isEmpty() ? null : microchip,
                 "ACTIVA"
         );
 
-        // Capturar el ID generado
-        int idGenerado = imascotasDAO.agregarMascota(mascota, documentoDueno);
-        mascota.setId(idGenerado); // Asignar el ID a la mascota
-
-        System.out.println("Mascota agregada con éxito. ID: " + idGenerado);
-        imprimirMascota(mascota);
-
+        try {
+            int idGenerado = mascotaDAO.agregarMascota(mascota, documento);
+            mascota.setId(idGenerado);
+            System.out.println("Mascota agregada con éxito. ID: " + idGenerado);
+            imprimirMascota(mascota);
+        } catch (Exception e) {
+            System.out.println("Error al agregar mascota: " + e.getMessage());
+        }
     }
 
+    // Continuación de tu clase MascotaController
 
     public void actualizarMascota() {
-        System.out.println("=== ACTUALIZAR MASCOTA (ADOPCIÓN) ===");
-
-        System.out.print("ID de la mascota a actualizar: ");
-        int id = input.nextInt();
-        input.nextLine();
-
-        Mascota mascota = imascotasDAO.obtenerPorId(id);
-        if (mascota == null) {
-            System.out.println("No se encontró la mascota con ID " + id);
-            return;
-        }
-
-        // --- Nombre ---
-        System.out.print("Nuevo nombre (" + mascota.getNombre() + "): ");
-        String nombre = input.nextLine();
-        if (!nombre.isEmpty()) {
-            mascota.setNombre(nombre);
-        }
-
-        IDuenosDAO duenosDAO = new DuenoDAO();  // Usa la implementación concreta
-        List<Dueno> duenos = duenosDAO.listarDuenos();
-
-        System.out.println("=== LISTA DE DUEÑOS DISPONIBLES ===");
-        for (Dueno d : duenos) {
-            System.out.println(d.getId() + " - " + d.getNombre_completo());
-        }
-
-
-        // --- Cambio de dueño ---
-        System.out.print("Nuevo ID de dueño (" + mascota.getDueno_id() + "): ");
-        String duenoStr = input.nextLine();
-        if (!duenoStr.isEmpty()) {
-            try {
-                int nuevoDuenoId = Integer.parseInt(duenoStr);
-                mascota.setDuenos_id(nuevoDuenoId);
-            } catch (NumberFormatException e) {
-                System.out.println("ID inválido, se mantiene el actual.");
+        System.out.println("=== ACTUALIZAR MASCOTA ===");
+        System.out.print("Ingrese ID de la mascota: ");
+        int id = Integer.parseInt(input.nextLine().trim());
+        try {
+            Mascota mascota = mascotaDAO.obtenerPorId(id);
+            if (mascota == null || "INACTIVA".equalsIgnoreCase(mascota.getEstado())) {
+                System.out.println("Mascota no encontrada o INACTIVA");
+                return;
             }
-        }
 
-        // Guardar cambios
-        imascotasDAO.actualizarMascota(mascota);
-        System.out.println("Mascota actualizada.");
+            System.out.print("Nuevo nombre (" + mascota.getNombre() + "): ");
+            String nombre = input.nextLine().trim();
+            if (!nombre.isEmpty()) mascota.setNombre(nombre);
+
+            System.out.print("Nuevo sexo (" + mascota.getSexo() + "): ");
+            String sexo = input.nextLine().trim();
+            if (!sexo.isEmpty()) mascota.setSexo(sexo);
+
+            IDuenosDAO duenosDAO = new DuenoDAO();
+            List<Dueno> duenos = duenosDAO.listarDuenos();
+            System.out.print("Nuevo ID de dueño (" + mascota.getDueno_id() + "): ");
+            String duenoStr = input.nextLine().trim();
+            if (!duenoStr.isEmpty()) {
+                int nuevoDuenoId = Integer.parseInt(duenoStr);
+                if (duenos.stream().anyMatch(d -> d.getId() == nuevoDuenoId)) {
+                    mascota.setDuenos_id(nuevoDuenoId);
+                } else {
+                    System.out.println("ID de dueño inválido, se mantiene el actual.");
+                }
+            }
+
+            mascotaDAO.actualizarMascota(mascota);
+            System.out.println("Mascota actualizada correctamente.");
+        } catch (Exception e) {
+            System.out.println("Error al actualizar mascota: " + e.getMessage());
+        }
     }
 
-
     public void cambiarEstadoMascota() {
-        System.out.println("=== CAMBIAR ESTADO DE MASCOTA (INACTIVA) ===");
-        System.out.print("ID de la mascota: ");
-        int id = input.nextInt();
-        input.nextLine();
-
-        imascotasDAO.cambiarEstadoMascota(id);
-        System.out.println("Mascota marcada como INACTIVA.");
+        System.out.println("=== CAMBIAR ESTADO DE MASCOTA ===");
+        System.out.print("Ingrese ID de la mascota: ");
+        int id = Integer.parseInt(input.nextLine().trim());
+        try {
+            Mascota mascota = mascotaDAO.obtenerPorId(id);
+            if (mascota == null) {
+                System.out.println("Mascota no encontrada");
+                return;
+            }
+            if ("INACTIVA".equalsIgnoreCase(mascota.getEstado())) {
+                System.out.println("La mascota ya está INACTIVA");
+                return;
+            }
+            mascotaDAO.cambiarEstadoMascota(id);
+            System.out.println("Mascota marcada como INACTIVA");
+        } catch (Exception e) {
+            System.out.println("Error al cambiar estado: " + e.getMessage());
+        }
     }
 
     public void listarMascotas() {
         System.out.println("=== LISTA DE MASCOTAS ===");
-        List<Mascota> lista = imascotasDAO.obtenerTodos();
-        if (lista.isEmpty()) {
-            System.out.println("No hay mascotas registradas.");
-            return;
-        }
-        for (Mascota m : lista) {
-            imprimirMascota(m);
+        try {
+            List<Mascota> lista = mascotaDAO.obtenerTodos();
+            if (lista.isEmpty()) {
+                System.out.println("No hay mascotas registradas");
+                return;
+            }
+            for (Mascota m : lista) imprimirMascota(m);
+        } catch (Exception e) {
+            System.out.println("Error al listar mascotas: " + e.getMessage());
         }
     }
 
     public void buscarPorId() {
         System.out.print("Ingrese ID de la mascota: ");
-        int id = input.nextInt();
-        input.nextLine();
-
-        Mascota mascota = imascotasDAO.obtenerPorId(id);
-        if (mascota != null) {
-            imprimirMascota(mascota);
-        } else {
-            System.out.println("Mascota no encontrada.");
+        int id = Integer.parseInt(input.nextLine().trim());
+        try {
+            Mascota mascota = mascotaDAO.obtenerPorId(id);
+            if (mascota != null) imprimirMascota(mascota);
+            else System.out.println("Mascota no encontrada");
+        } catch (Exception e) {
+            System.out.println("Error al buscar mascota: " + e.getMessage());
         }
     }
 
     public void obtenerPorDuenoDocumento() {
-        System.out.print("Ingrese el documento de identificación del dueño: ");
-        int documento = input.nextInt();
-        input.nextLine();
-
-        List<Mascota> mascotas = imascotasDAO.obtenerPorDuenoDocumento(documento);
-
-        if (mascotas.isEmpty()) {
-            System.out.println("No se encontraron mascotas para el dueño con documento " + documento);
-        } else {
-            System.out.println("Mascotas del dueño con documento " + documento + ":");
-            for (Mascota m : mascotas) {
-                imprimirMascota(m);
+        System.out.print("Ingrese documento del dueño: ");
+        String docStr = input.nextLine().trim();
+        if (!docStr.matches("\\d+")) {
+            System.out.println("Documento inválido");
+            return;
+        }
+        int documento = Integer.parseInt(docStr);
+        try {
+            List<Mascota> mascotas = mascotaDAO.obtenerPorDuenoDocumento(documento);
+            if (mascotas.isEmpty()) {
+                System.out.println("No se encontraron mascotas para este dueño");
+                return;
             }
+            for (Mascota m : mascotas) imprimirMascota(m);
+        } catch (Exception e) {
+            System.out.println("Error al buscar mascotas: " + e.getMessage());
         }
     }
 
     public void obtenerPorRazaId() {
-        // Usamos la implementación concreta del DAO
         RazaDAO razaDAO = new RazaDAO();
-        List<Raza> razas = razaDAO.obtenerTodos();
-
-        if (razas.isEmpty()) {
-            System.out.println("No hay razas registradas.");
-            return;
-        }
-
-        System.out.println("=== LISTA DE RAZAS DISPONIBLES ===");
-        for (Raza r : razas) {
-            System.out.println(r.getId() + " - " + r.getNombre());
-        }
-
-        // Preguntar al usuario
-        System.out.print("Ingrese el ID de la raza: ");
-        int razaId = input.nextInt();
-        input.nextLine();
-
-        List<Mascota> mascotas = imascotasDAO.obtenerPorRazaId(razaId);
-
-        if (mascotas.isEmpty()) {
-            System.out.println("No se encontraron mascotas para la raza con ID " + razaId);
-        } else {
-            System.out.println("=== Mascotas de la raza ID " + razaId + " ===");
-            for (Mascota m : mascotas) {
-                imprimirMascota(m);
+        try {
+            List<Raza> razas = razaDAO.obtenerTodos();
+            if (razas.isEmpty()) {
+                System.out.println("No hay razas registradas");
+                return;
             }
+            for (Raza r : razas) System.out.println(r.getId() + " - " + r.getNombre());
+            System.out.print("Ingrese ID de la raza: ");
+            int id = Integer.parseInt(input.nextLine().trim());
+            List<Mascota> mascotas = mascotaDAO.obtenerPorRazaId(id);
+            if (mascotas.isEmpty()) System.out.println("No se encontraron mascotas para esta raza");
+            else for (Mascota m : mascotas) imprimirMascota(m);
+        } catch (Exception e) {
+            System.out.println("Error al buscar mascotas: " + e.getMessage());
         }
     }
 
     public void obtenerPorEspecieId() {
-        // Usamos la implementación concreta del DAO
         EspecieDAO especieDAO = new EspecieDAO();
-        List<Especie> especies = especieDAO.obtenerTodos();
-
-        if (especies.isEmpty()) {
-            System.out.println("No hay especies registradas.");
-            return;
-        }
-
-        System.out.println("=== LISTA DE ESPECIES DISPONIBLES ===");
-        for (Especie e : especies) {
-            System.out.println(e.getId() + " - " + e.getNombre());
-        }
-
-        // Preguntar al usuario
-        System.out.print("Ingrese el ID de la especie: ");
-        int especieId = input.nextInt();
-        input.nextLine();
-
-        List<Mascota> mascotas = imascotasDAO.obtenerPorEspecieId(especieId);
-
-        if (mascotas.isEmpty()) {
-            System.out.println("No se encontraron mascotas para la especie con ID " + especieId);
-        } else {
-            System.out.println("=== Mascotas de la especie ID " + especieId + " ===");
-            for (Mascota m : mascotas) {
-                imprimirMascota(m);
+        try {
+            List<Especie> especies = especieDAO.obtenerTodos();
+            if (especies.isEmpty()) {
+                System.out.println("No hay especies registradas");
+                return;
             }
+            for (Especie e : especies) System.out.println(e.getId() + " - " + e.getNombre());
+            System.out.print("Ingrese ID de la especie: ");
+            int id = Integer.parseInt(input.nextLine().trim());
+            List<Mascota> mascotas = mascotaDAO.obtenerPorEspecieId(id);
+            if (mascotas.isEmpty()) System.out.println("No se encontraron mascotas para esta especie");
+            else for (Mascota m : mascotas) imprimirMascota(m);
+        } catch (Exception e) {
+            System.out.println("Error al buscar mascotas: " + e.getMessage());
         }
+    }
+
+
+    private String validarDocumentoDueno() {
+        System.out.print("Documento del dueño: ");
+        String doc = input.nextLine().trim();
+
+        if (!doc.matches("\\d{6,20}")) {
+            System.out.println("Documento inválido. Debe contener entre 6 y 20 dígitos.");
+            return null;
+        }
+
+        IDuenosDAO duenosDAO = new DuenoDAO();
+        try {
+            Dueno dueno = duenosDAO.buscarPorDocumento(doc);
+            if (dueno == null) {
+                System.out.println("No existe un dueño con ese documento.");
+                return null;
+            }
+            return doc;
+        } catch (Exception e) {
+            System.out.println("Error al validar documento: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private int validarEspecie() {
+        EspecieDAO dao = new EspecieDAO();
+        try {
+            List<Especie> especies = dao.obtenerTodos();
+            if (especies.isEmpty()) {
+                System.out.println("No hay especies registradas.");
+                return -1;
+            }
+
+            System.out.println("=== ESPECIES DISPONIBLES ===");
+            for (Especie e : especies) {
+                System.out.println(e.getId() + " - " + e.getNombre());
+            }
+
+            System.out.print("Ingrese el ID de la especie: ");
+            int id = Integer.parseInt(input.nextLine().trim());
+            if (especies.stream().anyMatch(e -> e.getId() == id)) {
+                return id;
+            } else {
+                System.out.println("ID de especie no existe.");
+                return -1;
+            }
+        } catch (Exception e) {
+            System.out.println("Error al listar especies: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private int validarRaza(int especieId) {
+        RazaDAO dao = new RazaDAO();
+        try {
+            List<Raza> razas = dao.obtenerPorEspecieId(especieId);
+            if (razas.isEmpty()) {
+                System.out.println("No hay razas registradas para esta especie.");
+                return -1;
+            }
+
+            System.out.println("=== RAZAS DISPONIBLES ===");
+            for (Raza r : razas) {
+                System.out.println(r.getId() + " - " + r.getNombre());
+            }
+
+            System.out.print("Ingrese el ID de la raza: ");
+            int id = Integer.parseInt(input.nextLine().trim());
+            if (razas.stream().anyMatch(r -> r.getId() == id)) {
+                return id;
+            } else {
+                System.out.println("ID de raza no existe.");
+                return -1;
+            }
+        } catch (Exception e) {
+            System.out.println("Error al listar razas: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private String leerTexto(String campo, int min, int max) {
+        System.out.print(campo + ": ");
+        String texto = input.nextLine().trim();
+        if (texto.length() < min || texto.length() > max) {
+            System.out.println(campo + " inválido. Longitud permitida: " + min + "-" + max);
+            return null;
+        }
+        return texto;
+    }
+
+
+    private LocalDate validarFecha(String mensaje) {
+        System.out.print(mensaje + ": ");
+        try {
+            LocalDate fecha = LocalDate.parse(input.nextLine().trim());
+            if (fecha.isAfter(LocalDate.now())) {
+                System.out.println("La fecha no puede ser futura.");
+                return null;
+            }
+            return fecha;
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha inválido. Use yyyy-MM-dd.");
+            return null;
+        }
+    }
+
+    private String validarSexo() {
+        System.out.print("Sexo (Macho/Hembra): ");
+        String sexo = input.nextLine().trim();
+        if (!sexo.equalsIgnoreCase("Macho") && !sexo.equalsIgnoreCase("Hembra")) {
+            System.out.println("Sexo inválido. Debe ser 'Macho' o 'Hembra'.");
+            return null;
+        }
+        return sexo.substring(0, 1).toUpperCase() + sexo.substring(1).toLowerCase();
+    }
+
+    private String leerOpcional(String mensaje) {
+        System.out.print(mensaje + ": ");
+        return input.nextLine().trim();
+    }
+
+    private String validarMicrochip() {
+        System.out.print("Microchip (opcional): ");
+        String microchip = input.nextLine().trim();
+        if (!microchip.isEmpty() && !microchip.matches("[A-Za-z0-9]{5,20}")) {
+            System.out.println("Microchip inválido (5-20 caracteres alfanuméricos).");
+            return "";
+        }
+        return microchip;
     }
 
     public void imprimirMascota(Mascota mascota) {
         if (mascota == null) {
-            System.out.println("No se encontró la Mascota.");
+            System.out.println("No se encontró la mascota.");
             return;
         }
-
-        System.out.println("------ INFORMACION DE LA MASCOTA ------");
+        System.out.println("------ INFORMACIÓN DE LA MASCOTA ------");
         System.out.println("ID: " + mascota.getId());
         System.out.println("ID Dueño: " + mascota.getDueno_id());
         System.out.println("Nombre: " + mascota.getNombre());
         System.out.println("Fecha Nacimiento: " + mascota.getFecha_nacimiento());
         System.out.println("ID Especie: " + mascota.getEspecie_id());
+        System.out.println("ID Raza: " + mascota.getRaza_id());
         System.out.println("Sexo: " + mascota.getSexo());
-        System.out.println("URL Foto: " + mascota.getUrl_foto());
-        System.out.println("Microchip: " + mascota.getMicrochip());
+        System.out.println("URL Foto: " + (mascota.getUrl_foto() != null ? mascota.getUrl_foto() : "N/A"));
+        System.out.println("Microchip: " + (mascota.getMicrochip() != null ? mascota.getMicrochip() : "N/A"));
         System.out.println("Estado: " + mascota.getEstado());
-        System.out.println("----------------------------------");
+        System.out.println("--------------------------------------");
     }
-
-
-
 }
