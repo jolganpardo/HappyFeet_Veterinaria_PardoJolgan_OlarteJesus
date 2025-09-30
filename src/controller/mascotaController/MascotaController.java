@@ -115,7 +115,7 @@ public class MascotaController {
         int idGenerado = imascotasDAO.agregarMascota(mascota, documentoDueno);
         mascota.setId(idGenerado); // Asignar el ID a la mascota
 
-        System.out.println("✓ Mascota agregada con éxito. ID: " + idGenerado);
+        System.out.println("Mascota agregada con éxito. ID: " + idGenerado);
         imprimirMascota(mascota);
 
     }

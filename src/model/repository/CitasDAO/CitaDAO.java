@@ -2,9 +2,6 @@ package model.repository.CitasDAO;
 
 import model.ConexionSingleton;
 import model.entities.Citas.Cita;
-import model.entities.Citas.CitaEstado;
-import model.entities.Mascotas.Mascota;
-import model.entities.Veterinarios.Veterinario;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,9 +15,9 @@ public class CitaDAO implements ICitaDAO {
     }
 
     @Override
-    public void agregarCita(Cita cita) {
+    public int agregarCita(Cita cita) {
         String sql = "INSERT INTO cita (mascota_id, fecha_hora, motivo, estado_id, veterinario_id) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, cita.getMascota_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(cita.getFecha_hora()));
             pstmt.setString(3, cita.getMotivo());
@@ -31,17 +28,27 @@ public class CitaDAO implements ICitaDAO {
                 pstmt.setNull(4, Types.INTEGER);
             }
 
-            if (cita.getVeterianrio_id() != null) {
-                pstmt.setInt(5, cita.getVeterianrio_id());
+            if (cita.getVeterinario_id() != null) {
+                pstmt.setInt(5, cita.getVeterinario_id());
             } else {
                 pstmt.setNull(5, Types.INTEGER);
             }
 
             pstmt.executeUpdate();
+
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int idGenerado = rs.getInt(1);
+                    return idGenerado;
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado de la cita.");
+                }
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al agregar cita.\n" + e.getMessage(), e);
+            throw new RuntimeException("Error al agregar cita: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public Cita obtenerPorId(Integer id) {
@@ -104,8 +111,8 @@ public class CitaDAO implements ICitaDAO {
                 pstmt.setNull(4, Types.INTEGER);
             }
 
-            if (cita.getVeterianrio_id() != null) {
-                pstmt.setInt(5, cita.getVeterianrio_id());
+            if (cita.getVeterinario_id() != null) {
+                pstmt.setInt(5, cita.getVeterinario_id());
             } else {
                 pstmt.setNull(5, Types.INTEGER);
             }
@@ -129,34 +136,16 @@ public class CitaDAO implements ICitaDAO {
     }
 
     @Override
-    public List<Cita> obtenerPorMascotaId(Integer mascotaId) {
-        List<Cita> citas = new ArrayList<>();
-        String sql = "SELECT * FROM cita WHERE mascota_id = ?";
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, mascotaId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Cita cita = new Cita(
-                            rs.getInt("id"),
-                            rs.getInt("mascota_id"),
-                            rs.getTimestamp("fecha_hora").toLocalDateTime(),
-                            rs.getString("motivo"),
-                            rs.getInt("estado_id"),
-                            rs.getInt("veterinario_id")
-                    );
-                    citas.add(cita);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al consultar las citas de la mascota con ID " + mascotaId, e);
-        }
-        return citas;
-    }
-
-    @Override
     public List<Cita> obtenerPorVeterinarioId(Integer veterinarioId) {
         List<Cita> citas = new ArrayList<>();
-        String sql = "SELECT * FROM cita WHERE veterinario_id = ?";
+        String sql = """
+        SELECT c.id, c.mascota_id, c.fecha_hora, c.motivo, c.estado_id, c.veterinario_id,
+               v.nombre_completo AS nombre_veterinario
+        FROM cita c
+        JOIN veterinario v ON c.veterinario_id = v.id
+        WHERE c.veterinario_id = ?
+    """;
+
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, veterinarioId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -169,13 +158,16 @@ public class CitaDAO implements ICitaDAO {
                             rs.getInt("estado_id"),
                             rs.getInt("veterinario_id")
                     );
+
                     citas.add(cita);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error al consultar las citas del veterinario con ID " + veterinarioId, e);
         }
+
         return citas;
     }
+
 
 }
