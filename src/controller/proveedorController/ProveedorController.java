@@ -2,57 +2,26 @@ package controller.proveedorController;
 
 import model.entities.Inventario.Proveedor;
 import model.repository.InventarioDAO.IProveedorDAO;
+import util.Validaciones;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ProveedorController {
     private final IProveedorDAO proveedorDAO;
-    private final Scanner input;
+    private final Validaciones validador;
 
     public ProveedorController(IProveedorDAO proveedorDAO, Scanner input) {
         this.proveedorDAO = proveedorDAO;
-        this.input = input;
+        this.validador = new Validaciones(input);
     }
 
-    // Validar entero positivo
-    public int leerEntero(String mensaje) {
-        int valor;
-        while (true) {
-            System.out.print(mensaje);
-            String line = input.nextLine();
-            try {
-                valor = Integer.parseInt(line);
-                if (valor < 0) {
-                    System.out.println("No puede ser negativo.");
-                    continue;
-                }
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Debe ingresar un número válido.");
-            }
-        }
-        return valor;
-    }
-
-    // Validar texto no vacío
-    private String leerTexto(String mensaje) {
-        String valor;
-        do {
-            System.out.print(mensaje);
-            valor = input.nextLine().trim();
-            if (valor.isEmpty()) System.out.println("Este campo no puede estar vacío.");
-        } while (valor.isEmpty());
-        return valor;
-    }
-
-    // Agregar proveedor
     public void agregarProveedor() {
-        String nombre = leerTexto("Nombre de la empresa: ");
-        String contacto = leerTexto("Nombre del contacto: ");
-        String telefono = validarTelefono("Teléfono: ");
-        String email = validarEmail("Email: ");
-        String direccion = leerTexto("Dirección: ");
+        String nombre = validador.leerTexto("Nombre de la empresa: ");
+        String contacto = validador.leerTexto("Nombre del contacto: ");
+        String telefono = validador.validarTelefono("Teléfono: ");
+        String email = validador.validarEmail("Email: ");
+        String direccion = validador.leerTexto("Dirección: ");
 
         Proveedor proveedor = new Proveedor(null, nombre, contacto, telefono, email, direccion);
         try {
@@ -63,9 +32,8 @@ public class ProveedorController {
         }
     }
 
-    // Actualizar proveedor
     public void actualizarProveedor() {
-        int id = leerEntero("ID del proveedor a actualizar: ");
+        int id = validador.leerEnteroPositivo("ID del proveedor a actualizar: ");
         Proveedor proveedor = proveedorDAO.obtenerPorId(id);
         if (proveedor == null) {
             System.out.println("No existe proveedor con ese ID.");
@@ -73,24 +41,19 @@ public class ProveedorController {
         }
 
         System.out.println("Deje vacío para mantener el valor actual.");
-        System.out.print("Nuevo nombre de la empresa (" + proveedor.getNombre() + "): ");
-        String nombre = input.nextLine();
+        String nombre = validador.leerTexto("Nuevo nombre de la empresa (" + proveedor.getNombre() + "): ");
         if (!nombre.isEmpty()) proveedor.setNombre(nombre);
 
-        System.out.print("Nuevo contacto (" + proveedor.getContacto() + "): ");
-        String contacto = input.nextLine();
+        String contacto = validador.leerTexto("Nuevo contacto (" + proveedor.getContacto() + "): ");
         if (!contacto.isEmpty()) proveedor.setContacto(contacto);
 
-        System.out.print("Nuevo teléfono (" + proveedor.getTelefono() + "): ");
-        String telefono = input.nextLine();
+        String telefono = validador.validarTelefono("Nuevo teléfono (" + proveedor.getTelefono() + "): ");
         if (!telefono.isEmpty()) proveedor.setTelefono(telefono);
 
-        System.out.print("Nuevo email (" + proveedor.getEmail() + "): ");
-        String email = input.nextLine();
+        String email = validador.validarEmail("Nuevo email (" + proveedor.getEmail() + "): ");
         if (!email.isEmpty()) proveedor.setEmail(email);
 
-        System.out.print("Nueva dirección (" + proveedor.getDireccion() + "): ");
-        String direccion = input.nextLine();
+        String direccion = validador.leerTexto("Nueva dirección (" + proveedor.getDireccion() + "): ");
         if (!direccion.isEmpty()) proveedor.setDireccion(direccion);
 
         try {
@@ -101,9 +64,8 @@ public class ProveedorController {
         }
     }
 
-    // Eliminar proveedor
     public void eliminarProveedor() {
-        int id = leerEntero("ID del proveedor a eliminar: ");
+        int id = validador.leerEnteroPositivo("ID del proveedor a eliminar: ");
         try {
             proveedorDAO.eliminar(id);
             System.out.println("Proveedor eliminado con éxito.");
@@ -112,14 +74,12 @@ public class ProveedorController {
         }
     }
 
-    // Buscar proveedor por ID
     public void buscarProveedorPorId() {
-        int id = leerEntero("ID del proveedor: ");
+        int id = validador.leerEnteroPositivo("ID del proveedor: ");
         Proveedor proveedor = proveedorDAO.obtenerPorId(id);
         imprimirProveedor(proveedor);
     }
 
-    // Listar todos
     public void listarProveedores() {
         List<Proveedor> proveedores = proveedorDAO.obtenerTodos();
         if (proveedores.isEmpty()) {
@@ -144,44 +104,4 @@ public class ProveedorController {
         System.out.println("Dirección: " + p.getDireccion());
         System.out.println("------------------------");
     }
-
-    public String validarEmail(String mensaje) {
-        String email;
-        while (true) {
-            System.out.print(mensaje);
-            email = input.nextLine().trim();
-            if (email.isEmpty()) {
-                System.out.println("El email no puede estar vacío.");
-                continue;
-            }
-            // Validación simple de formato
-            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-                System.out.println("Email inválido. Debe tener formato ejemplo@dominio.com");
-                continue;
-            }
-            break;
-        }
-        return email;
-    }
-
-    public String validarTelefono(String mensaje) {
-        String telefono;
-        while (true) {
-            System.out.print(mensaje);
-            telefono = input.nextLine().trim();
-            if (telefono.isEmpty()) {
-                System.out.println("El teléfono no puede estar vacío.");
-                continue;
-            }
-            // Solo permite 10 caracteres del numero celular
-            if (!telefono.matches("\\d{10}")) {
-                System.out.println("Teléfono inválido. Solo números. Debe contener 10 digitos.");
-                continue;
-            }
-            break;
-        }
-        return telefono;
-    }
-
-
 }
