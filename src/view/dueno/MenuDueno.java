@@ -3,6 +3,7 @@ package view.dueno;
 import controller.duenoController.DuenoController;
 import model.repository.duenosDAO.DuenoDAO;
 import model.repository.duenosDAO.IDuenosDAO;
+import service.DuenoService;
 
 import java.util.Scanner;
 
@@ -14,8 +15,10 @@ public class MenuDueno {
     public MenuDueno() {
         this.duenoDAO = new DuenoDAO();
         this.input = new Scanner(System.in);
-        this.duenoController = new DuenoController(duenoDAO, input);
+        DuenoService duenoService = new DuenoService(duenoDAO);
+        this.duenoController = new DuenoController(duenoService, input);
     }
+
 
     public void mostrarMenuDueno() {
         int opcion;

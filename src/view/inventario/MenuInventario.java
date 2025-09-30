@@ -3,8 +3,11 @@ package view.inventario;
 import controller.inventarioController.InventarioController;
 import model.entities.Inventario.Inventario;
 import model.entities.Inventario.ProductoTipo;
+import model.repository.InventarioDAO.IInventarioDAO;
+import model.repository.InventarioDAO.InventarioDAO;
 import model.repository.InventarioDAO.ProductoTipoDAO;
 import model.repository.InventarioDAO.ProveedorDAO;
+import service.InventarioService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,9 +18,12 @@ public class MenuInventario {
     private final Scanner scanner;
 
     public MenuInventario() {
-        this.controller = new InventarioController();
+        IInventarioDAO inventarioDAO = new InventarioDAO();
+        InventarioService inventarioService = new InventarioService(inventarioDAO);
+        this.controller = new InventarioController(inventarioService);
         this.scanner = new Scanner(System.in);
     }
+
 
     public void mostrarMenu() {
         int opcion;

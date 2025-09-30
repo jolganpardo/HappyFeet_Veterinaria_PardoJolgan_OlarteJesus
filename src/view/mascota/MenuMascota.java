@@ -1,22 +1,23 @@
 package view.mascota;
 
 import controller.mascotaController.MascotaController;
-import model.entities.Mascotas.Mascota;
 import model.repository.MascotasDAO.IMascotasDAO;
 import model.repository.MascotasDAO.MascotaDAO;
+import service.MascotaService;
 
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class MenuMascota {
     private IMascotasDAO mascotasDAO;
+    private MascotaService mascotaService;
     private MascotaController mascotaController;
     private Scanner input;
 
     public MenuMascota() {
         this.mascotasDAO = new MascotaDAO();
+        this.mascotaService = new MascotaService(mascotasDAO);
         this.input = new Scanner(System.in);
-        this.mascotaController = new MascotaController(mascotasDAO, input);
+        this.mascotaController = new MascotaController(mascotaService, input);
     }
 
     public void mostrarMenuMascota() {
@@ -32,6 +33,7 @@ public class MenuMascota {
                     6. Mascota por documento del dueño.
                     7. Mostrar mascota por raza.
                     8. Mostrar mascota por especie.
+                    0. Salir
                     >>> Ingrese la opcion:""");
             opcion = input.nextInt();
             input.nextLine();

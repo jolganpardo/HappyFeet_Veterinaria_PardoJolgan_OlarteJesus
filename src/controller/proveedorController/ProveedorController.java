@@ -1,18 +1,18 @@
 package controller.proveedorController;
 
 import model.entities.Inventario.Proveedor;
-import model.repository.InventarioDAO.IProveedorDAO;
+import service.ProveedorService;
 import util.Validaciones;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ProveedorController {
-    private final IProveedorDAO proveedorDAO;
+    private final ProveedorService proveedorService;
     private final Validaciones validador;
 
-    public ProveedorController(IProveedorDAO proveedorDAO, Scanner input) {
-        this.proveedorDAO = proveedorDAO;
+    public ProveedorController(ProveedorService proveedorService, Scanner input) {
+        this.proveedorService = proveedorService;
         this.validador = new Validaciones(input);
     }
 
@@ -25,7 +25,7 @@ public class ProveedorController {
 
         Proveedor proveedor = new Proveedor(null, nombre, contacto, telefono, email, direccion);
         try {
-            proveedorDAO.insertar(proveedor);
+            proveedorService.agregarProveedor(proveedor);
             System.out.println("Proveedor agregado con éxito.");
         } catch (Exception e) {
             System.out.println("Error al agregar proveedor: " + e.getMessage());
@@ -34,7 +34,7 @@ public class ProveedorController {
 
     public void actualizarProveedor() {
         int id = validador.leerEnteroPositivo("ID del proveedor a actualizar: ");
-        Proveedor proveedor = proveedorDAO.obtenerPorId(id);
+        Proveedor proveedor = proveedorService.obtenerProveedorPorId(id);
         if (proveedor == null) {
             System.out.println("No existe proveedor con ese ID.");
             return;
@@ -47,17 +47,17 @@ public class ProveedorController {
         String contacto = validador.leerTexto("Nuevo contacto (" + proveedor.getContacto() + "): ");
         if (!contacto.isEmpty()) proveedor.setContacto(contacto);
 
-        String telefono = validador.validarTelefono("Nuevo teléfono (" + proveedor.getTelefono() + "): ");
+        String telefono = validador.validarTelefonoOpcional("Nuevo teléfono (" + proveedor.getTelefono() + "): ");
         if (!telefono.isEmpty()) proveedor.setTelefono(telefono);
 
-        String email = validador.validarEmail("Nuevo email (" + proveedor.getEmail() + "): ");
+        String email = validador.validarEmailOpcional("Nuevo email (" + proveedor.getEmail() + "): ");
         if (!email.isEmpty()) proveedor.setEmail(email);
 
         String direccion = validador.leerTexto("Nueva dirección (" + proveedor.getDireccion() + "): ");
         if (!direccion.isEmpty()) proveedor.setDireccion(direccion);
 
         try {
-            proveedorDAO.actualizar(proveedor);
+            proveedorService.actualizarProveedor(proveedor);
             System.out.println("Proveedor actualizado con éxito.");
         } catch (Exception e) {
             System.out.println("Error al actualizar proveedor: " + e.getMessage());
@@ -67,7 +67,7 @@ public class ProveedorController {
     public void eliminarProveedor() {
         int id = validador.leerEnteroPositivo("ID del proveedor a eliminar: ");
         try {
-            proveedorDAO.eliminar(id);
+            proveedorService.eliminarProveedor(id);
             System.out.println("Proveedor eliminado con éxito.");
         } catch (Exception e) {
             System.out.println("Error al eliminar proveedor: " + e.getMessage());
@@ -76,17 +76,19 @@ public class ProveedorController {
 
     public void buscarProveedorPorId() {
         int id = validador.leerEnteroPositivo("ID del proveedor: ");
-        Proveedor proveedor = proveedorDAO.obtenerPorId(id);
+        Proveedor proveedor = proveedorService.obtenerProveedorPorId(id);
         imprimirProveedor(proveedor);
     }
 
     public void listarProveedores() {
-        List<Proveedor> proveedores = proveedorDAO.obtenerTodos();
+        List<Proveedor> proveedores = proveedorService.obtenerTodosLosProveedores();
         if (proveedores.isEmpty()) {
             System.out.println("No hay proveedores registrados.");
         } else {
             System.out.println("\n=== LISTA DE PROVEEDORES ===");
-            proveedores.forEach(this::imprimirProveedor);
+            for (Proveedor p : proveedores) {
+                imprimirProveedor(p);
+            }
         }
     }
 

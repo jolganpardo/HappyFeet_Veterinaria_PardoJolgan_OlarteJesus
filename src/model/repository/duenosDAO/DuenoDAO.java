@@ -23,6 +23,8 @@ public class DuenoDAO implements IDuenosDAO {
             pstmt.setString(5, dueno.getEmail());
             pstmt.executeUpdate();
 
+            System.out.println("Dueño insertado con éxito.");
+
         } catch (SQLException e) {
             System.out.println("Error al agregar dueño.\n" + e.getMessage());
         }

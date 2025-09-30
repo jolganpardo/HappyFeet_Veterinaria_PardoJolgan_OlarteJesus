@@ -1,18 +1,23 @@
 package view.proveedor;
 
 import controller.proveedorController.ProveedorController;
-import model.entities.Inventario.Proveedor;
 import model.repository.InventarioDAO.IProveedorDAO;
+import service.ProveedorService;
+import util.Validaciones;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MenuProveedor {
     private Scanner input;
-    private IProveedorDAO proveedorDAO;
     private ProveedorController proveedorController;
 
-    public void MenuProveedor() {
+    public MenuProveedor(Scanner input, IProveedorDAO proveedorDAO) {
+        this.input = input;
+        ProveedorService proveedorService = new ProveedorService(proveedorDAO);
+        this.proveedorController = new ProveedorController(proveedorService, input);
+    }
+
+    public void mostrarMenu() {
         int opcion;
         do {
             System.out.print("""
@@ -23,18 +28,31 @@ public class MenuProveedor {
             4. Buscar proveedor por ID
             5. Listar todos los proveedores
             0. Salir
-            Ingrese una opcion:
-            """);
-            opcion = proveedorController.leerEntero("Ingresa una opcion: ");
+            Ingrese una opcion:\s""");
+            opcion = Validaciones.leerEntero(input);
 
             switch (opcion) {
-                case 1 -> proveedorController.agregarProveedor();
-                case 2 -> proveedorController.actualizarProveedor();
-                case 3 -> proveedorController.eliminarProveedor();
-                case 4 -> proveedorController.buscarProveedorPorId();
-                case 5 -> proveedorController.listarProveedores();
-                case 0 -> System.out.println("Saliendo del menú de proveedores...");
-                default -> System.out.println("Opción no válida.");
+                case 1:
+                    proveedorController.agregarProveedor();
+                    break;
+                case 2:
+                    proveedorController.actualizarProveedor();
+                    break;
+                case 3:
+                    proveedorController.eliminarProveedor();
+                    break;
+                case 4:
+                    proveedorController.buscarProveedorPorId();
+                    break;
+                case 5:
+                    proveedorController.listarProveedores();
+                    break;
+                case 0:
+                    System.out.println("Saliendo del menú de proveedores...");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         } while (opcion != 0);
     }

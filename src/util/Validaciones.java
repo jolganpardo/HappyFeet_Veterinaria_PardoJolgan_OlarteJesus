@@ -55,6 +55,42 @@ public class Validaciones {
         return telefono;
     }
 
+    public String validarEmailOpcional(String mensaje) {
+        String email;
+        while (true) {
+            System.out.print(mensaje);
+            email = input.nextLine().trim();
+            if (email.isEmpty()) {
+                return "";
+            }
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+                System.out.println("Email inválido. Debe tener formato ejemplo@dominio.com");
+                continue;
+            }
+            break;
+        }
+        return email;
+    }
+
+    public String validarTelefonoOpcional(String mensaje) {
+        String telefono;
+        while (true) {
+            System.out.print(mensaje);
+            telefono = input.nextLine().trim();
+            if (telefono.isEmpty()) {
+                return "";
+            }
+            if (!telefono.matches("\\d{7,15}")) {
+                System.out.println("Teléfono inválido. Solo números, entre 7 y 15 dígitos.");
+                continue;
+            }
+            break;
+        }
+        return telefono;
+    }
+
+
+
     public int leerEnteroPositivo(String mensaje) {
         int valor;
         while (true) {
@@ -69,6 +105,21 @@ public class Validaciones {
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Debe ingresar un número válido.");
+            }
+        }
+        return valor;
+    }
+
+    public static int leerEntero(Scanner input) {
+        int valor;
+        while (true) {
+            String line = input.nextLine();
+            try {
+                valor = Integer.parseInt(line);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar un número válido.");
+                System.out.print("Ingrese una opcion: ");
             }
         }
         return valor;
