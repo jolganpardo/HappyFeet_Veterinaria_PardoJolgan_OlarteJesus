@@ -2,6 +2,8 @@ package controller.inventarioController;
 
 import model.entities.Inventario.Inventario;
 import model.repository.InventarioDAO.InventarioDAO;
+import model.repository.InventarioDAO.ProductoTipoDAO;
+import model.repository.InventarioDAO.ProveedorDAO;
 
 import java.util.List;
 
@@ -76,4 +78,40 @@ public class InventarioController {
                 .filter(inv -> inv.getCantidad_stock() < inv.getStock_minimo())
                 .toList();
     }
+
+    public void imprimirInventario(Inventario inv) {
+        if (inv == null) {
+            System.out.println("No se encontró el producto.");
+            return;
+        }
+
+        // Obtener nombre del tipo
+        ProductoTipoDAO tipoDAO = new ProductoTipoDAO();
+        String tipoNombre = "Desconocido";
+        if (inv.getProducto_tipo_id() != null) {
+            tipoNombre = tipoDAO.obtenerPorId(inv.getProducto_tipo_id()).getNombre();
+        }
+
+        // Obtener nombre del proveedor
+        ProveedorDAO provDAO = new ProveedorDAO();
+        String proveedorNombre = "Desconocido";
+        if (inv.getProveedor_id() != null) {
+            proveedorNombre = provDAO.obtenerPorId(inv.getProveedor_id()).getNombre();
+        }
+
+        System.out.println("------ PRODUCTO ------");
+        System.out.println("ID: " + inv.getId());
+        System.out.println("Nombre: " + inv.getNombre_producto());
+        System.out.println("Tipo: " + tipoNombre);
+        System.out.println("Descripción: " + inv.getDescripcion());
+        System.out.println("Fabricante: " + inv.getFabricante());
+        System.out.println("Lote: " + inv.getLote());
+        System.out.println("Stock: " + inv.getCantidad_stock());
+        System.out.println("Stock mínimo: " + inv.getStock_minimo());
+        System.out.println("Fecha de vencimiento: " + inv.getFecha_vencimiento());
+        System.out.println("Precio venta: " + inv.getPrecio_venta());
+        System.out.println("Proveedor: " + proveedorNombre);
+        System.out.println("---------------------");
+    }
+
 }

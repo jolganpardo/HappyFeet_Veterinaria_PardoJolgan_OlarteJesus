@@ -2,6 +2,9 @@ package view.inventario;
 
 import controller.inventarioController.InventarioController;
 import model.entities.Inventario.Inventario;
+import model.entities.Inventario.ProductoTipo;
+import model.repository.InventarioDAO.ProductoTipoDAO;
+import model.repository.InventarioDAO.ProveedorDAO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,11 +55,16 @@ public class MenuInventario {
     private void agregarProducto() {
         System.out.println("\n--- Agregar Producto ---");
 
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
+        // Agregar Nombre
+        String nombre = validarNombreProducto();
 
-        System.out.print("Tipo de producto (ID): 1=Medicamento, 2=Vacuna, 3=Insumo Médico, 4=Alimento, 5=Otro");
-        int tipoId = scanner.nextInt(); scanner.nextLine();
+        // Tipo de producto
+        ProductoTipoDAO tipoDAO = new ProductoTipoDAO();
+        System.out.println("=== TIPOS DISPONIBLES ===");
+        for (ProductoTipo t : tipoDAO.obtenerTodos()) {
+            System.out.println(t.getId() + " - " + t.getNombre());
+        }
+        int tipoId = validarTipoProducto();
 
         System.out.print("Descripción: ");
         String descripcion = scanner.nextLine();
@@ -67,21 +75,14 @@ public class MenuInventario {
         System.out.print("Lote: ");
         String lote = scanner.nextLine();
 
-        System.out.print("Cantidad en stock: ");
-        int cantidad = scanner.nextInt();
+        int cantidad = validarCantidad("Cantidad en stock: ");
+        int minimo = validarCantidad("Stock mínimo: ");
 
-        System.out.print("Stock mínimo: ");
-        int minimo = scanner.nextInt(); scanner.nextLine();
+        LocalDate fechaVenc = validarFechaVencimiento();
 
-        System.out.print("Fecha de vencimiento (YYYY-MM-DD o enter): ");
-        String fechaStr = scanner.nextLine();
-        LocalDate fechaVenc = fechaStr.isEmpty() ? null : LocalDate.parse(fechaStr);
+        double precio = validarPrecio();
 
-        System.out.print("Precio de venta: ");
-        double precio = scanner.nextDouble();
-
-        System.out.print("Proveedor (ID): ");
-        int proveedorId = scanner.nextInt(); scanner.nextLine();
+        int proveedorId = validarProveedor();
 
 
         Inventario inv = new Inventario(null, nombre, tipoId, descripcion, fabricante, lote,
@@ -151,4 +152,95 @@ public class MenuInventario {
         List<Inventario> lista = controller.obtenerPorTipoProducto(tipoId);
         lista.forEach(System.out::println);
     }
+
+
+    // Validar nombre no vacío
+    private String validarNombreProducto() {
+        String nombre;
+        do {
+            System.out.print("Nombre: ");
+            nombre = scanner.nextLine().trim();
+            if (nombre.isEmpty()) System.out.println("El nombre no puede estar vacío.");
+        } while (nombre.isEmpty());
+        return nombre;
+    }
+
+    // Validar ID de tipo
+    private int validarTipoProducto() {
+        int tipoId;
+        ProductoTipoDAO tipoDAO = new ProductoTipoDAO();
+        do {
+            System.out.print("Tipo de producto (ID): ");
+            tipoId = scanner.nextInt(); scanner.nextLine();
+            if (tipoDAO.obtenerPorId(tipoId) == null) {
+                System.out.println("Tipo de producto no existe.");
+                tipoId = -1;
+            }
+        } while (tipoId == -1);
+        return tipoId;
+    }
+
+    // Validar proveedor
+    private int validarProveedor() {
+        int proveedorId;
+        ProveedorDAO provDAO = new ProveedorDAO();
+        do {
+            System.out.print("Proveedor (ID): ");
+            proveedorId = scanner.nextInt(); scanner.nextLine();
+            if (provDAO.obtenerPorId(proveedorId) == null) {
+                System.out.println("Proveedor no existe.");
+                proveedorId = -1;
+            }
+        } while (proveedorId == -1);
+        return proveedorId;
+    }
+
+    // Validar cantidad o precio no negativo
+    private int validarCantidad(String mensaje) {
+        int cantidad;
+        do {
+            System.out.print(mensaje);
+            cantidad = scanner.nextInt(); scanner.nextLine();
+            if (cantidad < 0) System.out.println("No puede ser negativo.");
+        } while (cantidad < 0);
+        return cantidad;
+    }
+
+    // Validar fecha de vencimiento
+    private LocalDate validarFechaVencimiento() {
+        LocalDate fecha = null;
+        while (true) {
+            System.out.print("Fecha de vencimiento (YYYY-MM-DD o enter): ");
+            String f = scanner.nextLine().trim();
+            if (f.isEmpty()) break;
+            try {
+                fecha = LocalDate.parse(f);
+                if (fecha.isBefore(LocalDate.now())) {
+                    System.out.println("La fecha no puede ser anterior a hoy.");
+                    continue;
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Formato inválido.");
+            }
+        }
+        return fecha;
+    }
+
+    private double validarPrecio() {
+        double precio = -1;
+        while (precio < 0) {
+            System.out.print("Precio de venta: ");
+            String inputStr = scanner.nextLine().trim();
+            try {
+                precio = Double.parseDouble(inputStr);
+                if (precio < 0) System.out.println("El precio no puede ser negativo.");
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar un número válido.");
+            }
+        }
+        return precio;
+    }
+
+
 }
