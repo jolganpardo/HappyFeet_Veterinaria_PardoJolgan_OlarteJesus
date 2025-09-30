@@ -10,6 +10,7 @@ import view.dueno.MenuDueno;
 import view.factura.MenuFactura;
 import view.inventario.MenuInventario;
 import view.mascota.MenuMascota;
+import view.menuHistorialMedico.MenuHistorialMedico;
 import view.proveedor.MenuProveedor;
 import view.veterinario.MenuVeterinario;
 
@@ -36,6 +37,7 @@ public class MenuPrincipal {
                     5. Gestionar Inventario
                     6. Gestionar Facturación
                     7. Gestionar Proveedores
+                    8. Gestional Historial Medico.
                     0. Salir
                     >>Ingrese su opcion:""");
 
@@ -73,6 +75,10 @@ public class MenuPrincipal {
                 case 7:
                     MenuProveedor menuProveedor = new MenuProveedor(scanner, new ProveedorDAO());
                     menuProveedor.mostrarMenu();
+                    break;
+                case 8:
+                    MenuHistorialMedico menuHistorialMedico = new MenuHistorialMedico();
+                    menuHistorialMedico.mostrarMenuHistorialMedico();
                     break;
                 case 0:
                     System.out.println("Saliendo... Hasta pronto.");
