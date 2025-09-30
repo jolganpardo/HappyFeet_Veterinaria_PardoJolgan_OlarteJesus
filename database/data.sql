@@ -49,10 +49,6 @@ INSERT INTO mascota (id, dueno_id, raza_id, nombre, fecha_nacimiento, especie_id
 (1, 1, 1, 'Firulais', '2019-05-10', 1, 'Macho', NULL, 'MC12345', 'ACTIVA'),
 (2, 2, 2, 'Misu', '2020-08-15', 2, 'Hembra', NULL, 'MC67890', 'ACTIVA');
 
-INSERT INTO adopcion (id, mascota_id, estado, fecha_inicio, fecha_fin) VALUES
-(1, 1, 'No Disponible', '2021-01-01', '2021-01-15'),
-(2, 2, 'Adoptada', '2022-03-01', '2022-03-20');
-
 INSERT INTO historial_medico (id, mascota_id, veterinario_id, fecha_evento, evento_tipo_id, descripcion, diagnostico, tratamiento_recomendado) VALUES
 (1, 1, 1, '2023-05-10', 2, 'Consulta general', 'Gastroenteritis', 'Medicamento y dieta blanda'),
 (2, 2, 2, '2023-06-01', 1, 'Vacunación anual', 'Sin novedades', 'Vacuna antirrábica');

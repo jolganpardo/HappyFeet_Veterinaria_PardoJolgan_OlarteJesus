@@ -7,17 +7,21 @@ import model.repository.CitasDAO.ICitaDAO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuCita {
     private ICitaDAO citaDAO;
+    private CitaController controller;
     private Scanner input;
 
     public MenuCita() {
         this.citaDAO = new CitaDAO();
         this.input = new Scanner(System.in);
+        this.controller = new CitaController();
     }
+
 
     public void mostrarMenuCita(){
         int opcion;
@@ -62,31 +66,20 @@ public class MenuCita {
     }
 
     public void agregarCita() {
-        try {
-            System.out.print("ID de la mascota: ");
-            Integer mascotaId = input.nextInt();
-            input.nextLine();
+        System.out.println("\n--- Agregar Cita ---");
+        int mascotaId = leerEntero("Ingrese ID de la mascota: ");
+        LocalDateTime fechaHora = leerFecha("Ingrese fecha y hora (yyyy-MM-dd HH:mm): ");
+        System.out.print("Ingrese motivo: ");
+        String motivo = input.nextLine();
+        int estadoId = leerEntero("Ingrese ID de estado (opcional, 0 si no aplica): ");
+        int veterinarioId = leerEntero("Ingrese ID de veterinario (opcional, 0 si no aplica): ");
 
-            System.out.print("Fecha y hora (yyyy-MM-dd HH:mm): ");
-            String fechaStr = input.nextLine();
-            LocalDateTime fechaHora = LocalDateTime.parse(fechaStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-
-            System.out.print("Motivo: ");
-            String motivo = input.nextLine();
-
-            System.out.print("ID del estado (ej: 1=Programada, 2=En Proceso, 3=Finalizada 4=Cancelada, 5=No Asistió): ");
-            Integer estadoId = input.nextInt();
-            input.nextLine();
-
-            System.out.print("ID del veterinario: ");
-            Integer veterinarioId = input.nextInt();
-
-            Cita nueva = new Cita(null, mascotaId, fechaHora, motivo, estadoId, veterinarioId);
-            citaDAO.agregarCita(nueva);
-            System.out.println("Cita agregada con éxito.");
-        } catch (Exception e) {
-            System.out.println("Error al agregar cita: " + e.getMessage());
-        }
+        controller.agregarCita(mascotaId,
+                fechaHora,
+                motivo,
+                estadoId != 0 ? estadoId : null,
+                veterinarioId != 0 ? veterinarioId : null
+        );
     }
 
     public void buscarPorId() {
@@ -168,6 +161,34 @@ public class MenuCita {
         System.out.println("\n📋 Citas del veterinario:");
         for (Cita c : citas) {
             System.out.println(c);
+        }
+    }
+
+    private int leerEntero() {
+        while (true) {
+            try {
+                return Integer.parseInt(input.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida, ingrese un número: ");
+            }
+        }
+    }
+
+    private int leerEntero(String mensaje) {
+        System.out.print(mensaje);
+        return leerEntero();
+    }
+
+    private LocalDateTime leerFecha(String mensaje) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        while (true) {
+            System.out.print(mensaje);
+            String entrada = input.nextLine();
+            try {
+                return LocalDateTime.parse(entrada, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato inválido. Use: yyyy-MM-dd HH:mm");
+            }
         }
     }
 }

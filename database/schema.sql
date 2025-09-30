@@ -77,16 +77,6 @@ CREATE TABLE mascota (
     FOREIGN KEY (raza_id) REFERENCES raza(id)
 );
 
--- Adopciones
-CREATE TABLE adopcion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    mascota_id INT NOT NULL,
-    estado ENUM('Disponible','Reservada','En Proceso','Adoptada','No Disponible') DEFAULT 'Disponible',
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE,
-    FOREIGN KEY (mascota_id) REFERENCES mascota(id) ON DELETE CASCADE
-);
-
 -- Historial médico
 CREATE TABLE historial_medico (
     id INT AUTO_INCREMENT PRIMARY KEY,
