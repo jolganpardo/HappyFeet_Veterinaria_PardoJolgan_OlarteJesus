@@ -13,8 +13,8 @@ public class MascotaService {
 
     private final IMascotasDAO mascotaDAO;
     private final IDuenosDAO duenosDAO;
-    private final IEspeciesDAO especieDAO;
-    private final IRazasDAO razaDAO;
+    private final EspecieDAO especieDAO;
+    private final RazaDAO razaDAO;
 
     public MascotaService(IMascotasDAO mascotaDAO) {
         this.mascotaDAO = mascotaDAO;
@@ -26,7 +26,6 @@ public class MascotaService {
     public Mascota agregarMascota(String documento, String nombre, int razaId, int especieId,
                                   String fechaNacimiento, String sexo, String urlFoto, String microchip) {
 
-        // Validaciones
         String docValidado = validarDocumentoDueno(documento);
         validarEspecie(especieId);
         validarRaza(razaId, especieId);
@@ -35,13 +34,12 @@ public class MascotaService {
         String sexoValidado = validarSexo(sexo);
         String microchipValidado = validarMicrochip(microchip);
 
-        // Crear mascota
         Mascota mascota = new Mascota(
                 null,
                 null,
                 nombreValidado,
-                especieId,
                 razaId,
+                especieId,
                 fechaValidada,
                 sexoValidado,
                 urlFoto.isEmpty() ? null : urlFoto,
@@ -49,7 +47,6 @@ public class MascotaService {
                 "ACTIVA"
         );
 
-        // Guardar en base de datos
         int idGenerado = mascotaDAO.agregarMascota(mascota, docValidado);
         mascota.setId(idGenerado);
         return mascota;
@@ -61,28 +58,22 @@ public class MascotaService {
             throw new RuntimeException("Mascota no encontrada o INACTIVA");
         }
 
-        // Actualizar nombre si se proporciona
         if (!nombre.isEmpty()) {
             String nombreValidado = validarTexto(nombre, "Nombre", 1, 100);
             mascota.setNombre(nombreValidado);
         }
 
-        // Actualizar sexo si se proporciona
         if (!sexo.isEmpty()) {
             String sexoValidado = validarSexo(sexo);
             mascota.setSexo(sexoValidado);
         }
 
-        // Actualizar dueño si se proporciona
         if (!duenoStr.isEmpty()) {
-            try {
-                int nuevoDuenoId = Integer.parseInt(duenoStr);
-                Dueno dueno = duenosDAO.buscarPorId(nuevoDuenoId);
-                if (dueno == null) {
-                    throw new RuntimeException("No existe un dueño con ID: " + nuevoDuenoId);
-                }
+            int nuevoDuenoId = Integer.parseInt(duenoStr);
+            List<Dueno> duenos = duenosDAO.listarDuenos();
+            if (duenos.stream().anyMatch(d -> d.getId() == nuevoDuenoId)) {
                 mascota.setDuenos_id(nuevoDuenoId);
-            } catch (NumberFormatException e) {
+            } else {
                 throw new RuntimeException("ID de dueño inválido");
             }
         }
@@ -118,29 +109,21 @@ public class MascotaService {
     }
 
     public List<Mascota> obtenerPorRazaId(String idStr) {
-        try {
-            int id = Integer.parseInt(idStr);
-            Raza raza = razaDAO.obtenerPorId(id);
-            if (raza == null) {
-                throw new RuntimeException("No existe una raza con ID: " + id);
-            }
-            return mascotaDAO.obtenerPorRazaId(id);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("ID de raza inválido");
+        int id = Integer.parseInt(idStr);
+        List<Raza> razas = razaDAO.obtenerTodos();
+        if (razas.isEmpty()) {
+            throw new RuntimeException("No hay razas registradas");
         }
+        return mascotaDAO.obtenerPorRazaId(id);
     }
 
     public List<Mascota> obtenerPorEspecieId(String idStr) {
-        try {
-            int id = Integer.parseInt(idStr);
-            Especie especie = especieDAO.obtenerPorId(id);
-            if (especie == null) {
-                throw new RuntimeException("No existe una especie con ID: " + id);
-            }
-            return mascotaDAO.obtenerPorEspecieId(id);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("ID de especie inválido");
+        int id = Integer.parseInt(idStr);
+        List<Especie> especies = especieDAO.obtenerTodos();
+        if (especies.isEmpty()) {
+            throw new RuntimeException("No hay especies registradas");
         }
+        return mascotaDAO.obtenerPorEspecieId(id);
     }
 
     public List<Especie> listarEspecies() {
@@ -155,8 +138,32 @@ public class MascotaService {
         return razaDAO.obtenerTodos();
     }
 
-    // ===== MÉTODOS DE VALIDACIÓN =====
+    public List<Dueno> listarDuenos() {
+        return duenosDAO.listarDuenos();
+    }
 
+    // Nuevos métodos para agregar Especie y Raza
+    public void agregarEspecie(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new RuntimeException("El nombre de la especie no puede estar vacío");
+        }
+        Especie especie = new Especie(null, nombre.trim());
+        especieDAO.agregarEspecie(especie);
+    }
+
+    public void agregarRaza(String nombre, int especieId) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new RuntimeException("El nombre de la raza no puede estar vacío");
+        }
+
+        // Validar que la especie exista
+        validarEspecie(especieId);
+
+        Raza raza = new Raza(null, especieId, nombre.trim());
+        razaDAO.agregarRaza(raza);
+    }
+
+    // Métodos de validación
     private String validarDocumentoDueno(String doc) {
         if (!doc.matches("\\d{6,20}")) {
             throw new RuntimeException("Documento inválido. Debe contener entre 6 y 20 dígitos.");
@@ -170,31 +177,32 @@ public class MascotaService {
     }
 
     private void validarEspecie(int especieId) {
-        Especie especie = especieDAO.obtenerPorId(especieId);
-        if (especie == null) {
-            throw new RuntimeException("No existe una especie con ID: " + especieId);
+        List<Especie> especies = especieDAO.obtenerTodos();
+        if (especies.isEmpty()) {
+            throw new RuntimeException("No hay especies registradas.");
+        }
+
+        if (especies.stream().noneMatch(e -> e.getId() == especieId)) {
+            throw new RuntimeException("ID de especie no existe.");
         }
     }
 
     private void validarRaza(int razaId, int especieId) {
-        Raza raza = razaDAO.obtenerPorId(razaId);
-        if (raza == null) {
-            throw new RuntimeException("No existe una raza con ID: " + razaId);
+        List<Raza> razas = razaDAO.obtenerPorEspecieId(especieId);
+        if (razas.isEmpty()) {
+            throw new RuntimeException("No hay razas registradas para esta especie.");
         }
 
-        if (raza.getEspecie_id() != especieId) {
-            throw new RuntimeException("La raza seleccionada no corresponde a la especie indicada.");
+        if (razas.stream().noneMatch(r -> r.getId() == razaId)) {
+            throw new RuntimeException("ID de raza no existe.");
         }
     }
 
     private String validarTexto(String texto, String campo, int min, int max) {
-        if (texto == null || texto.trim().isEmpty()) {
-            throw new RuntimeException(campo + " no puede estar vacío.");
-        }
         if (texto.length() < min || texto.length() > max) {
             throw new RuntimeException(campo + " inválido. Longitud permitida: " + min + "-" + max);
         }
-        return texto.trim();
+        return texto;
     }
 
     private LocalDate validarFecha(String fechaStr) {
@@ -203,9 +211,6 @@ public class MascotaService {
             if (fecha.isAfter(LocalDate.now())) {
                 throw new RuntimeException("La fecha no puede ser futura.");
             }
-            if (fecha.isBefore(LocalDate.now().minusYears(50))) {
-                throw new RuntimeException("La fecha es demasiado antigua. Verifique el formato.");
-            }
             return fecha;
         } catch (DateTimeParseException e) {
             throw new RuntimeException("Formato de fecha inválido. Use yyyy-MM-dd.");
@@ -213,9 +218,6 @@ public class MascotaService {
     }
 
     private String validarSexo(String sexo) {
-        if (sexo == null || sexo.trim().isEmpty()) {
-            throw new RuntimeException("Sexo no puede estar vacío.");
-        }
         if (!sexo.equalsIgnoreCase("Macho") && !sexo.equalsIgnoreCase("Hembra")) {
             throw new RuntimeException("Sexo inválido. Debe ser 'Macho' o 'Hembra'.");
         }
@@ -223,10 +225,6 @@ public class MascotaService {
     }
 
     private String validarMicrochip(String microchip) {
-        if (microchip == null) {
-            return "";
-        }
-        microchip = microchip.trim();
         if (!microchip.isEmpty() && !microchip.matches("[A-Za-z0-9]{5,20}")) {
             throw new RuntimeException("Microchip inválido (5-20 caracteres alfanuméricos).");
         }

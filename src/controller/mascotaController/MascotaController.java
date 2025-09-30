@@ -1,5 +1,6 @@
 package controller.mascotaController;
 
+import model.entities.Duenos.Dueno;
 import model.entities.Mascotas.Especie;
 import model.entities.Mascotas.Mascota;
 import model.entities.Mascotas.Raza;
@@ -35,37 +36,78 @@ public class MascotaController {
         for (Especie especie : especies) {
             System.out.println(especie.getId() + " - " + especie.getNombre());
         }
-
-        System.out.print("Seleccione el ID de la especie: ");
-        String especieStr = input.nextLine().trim();
+        System.out.print("Seleccione el ID de la especie (o 0 para añadir nueva): ");
         int especieId;
         try {
-            especieId = Integer.parseInt(especieStr);
+            especieId = Integer.parseInt(input.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Error: ID de especie inválido");
+            System.out.println("ID inválido");
             return;
         }
 
-        // Mostrar razas filtradas por especie
+        // Agregar nueva especie si se selecciona 0
+        if (especieId == 0) {
+            System.out.print("Ingrese el nombre de la nueva especie: ");
+            String nuevaEspecie = input.nextLine().trim();
+            if (nuevaEspecie.isEmpty()) {
+                System.out.println("Nombre de especie no puede estar vacío");
+                return;
+            }
+            try {
+                mascotaService.agregarEspecie(nuevaEspecie);
+                especies = mascotaService.listarEspecies();
+                especieId = especies.stream()
+                        .filter(e -> e.getNombre().equalsIgnoreCase(nuevaEspecie))
+                        .findFirst()
+                        .map(Especie::getId)
+                        .orElse(0);
+                System.out.println("Especie añadida con ID: " + especieId);
+            } catch (Exception e) {
+                System.out.println("Error al agregar especie: " + e.getMessage());
+                return;
+            }
+        }
+
+        // Mostrar y seleccionar raza
         List<Raza> razas = mascotaService.listarRazasPorEspecie(especieId);
         if (razas.isEmpty()) {
             System.out.println("No hay razas registradas para esta especie.");
-            return;
+        } else {
+            System.out.println("=== RAZAS DISPONIBLES ===");
+            for (Raza raza : razas) {
+                System.out.println(raza.getId() + " - " + raza.getNombre());
+            }
         }
-
-        System.out.println("=== RAZAS DISPONIBLES ===");
-        for (Raza raza : razas) {
-            System.out.println(raza.getId() + " - " + raza.getNombre());
-        }
-
-        System.out.print("Seleccione el ID de la raza: ");
-        String razaStr = input.nextLine().trim();
+        System.out.print("Seleccione el ID de la raza (o 0 para añadir nueva): ");
         int razaId;
         try {
-            razaId = Integer.parseInt(razaStr);
+            razaId = Integer.parseInt(input.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Error: ID de raza inválido");
+            System.out.println("ID inválido");
             return;
+        }
+
+        // Agregar nueva raza si se selecciona 0
+        if (razaId == 0) {
+            System.out.print("Ingrese el nombre de la nueva raza: ");
+            String nuevaRaza = input.nextLine().trim();
+            if (nuevaRaza.isEmpty()) {
+                System.out.println("Nombre de raza no puede estar vacío");
+                return;
+            }
+            try {
+                mascotaService.agregarRaza(nuevaRaza, especieId);
+                razas = mascotaService.listarRazasPorEspecie(especieId);
+                razaId = razas.stream()
+                        .filter(r -> r.getNombre().equalsIgnoreCase(nuevaRaza))
+                        .findFirst()
+                        .map(Raza::getId)
+                        .orElse(0);
+                System.out.println("Raza añadida con ID: " + razaId);
+            } catch (Exception e) {
+                System.out.println("Error al agregar raza: " + e.getMessage());
+                return;
+            }
         }
 
         System.out.print("Nombre de la mascota: ");
@@ -96,7 +138,7 @@ public class MascotaController {
     }
 
     public void actualizarMascota() {
-        System.out.println("=== ACTUALIZAR MASCOTA (ADOPCIÓN) ===");
+        System.out.println("=== ACTUALIZAR DUEÑO DE LA MASCOTA ===");
         System.out.print("Ingrese ID de la mascota: ");
         int id;
         try {
@@ -108,26 +150,47 @@ public class MascotaController {
 
         try {
             Mascota mascota = mascotaService.obtenerPorId(id);
-            if (mascota == null) {
+            if (mascota == null || "INACTIVA".equalsIgnoreCase(mascota.getEstado())) {
                 System.out.println("Mascota no encontrada o INACTIVA");
                 return;
             }
 
-            System.out.print("Nuevo nombre (" + mascota.getNombre() + "): ");
-            String nombre = input.nextLine().trim();
+            // Listar dueños disponibles
+            List<Dueno> duenos = mascotaService.listarDuenos();
+            if (duenos.isEmpty()) {
+                System.out.println("No hay dueños registrados.");
+                return;
+            }
 
-            System.out.print("Nuevo sexo (" + mascota.getSexo() + "): ");
-            String sexo = input.nextLine().trim();
+            System.out.println("=== DUEÑOS DISPONIBLES ===");
+            for (Dueno dueno : duenos) {
+                System.out.println(dueno.getId() + " - " + dueno.getNombre_completo());
+            }
 
-            System.out.print("Nuevo ID de dueño (" + mascota.getDueno_id() + "): ");
+            System.out.print("Seleccione el ID del nuevo dueño: ");
             String duenoStr = input.nextLine().trim();
+            int nuevoDuenoId;
+            try {
+                nuevoDuenoId = Integer.parseInt(duenoStr);
+            } catch (NumberFormatException e) {
+                System.out.println("Error: ID de dueño inválido");
+                return;
+            }
 
-            mascotaService.actualizarMascota(id, nombre, sexo, duenoStr);
-            System.out.println("Mascota actualizada correctamente.");
+            if (duenos.stream().noneMatch(d -> d.getId() == nuevoDuenoId)) {
+                System.out.println("ID de dueño no existe");
+                return;
+            }
+
+            // Actualizar dueño de la mascota
+            mascotaService.actualizarMascota(id, "", "", String.valueOf(nuevoDuenoId));
+            System.out.println("Dueño de la mascota actualizado correctamente.");
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     public void cambiarEstadoMascota() {
         System.out.println("=== CAMBIAR ESTADO DE MASCOTA (INACTIVA) ===");
