@@ -1,10 +1,5 @@
 package view;
 
-import controller.citaController.CitaController;
-import model.repository.CitasDAO.CitaDAO;
-import model.repository.InventarioDAO.ProveedorDAO;
-import model.repository.VeterinariosDAO.VeterinarioDAO;
-import service.CitaService;
 import view.cita.MenuCita;
 import view.dueno.MenuDueno;
 import view.inventario.MenuInventario;
@@ -51,14 +46,11 @@ public class MenuPrincipal {
                     menuMascota.mostrarMenuMascota();
                     break;
                 case 3:
-                    CitaService citaService = new CitaService(new CitaDAO(), new VeterinarioDAO());
-                    CitaController citaController = new CitaController(citaService);
-                    MenuCita menuCita = new MenuCita(citaController);
+                    MenuCita menuCita = new MenuCita();
                     menuCita.mostrarMenuCita();
                     break;
-
                 case 4:
-                    MenuVeterinario menuVeterinario = new MenuVeterinario(scanner, new VeterinarioDAO());
+                    MenuVeterinario menuVeterinario = new MenuVeterinario();
                     menuVeterinario.mostrarMenuVeterinario();
                     break;
                 case 5:
@@ -66,11 +58,10 @@ public class MenuPrincipal {
                     menuInventario.mostrarMenu();
                     break;
                 case 6:
-                    mostrarMenu();
                     break;
                 case 7:
-                    MenuProveedor menuProveedor = new MenuProveedor(scanner, new ProveedorDAO());
-                    menuProveedor.mostrarMenu();
+                    MenuProveedor menuProveedor = new MenuProveedor();
+                    menuProveedor.mostrarMenuProveedor();
                     break;
                 case 0:
                     System.out.println("Saliendo... Hasta pronto.");
