@@ -1,7 +1,6 @@
 package controller.duenoController;
 
 import model.entities.Duenos.Dueno;
-import model.repository.duenosDAO.DuenoDAO;
 import model.repository.duenosDAO.IDuenosDAO;
 
 import java.util.Scanner;
@@ -32,30 +31,29 @@ public class DuenoController {
         System.out.println("Dueño insertado con éxito.");
     }
 
-    public void buscarPorId() {
-        System.out.print("ID del dueño: ");
-        int id = input.nextInt();
-        input.nextLine();
-        Dueno dueno = iduenoDAO.buscarPorId(id);
+    public void buscarPorDocumento() {
+        System.out.print("Documento del dueño: ");
+        String documento = input.nextLine();
+        Dueno dueno = iduenoDAO.buscarPorDocumento(documento);
         if (dueno != null) {
-            System.out.println("🔎 Dueño encontrado: " + dueno);
+            imprimirDueno(dueno);
         } else {
             System.out.println("No existe dueño con ese ID.");
         }
     }
 
     public void listarDuenos() {
-        System.out.println("\n📋 Lista de dueños:");
+        System.out.println("\nLista de dueños:");
         for (Dueno d : iduenoDAO.listarDuenos()) {
-            System.out.println(d);
+            imprimirDueno(d);
         }
     }
 
     public void actualizarDueno() {
-        System.out.print("ID del dueño a actualizar: ");
-        int id = input.nextInt();
+        System.out.print("Documento del dueño a actualizar: ");
+        String documento = input.nextLine();
         input.nextLine();
-        Dueno dueno = iduenoDAO.buscarPorId(id);
+        Dueno dueno = iduenoDAO.buscarPorDocumento(documento);
         if (dueno != null) {
             System.out.print("Nuevo nombre completo (" + dueno.getNombre_completo() + "): ");
             String nuevoNombre = input.nextLine();
@@ -76,20 +74,37 @@ public class DuenoController {
             iduenoDAO.actualizarDuenos(dueno);
             System.out.println("Dueño actualizado con éxito.");
         } else {
-            System.out.println("No existe dueño con ese ID.");
+            System.out.println("No existe dueño con esen documento.");
         }
     }
 
     public void eliminarDueno() {
-        System.out.print("ID del dueño a eliminar: ");
-        int id = input.nextInt();
+        System.out.print("Documento del dueño a eliminar: ");
+        String documento = input.nextLine();
         input.nextLine();
-        Dueno dueno = iduenoDAO.buscarPorId(id);
+        Dueno dueno = iduenoDAO.buscarPorDocumento(documento);
         if (dueno != null) {
-            iduenoDAO.eliminarDueno(id);
-            System.out.println("🗑️Dueño eliminado con éxito.");
+            iduenoDAO.eliminarDueno(documento);
+            System.out.println("Dueño eliminado con éxito.");
         } else {
-            System.out.println("No existe dueño con ese ID.");
+            System.out.println("No existe dueño con ese documento.");
         }
     }
+
+    public void imprimirDueno(Dueno dueno) {
+        if (dueno == null) {
+            System.out.println("No se encontró el dueño.");
+            return;
+        }
+
+        System.out.println("------ Información del dueño ------");
+        System.out.println("ID: " + dueno.getId());
+        System.out.println("Nombre completo: " + dueno.getNombre_completo());
+        System.out.println("Documento de identidad: " + dueno.getDocumento_identidad());
+        System.out.println("Dirección: " + dueno.getDireccion());
+        System.out.println("Teléfono: " + dueno.getTelefono());
+        System.out.println("Email: " + dueno.getEmail());
+        System.out.println("----------------------------------");
+    }
+
 }

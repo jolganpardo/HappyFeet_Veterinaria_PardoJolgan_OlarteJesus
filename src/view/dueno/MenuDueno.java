@@ -23,7 +23,7 @@ public class MenuDueno {
             System.out.print("""
                 \n=== MENU DUEÑO ===
                 1. Insertar nuevo dueño.
-                2. Buscar dueño por ID.
+                2. Buscar dueño por documento.
                 3. Listar todos los dueños.
                 4. Actualizar dueño.
                 5. Eliminar dueño.
@@ -38,7 +38,7 @@ public class MenuDueno {
                     duenoController.agregarDueno();
                     break;
                 case 2:
-                    duenoController.buscarPorId();
+                    duenoController.buscarPorDocumento();
                     break;
                 case 3:
                     duenoController.listarDuenos();

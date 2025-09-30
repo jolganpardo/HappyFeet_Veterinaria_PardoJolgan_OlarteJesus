@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IDuenosDAO {
     void agregarDueno(Dueno dueno);
-    Dueno buscarPorId(int id);
+    Dueno buscarPorDocumento(String documento);
     List<Dueno> listarDuenos();
     void actualizarDuenos(Dueno dueno);
-    void eliminarDueno(int id);
+    void eliminarDueno(String documento);
 }
