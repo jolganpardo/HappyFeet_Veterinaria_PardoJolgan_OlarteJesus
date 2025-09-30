@@ -1,9 +1,11 @@
 package view.mascota;
 
 import controller.mascotaController.MascotaController;
+import model.entities.Mascotas.Mascota;
 import model.repository.MascotasDAO.IMascotasDAO;
 import model.repository.MascotasDAO.MascotaDAO;
 
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class MenuMascota {

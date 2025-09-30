@@ -12,71 +12,73 @@ public class MascotaDAO implements IMascotasDAO {
     public MascotaDAO() {con = ConexionSingleton.getInstance().getConnection();}
 
     @Override
-    public void agregarMascota(Mascota mascota, String documentoDueno) {
+    public int agregarMascota(Mascota mascota, String documentoDueno) {
+        // Primero obtener el dueno_id
+        String selectDuenoSql = "SELECT id FROM dueno WHERE documento_identidad = ?";
+        int duenoId = 0;
+
+        try (PreparedStatement selectPstmt = con.prepareStatement(selectDuenoSql)) {
+            selectPstmt.setString(1, documentoDueno);
+            try (ResultSet rs = selectPstmt.executeQuery()) {
+                if (rs.next()) {
+                    duenoId = rs.getInt("id");
+                    mascota.setDuenos_id(duenoId); // Asignar inmediatamente
+                } else {
+                    throw new SQLException("No se encontró un dueño con documento: " + documentoDueno);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar dueño con documento " + documentoDueno, e);
+        }
+
+        // Ahora insertar la mascota con el dueno_id conocido
         String sql = """
-        INSERT INTO mascota (
-            dueno_id, nombre, especie_id, raza_id, fecha_nacimiento, sexo, url_foto, estado
-        )
-        VALUES (
-            (SELECT id FROM dueno WHERE documento_identidad = ?),
-            ?, ?, ?, ?, ?, ?, ?
-        )
-        """;
+    INSERT INTO mascota (
+        dueno_id, nombre, especie_id, raza_id, fecha_nacimiento, sexo, url_foto, estado
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """;
 
         try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            // 1 → documento dueño
-            pstmt.setString(1, documentoDueno);
-
-            // 2 → nombre
+            pstmt.setInt(1, duenoId);
             pstmt.setString(2, mascota.getNombre());
-
-            // 3 → especie_id
             pstmt.setInt(3, mascota.getEspecie_id());
-
-            // 4 → raza_id
             pstmt.setInt(4, mascota.getRaza_id());
-
-            // 5 → fecha_nacimiento
             pstmt.setDate(5, java.sql.Date.valueOf(mascota.getFecha_nacimiento()));
-
-            // 6 → sexo
             pstmt.setString(6, mascota.getSexo());
-
-            // 7 → url_foto (puede ser null)
             if (mascota.getUrl_image() != null) {
                 pstmt.setString(7, mascota.getUrl_image());
             } else {
                 pstmt.setNull(7, Types.VARCHAR);
             }
-
-            // 8 → estado
             pstmt.setString(8, mascota.getEstado());
-
             pstmt.executeUpdate();
 
-            // Obtener el ID generado
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     int idGenerado = rs.getInt(1);
 
-                    // Si el usuario no dio microchip, generamos uno basado en el ID
                     String microchip = mascota.getMicrochip();
                     if (microchip == null || microchip.isBlank()) {
                         microchip = "M-" + idGenerado;
+                        mascota.setMicrochip(microchip);
                     }
 
-                    // Actualizamos la mascota con el microchip
                     String updateSql = "UPDATE mascota SET microchip = ? WHERE id = ?";
                     try (PreparedStatement updatePstmt = con.prepareStatement(updateSql)) {
                         updatePstmt.setString(1, microchip);
                         updatePstmt.setInt(2, idGenerado);
                         updatePstmt.executeUpdate();
                     }
+
+                    return idGenerado;
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado para la mascota");
                 }
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error al agregar mascota con documento " + documentoDueno, e);
+            throw new RuntimeException("Error al agregar mascota", e);
         }
     }
 

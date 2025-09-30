@@ -9,6 +9,7 @@ import model.repository.duenosDAO.DuenoDAO;
 import model.repository.duenosDAO.IDuenosDAO;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -110,8 +111,13 @@ public class MascotaController {
                 "ACTIVA"
         );
 
-        imascotasDAO.agregarMascota(mascota, documentoDueno);
-        System.out.println("Mascota agregada con éxito.");
+        // Capturar el ID generado
+        int idGenerado = imascotasDAO.agregarMascota(mascota, documentoDueno);
+        mascota.setId(idGenerado); // Asignar el ID a la mascota
+
+        System.out.println("✓ Mascota agregada con éxito. ID: " + idGenerado);
+        imprimirMascota(mascota);
+
     }
 
 

@@ -34,6 +34,8 @@ public class Mascota {
         return id;
     }
 
+    public void setId(Integer id) {this.id = id;}
+
     public Integer getDuenos_id() {
         return duenos_id;
     }

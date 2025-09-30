@@ -5,7 +5,7 @@ import model.entities.Mascotas.Mascota;
 import java.util.List;
 
 public interface  IMascotasDAO {
-    void agregarMascota(Mascota mascota, String documentoDueno);
+    int agregarMascota(Mascota mascota, String documentoDueno);
     void agregarMascota(Mascota mascota);
     Mascota obtenerPorId(Integer id);
     List<Mascota> obtenerTodos();
