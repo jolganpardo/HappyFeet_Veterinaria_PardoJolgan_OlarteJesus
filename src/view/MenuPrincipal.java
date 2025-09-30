@@ -1,7 +1,13 @@
 package view;
 
+import controller.citaController.CitaController;
+import model.repository.CitasDAO.CitaDAO;
+import model.repository.InventarioDAO.ProveedorDAO;
+import model.repository.VeterinariosDAO.VeterinarioDAO;
+import service.CitaService;
 import view.cita.MenuCita;
 import view.dueno.MenuDueno;
+import view.factura.MenuFactura;
 import view.inventario.MenuInventario;
 import view.mascota.MenuMascota;
 import view.proveedor.MenuProveedor;
@@ -46,11 +52,14 @@ public class MenuPrincipal {
                     menuMascota.mostrarMenuMascota();
                     break;
                 case 3:
-                    MenuCita menuCita = new MenuCita();
+                    CitaService citaService = new CitaService(new CitaDAO(), new VeterinarioDAO());
+                    CitaController citaController = new CitaController(citaService);
+                    MenuCita menuCita = new MenuCita(citaController);
                     menuCita.mostrarMenuCita();
                     break;
+
                 case 4:
-                    MenuVeterinario menuVeterinario = new MenuVeterinario();
+                    MenuVeterinario menuVeterinario = new MenuVeterinario(scanner, new VeterinarioDAO());
                     menuVeterinario.mostrarMenuVeterinario();
                     break;
                 case 5:
@@ -58,10 +67,12 @@ public class MenuPrincipal {
                     menuInventario.mostrarMenu();
                     break;
                 case 6:
+                    MenuFactura menuFactura = new MenuFactura();
+                    menuFactura.mostrarMenuFactura();
                     break;
                 case 7:
-                    MenuProveedor menuProveedor = new MenuProveedor();
-                    menuProveedor.mostrarMenuProveedor();
+                    MenuProveedor menuProveedor = new MenuProveedor(scanner, new ProveedorDAO());
+                    menuProveedor.mostrarMenu();
                     break;
                 case 0:
                     System.out.println("Saliendo... Hasta pronto.");
