@@ -138,7 +138,7 @@ CREATE TABLE factura (
     dueno_id INT,
     fecha_emision DATETIME NOT NULL,
     total DECIMAL(10,2) NOT NULL,
-    metodo_pago ENUM('Efectivo','Tarjeta Débito','Tarjeta Crédito','Transferencia','Cheque') NOT NULL,
+    metodo_pago ENUM('Efectivo','Tarjeta Debito','Tarjeta Credito','Transferencia','Cheque') NOT NULL,
     FOREIGN KEY (dueno_id) REFERENCES dueno(id)
 );
 

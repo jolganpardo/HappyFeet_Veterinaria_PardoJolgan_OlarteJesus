@@ -42,15 +42,6 @@ public class MenuHistorialMedico {
                     >>>Seleccione una opción:\s 
                     """);
 
-            System.out.println("\n===== MENÚ HISTORIAL MÉDICO =====");
-            System.out.println("1. Agregar historial médico");
-            System.out.println("2. Ver historial por ID");
-            System.out.println("3. Ver todos los historiales");
-            System.out.println("4. Ver historiales por mascota");
-            System.out.println("5. Actualizar historial médico");
-            System.out.println("6. Eliminar historial médico");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
             opcion = input.nextInt();
             input.nextLine(); // limpiar buffer
 

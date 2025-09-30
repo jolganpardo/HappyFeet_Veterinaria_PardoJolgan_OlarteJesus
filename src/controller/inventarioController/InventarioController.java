@@ -18,7 +18,7 @@ public class InventarioController {
     public void agregarInventario(Inventario inventario) {
         try {
             inventarioService.agregarInventario(inventario);
-            System.out.println("Producto agregado al inventario correctamente.");
+            imprimirInventario(inventario);
         } catch (Exception e) {
             System.out.println("Error al agregar producto: " + e.getMessage());
         }
@@ -27,7 +27,7 @@ public class InventarioController {
     public Inventario obtenerInventarioPorId(int id) {
         Inventario inventario = inventarioService.obtenerPorId(id);
         if (inventario != null) {
-            System.out.println("Producto encontrado: " + inventario);
+            imprimirInventario(inventario);
         } else {
             System.out.println("No se encontró el producto con ID: " + id);
         }
@@ -57,15 +57,39 @@ public class InventarioController {
     }
 
     public List<Inventario> obtenerPorTipoProducto(int tipoId) {
-        return inventarioService.obtenerPorTipoProducto(tipoId);
+        List<Inventario> porTipo = inventarioService.obtenerPorTipoProducto(tipoId);
+        if (porTipo.isEmpty()) {
+            System.out.println("No se encontraron productos de este tipo.");
+        } else {
+            for (Inventario inv : porTipo) {
+                imprimirInventario(inv);
+            }
+        }
+        return porTipo;
     }
 
     public List<Inventario> obtenerPorProveedor(int proveedorId) {
-        return inventarioService.obtenerPorProveedor(proveedorId);
+        List<Inventario> porProveedor = inventarioService.obtenerPorProveedor(proveedorId);
+        if (porProveedor.isEmpty()) {
+            System.out.println("No se encontraron productos de este proveedor.");
+        } else {
+            for (Inventario inv : porProveedor) {
+                imprimirInventario(inv);
+            }
+        }
+        return porProveedor;
     }
 
     public List<Inventario> obtenerProductosBajoStock() {
-        return inventarioService.obtenerProductosBajoStock();
+        List<Inventario> bajos = inventarioService.obtenerProductosBajoStock();
+        if (bajos.isEmpty()) {
+            System.out.println("No hay productos bajo stock mínimo.");
+        } else {
+            for (Inventario inv : bajos) {
+                imprimirInventario(inv);
+            }
+        }
+        return bajos;
     }
 
     public void imprimirInventario(Inventario inv) {

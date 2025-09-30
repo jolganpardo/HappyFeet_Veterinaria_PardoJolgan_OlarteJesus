@@ -26,7 +26,7 @@ public class ProveedorController {
         Proveedor proveedor = new Proveedor(null, nombre, contacto, telefono, email, direccion);
         try {
             proveedorService.agregarProveedor(proveedor);
-            System.out.println("Proveedor agregado con éxito.");
+            imprimirProveedor(proveedor);
         } catch (Exception e) {
             System.out.println("Error al agregar proveedor: " + e.getMessage());
         }

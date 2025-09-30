@@ -149,14 +149,12 @@ public class MenuInventario {
         System.out.print("Ingrese ID del proveedor: ");
         int provId = scanner.nextInt();
         List<Inventario> lista = controller.obtenerPorProveedor(provId);
-        lista.forEach(System.out::println);
     }
 
     private void buscarPorTipo() {
         System.out.print("Ingrese ID del tipo de producto: ");
         int tipoId = scanner.nextInt();
         List<Inventario> lista = controller.obtenerPorTipoProducto(tipoId);
-        lista.forEach(System.out::println);
     }
 
 

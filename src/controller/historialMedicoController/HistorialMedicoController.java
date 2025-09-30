@@ -1,6 +1,7 @@
 package controller.historialMedicoController;
 
 import model.entities.Historial_Medico.HistorialMedico;
+import model.entities.Mascotas.Mascota;
 import model.repository.HistorialMedicoDAO.HistorialMedicoDAO;
 import model.repository.VeterinariosDAO.VeterinarioDAO;
 import service.HistorialMedicoService;
@@ -46,7 +47,7 @@ public class HistorialMedicoController {
             );
 
             service.agregarHistorial(historial);
-            System.out.println("Historial agregado con éxito.");
+            imprimirHistorialMedico(historial);
         } catch (Exception e) {
             System.out.println("Error al agregar historial: " + e.getMessage());
         }
@@ -57,7 +58,7 @@ public class HistorialMedicoController {
         int id = scanner.nextInt();
         HistorialMedico historial = service.obtenerHistorialPorId(id);
         if (historial != null) {
-            System.out.println(historial);
+            imprimirHistorialMedico(historial);
         } else {
             System.out.println("No se encontró historial con ese ID.");
         }
@@ -65,8 +66,15 @@ public class HistorialMedicoController {
 
     public void obtenerTodos() {
         List<HistorialMedico> historiales = service.obtenerTodosLosHistoriales();
-        historiales.forEach(System.out::println);
+        if (historiales.isEmpty()) {
+            System.out.println("No hay historiales registrados.");
+        } else {
+            for (HistorialMedico historial : historiales) {
+                imprimirHistorialMedico(historial);
+            }
+        }
     }
+
 
     public void obtenerPorMascota() {
         System.out.print("Ingrese el ID de la mascota: ");
@@ -75,9 +83,11 @@ public class HistorialMedicoController {
         if (historiales.isEmpty()) {
             System.out.println("No hay historiales para esta mascota.");
         } else {
-            historiales.forEach(System.out::println);
+            historiales.forEach(this::imprimirHistorialMedico);
         }
     }
+
+
 
     public void actualizarHistorial() {
         try {
@@ -109,5 +119,22 @@ public class HistorialMedicoController {
         int id = scanner.nextInt();
         service.eliminarHistorial(id);
         System.out.println("Historial eliminado.");
+    }
+
+    private void imprimirHistorialMedico(HistorialMedico historial) {
+        if (historial == null) {
+            System.out.println("No se encontró la mascota.");
+            return;
+        }
+        System.out.println("------ INFORMACIÓN DE HISTORIAL MEDICO ------");
+        System.out.println("ID: " + historial.getId());
+        System.out.println("ID Mascota: " + historial.getMascota_id());
+        System.out.println("Veterinario ID: " + historial.getVeterinario_id());
+        System.out.println("Fecha Evento: " + historial.getFecha_evento());
+        System.out.println("Evento Tipo ID: " + historial.getEvento_tipo_id());
+        System.out.println("Descripcion: " + historial.getDescripcion());
+        System.out.println("Diagnostico: " + historial.getDiagnostico());
+        System.out.println("Tratamiento Recomendado: " + historial.getTratamiento_recomendado());
+        System.out.println("--------------------------------------");
     }
 }
