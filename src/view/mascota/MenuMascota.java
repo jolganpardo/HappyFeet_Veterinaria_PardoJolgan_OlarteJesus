@@ -27,7 +27,7 @@ public class MenuMascota {
                     3. Mostrar todas las mascotas.
                     4. Actualizar mascota.
                     5. Cambiar estado de la mascota (Activa, Inactiva).
-                    6. Mascota por ID del dueño.
+                    6. Mascota por documento del dueño.
                     7. Mostrar mascota por raza.
                     8. Mostrar mascota por especie.
                     >>> Ingrese la opcion:""");

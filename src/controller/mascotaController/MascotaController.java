@@ -158,7 +158,7 @@ public class MascotaController {
 
         // Guardar cambios
         imascotasDAO.actualizarMascota(mascota);
-        System.out.println("Mascota actualizada/adoptada correctamente.");
+        System.out.println("Mascota actualizada.");
     }
 
 
@@ -180,7 +180,7 @@ public class MascotaController {
             return;
         }
         for (Mascota m : lista) {
-            System.out.println(m);
+            imprimirMascota(m);
         }
     }
 
@@ -191,7 +191,7 @@ public class MascotaController {
 
         Mascota mascota = imascotasDAO.obtenerPorId(id);
         if (mascota != null) {
-            System.out.println(mascota);
+            imprimirMascota(mascota);
         } else {
             System.out.println("Mascota no encontrada.");
         }
@@ -200,7 +200,7 @@ public class MascotaController {
     public void obtenerPorDuenoDocumento() {
         System.out.print("Ingrese el documento de identificación del dueño: ");
         int documento = input.nextInt();
-        input.nextLine(); // limpiar buffer
+        input.nextLine();
 
         List<Mascota> mascotas = imascotasDAO.obtenerPorDuenoDocumento(documento);
 
@@ -209,7 +209,7 @@ public class MascotaController {
         } else {
             System.out.println("Mascotas del dueño con documento " + documento + ":");
             for (Mascota m : mascotas) {
-                System.out.println(m);
+                imprimirMascota(m);
             }
         }
     }
@@ -241,7 +241,7 @@ public class MascotaController {
         } else {
             System.out.println("=== Mascotas de la raza ID " + razaId + " ===");
             for (Mascota m : mascotas) {
-                System.out.println(m);
+                imprimirMascota(m);
             }
         }
     }
@@ -264,7 +264,7 @@ public class MascotaController {
         // Preguntar al usuario
         System.out.print("Ingrese el ID de la especie: ");
         int especieId = input.nextInt();
-        input.nextLine(); // limpiar buffer
+        input.nextLine();
 
         List<Mascota> mascotas = imascotasDAO.obtenerPorEspecieId(especieId);
 
@@ -273,9 +273,28 @@ public class MascotaController {
         } else {
             System.out.println("=== Mascotas de la especie ID " + especieId + " ===");
             for (Mascota m : mascotas) {
-                System.out.println(m);
+                imprimirMascota(m);
             }
         }
+    }
+
+    public void imprimirMascota(Mascota mascota) {
+        if (mascota == null) {
+            System.out.println("No se encontró la Mascota.");
+            return;
+        }
+
+        System.out.println("------ INFORMACION DE LA MASCOTA ------");
+        System.out.println("ID: " + mascota.getId());
+        System.out.println("ID Dueño: " + mascota.getDueno_id());
+        System.out.println("Nombre: " + mascota.getNombre());
+        System.out.println("Fecha Nacimiento: " + mascota.getFecha_nacimiento());
+        System.out.println("ID Especie: " + mascota.getEspecie_id());
+        System.out.println("Sexo: " + mascota.getSexo());
+        System.out.println("URL Foto: " + mascota.getUrl_foto());
+        System.out.println("Microchip: " + mascota.getMicrochip());
+        System.out.println("Estado: " + mascota.getEstado());
+        System.out.println("----------------------------------");
     }
 
 
