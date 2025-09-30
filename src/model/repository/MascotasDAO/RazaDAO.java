@@ -1,7 +1,6 @@
 package model.repository.MascotasDAO;
 
 import model.ConexionSingleton;
-import model.entities.Mascotas.Especie;
 import model.entities.Mascotas.Raza;
 
 import java.sql.*;
@@ -13,32 +12,38 @@ public class RazaDAO implements IRazasDAO {
     public RazaDAO() { con = ConexionSingleton.getInstance().getConnection();}
 
     @Override
-    public void agregarRaza(Raza raza) {
+    public Raza agregarRaza(Raza raza) {
         String sql = "INSERT INTO raza (especie_id, nombre) VALUES (?, ?)";
-
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, raza.getEspecie_id().getId());
+        try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, raza.getEspecie_id());
             pstmt.setString(2, raza.getNombre());
             pstmt.executeUpdate();
 
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    raza.setId(rs.getInt(1)); // ✅ Esto es obligatorio
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("Error al agregar raza.\n" + e.getMessage());
+            throw new RuntimeException("Error al agregar raza: " + e.getMessage());
         }
+        return raza;
     }
+
 
     @Override
     public void actualizarRaza(Raza raza) {
-        String sql = "UPDATE raza SET nombre = ? WHERE id = ?";
-
-        try (PreparedStatement pstmt = con.prepareStatement(sql)){
+        String sql = "UPDATE raza SET nombre = ?, especie_id = ? WHERE id = ?";
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, raza.getNombre());
-            pstmt.setInt(2, raza.getId());
+            pstmt.setInt(2, raza.getEspecie_id());
+            pstmt.setInt(3, raza.getId());
             pstmt.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Error al actualizar raza ID " + raza.getId(), e);
+            throw new RuntimeException("Error al actualizar raza ID=" + raza.getId(), e);
         }
     }
+
 
     @Override
     public void eliminarRaza(int id) {
@@ -69,7 +74,7 @@ public class RazaDAO implements IRazasDAO {
 
                 while (rs.next()) {
                     raza = new Raza(rs.getInt("id"),
-                            new Especie(rs.getInt("especie_id"), null),
+                            rs.getInt("especie_id"),
                             rs.getString("nombre"));
 
                 }
@@ -89,7 +94,7 @@ public class RazaDAO implements IRazasDAO {
             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Raza raza = new Raza(rs.getInt("id"),
-                        new Especie(rs.getInt("especie_id"), null),
+                        rs.getInt("especie_id"),
                         rs.getString("nombre"));
                 lst.add(raza);
 
@@ -111,7 +116,7 @@ public class RazaDAO implements IRazasDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Raza raza = new Raza(rs.getInt("id"),
-                            new Especie(rs.getInt("especie_id"), null),
+                            rs.getInt("especie_id"),
                             rs.getString("nombre"));
                     lst.add(raza);
 

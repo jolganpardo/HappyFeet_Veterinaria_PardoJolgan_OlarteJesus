@@ -23,10 +23,37 @@ public class DuenoDAO implements IDuenosDAO {
             pstmt.setString(5, dueno.getEmail());
             pstmt.executeUpdate();
 
+            System.out.println("Dueño insertado con éxito.");
+
         } catch (SQLException e) {
             System.out.println("Error al agregar dueño.\n" + e.getMessage());
         }
 
+    }
+
+    @Override
+    public Dueno buscarPorDocumento(String documento) {
+        Dueno dueno = null;
+
+        String sql = "SELECT * FROM dueno WHERE documento_identidad = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+            pstmt.setString(1, documento);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    dueno = new Dueno(rs.getInt("id"),
+                            rs.getString("nombre_completo"),
+                            rs.getString("documento_identidad"),
+                            rs.getString("direccion"),
+                            rs.getString("telefono"),
+                            rs.getString("email"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al consultar el dueño con documento: " + documento + "\n" + e.getMessage());
+        }
+        return dueno;
     }
 
     @Override
@@ -49,7 +76,7 @@ public class DuenoDAO implements IDuenosDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al consultar el dueño con ID = " + id + "\n" + e.getMessage());
+            throw new RuntimeException("Error al consultar el dueño con ID: " + id + "\n" + e.getMessage());
         }
         return dueno;
     }
@@ -95,19 +122,19 @@ public class DuenoDAO implements IDuenosDAO {
     }
 
     @Override
-    public void eliminarDueno(int id) {
-        String sql = "DELETE FROM dueno WHERE id = ?";
+    public void eliminarDueno(String documento) {
+        String sql = "DELETE FROM dueno WHERE documento_identidad = ?";
 
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setString(1, documento);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             if (e.getSQLState().equals("23000")) {
-                throw new RuntimeException("No se puede eliminar el dueño con ID=" + id +
+                throw new RuntimeException("No se puede eliminar el dueño con documento: " + documento +
                         " porque hay mascotas asociadas.\n", e);
             }
-            throw new RuntimeException("Error al eliminar el dueño con ID " + id, e);
+            throw new RuntimeException("Error al eliminar el dueño con ID " + documento + "\n" + e);
         }
     }
 }

@@ -1,34 +1,37 @@
 drop database if exists Happy_Feet;
-create database if not exists Happy_Feet;
+create database if not exists Happy_Feet
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 USE Happy_Feet;
 
 -- ========================
--- TABLAS DE CATÁLOGO
+-- TABLAS DE CATALOGO
 -- ========================
 
 -- Tipo de producto
 CREATE TABLE producto_tipo (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre ENUM('Medicamento','Vacuna','Insumo Médico','Alimento','Otro') UNIQUE NOT NULL
+    nombre ENUM('Medicamento','Vacuna','Insumo Medico','Alimento','Otro') UNIQUE NOT NULL
 );
 
--- Tipo de evento médico
+-- Tipo de evento medico
 CREATE TABLE evento_tipo (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre ENUM('Vacunación','Consulta','Cirugía','Desparasitación','Control','Emergencia','Hospitalización') UNIQUE NOT NULL
+    nombre ENUM('Vacunacion','Consulta','Cirugia','Desparasitacion','Control','Emergencia','Hospitalizacion') UNIQUE NOT NULL
 );
 
 -- Estado de cita
 CREATE TABLE cita_estado (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre ENUM('Programada','En Proceso','Finalizada','Cancelada','No Asistió') UNIQUE NOT NULL
+    nombre ENUM('Programada','En Proceso','Finalizada','Cancelada','No Asistio') UNIQUE NOT NULL
 );
 
 -- ========================
 -- TABLAS PRINCIPALES
 -- ========================
 
--- Dueños de mascotas
+-- Duenos de mascotas
 CREATE TABLE dueno (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_completo VARCHAR(255) NOT NULL,
@@ -77,17 +80,7 @@ CREATE TABLE mascota (
     FOREIGN KEY (raza_id) REFERENCES raza(id)
 );
 
--- Adopciones
-CREATE TABLE adopcion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    mascota_id INT NOT NULL,
-    estado ENUM('Disponible','Reservada','En Proceso','Adoptada','No Disponible') DEFAULT 'Disponible',
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE,
-    FOREIGN KEY (mascota_id) REFERENCES mascota(id) ON DELETE CASCADE
-);
-
--- Historial médico
+-- Historial medico
 CREATE TABLE historial_medico (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mascota_id INT,
@@ -137,7 +130,7 @@ CREATE TABLE cita (
 );
 
 -- ========================
--- FACTURACIÓN / VENTAS
+-- FACTURACION / VENTAS
 -- ========================
 
 CREATE TABLE factura (
@@ -145,7 +138,7 @@ CREATE TABLE factura (
     dueno_id INT,
     fecha_emision DATETIME NOT NULL,
     total DECIMAL(10,2) NOT NULL,
-    metodo_pago ENUM('Efectivo','Tarjeta Débito','Tarjeta Crédito','Transferencia','Cheque') NOT NULL,
+    metodo_pago ENUM('Efectivo','Tarjeta Debito','Tarjeta Credito','Transferencia','Cheque') NOT NULL,
     FOREIGN KEY (dueno_id) REFERENCES dueno(id)
 );
 

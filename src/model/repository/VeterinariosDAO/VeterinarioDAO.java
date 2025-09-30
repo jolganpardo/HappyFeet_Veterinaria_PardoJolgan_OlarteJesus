@@ -15,18 +15,31 @@ public class VeterinarioDAO implements IVeterinariosDAO {
     }
 
     @Override
-    public void insertar(Veterinario veterinario) {
+    public Integer insertar(Veterinario veterinario) {
         String sql = "INSERT INTO veterinario (nombre_completo, especialidad, telefono, email) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, veterinario.getNombre_completo());
             pstmt.setString(2, veterinario.getEspecialidad());
             pstmt.setString(3, veterinario.getTelefono());
             pstmt.setString(4, veterinario.getEmail());
-            pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se pudo insertar el veterinario.");
+            }
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado.");
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar veterinario", e);
         }
     }
+
 
     @Override
     public void actualizar(Veterinario veterinario) {

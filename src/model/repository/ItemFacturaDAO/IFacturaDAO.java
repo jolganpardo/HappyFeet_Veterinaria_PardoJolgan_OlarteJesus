@@ -1,12 +1,12 @@
 package model.repository.ItemFacturaDAO;
 
-import model.entities.Items_Factura.Facturas;
+import model.entities.Items_Factura.Factura;
 import java.util.List;
 
 public interface IFacturaDAO {
-    void insertar(Facturas factura);
-    Facturas obtenerPorId(Integer id);
-    List<Facturas> obtenerTodas();
-    void actualizar(Facturas factura);
+    Factura insertar(Factura factura);
+    Factura obtenerPorId(Integer id);
+    List<Factura> obtenerTodas();
+    void actualizar(Factura factura);
     void eliminar(Integer id);
 }

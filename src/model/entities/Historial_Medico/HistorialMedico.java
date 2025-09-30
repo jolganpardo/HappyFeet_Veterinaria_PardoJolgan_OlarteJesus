@@ -7,15 +7,15 @@ import java.time.LocalDate;
 
 public class HistorialMedico {
     private Integer id;
-    private Mascota mascota_id;
-    private Veterinario veterinario_id;
+    private Integer mascota_id;
+    private Integer veterinario_id;
     private LocalDate fecha_evento;
-    private EventoTipos evento_tipo_id;
+    private Integer evento_tipo_id;
     private String descripcion;
     private String diagnostico;
     private String tratamiento_recomendado;
 
-    public HistorialMedico(Integer id, Mascota mascota_id, Veterinario veterinario_id, LocalDate fecha_evento, EventoTipos evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
+    public HistorialMedico(Integer id, Integer mascota_id, Integer veterinario_id, LocalDate fecha_evento, Integer evento_tipo_id, String descripcion, String diagnostico, String tratamiento_recomendado) {
         this.id = id;
         this.mascota_id = mascota_id;
         this.veterinario_id = veterinario_id;
@@ -30,17 +30,21 @@ public class HistorialMedico {
         return id;
     }
 
-    public Mascota getMascota_id() {
+    public Integer getMascota_id() {
         return mascota_id;
     }
 
-    public void setMascota_id(Mascota mascota_id) {
+    public void setMascota_id(Integer mascota_id) {
         this.mascota_id = mascota_id;
     }
 
-    public Veterinario getVeterinario_id() {return veterinario_id;}
+    public Integer getVeterinario_id() {
+        return veterinario_id;
+    }
 
-    public void setVeterinario_id(Veterinario veterinario_id) {this.veterinario_id = veterinario_id;}
+    public void setVeterinario_id(Integer veterinario_id) {
+        this.veterinario_id = veterinario_id;
+    }
 
     public LocalDate getFecha_evento() {
         return fecha_evento;
@@ -50,11 +54,11 @@ public class HistorialMedico {
         this.fecha_evento = fecha_evento;
     }
 
-    public EventoTipos getEvento_tipo_id() {
+    public Integer getEvento_tipo_id() {
         return evento_tipo_id;
     }
 
-    public void setEvento_tipo_id(EventoTipos evento_tipo_id) {
+    public void setEvento_tipo_id(Integer evento_tipo_id) {
         this.evento_tipo_id = evento_tipo_id;
     }
 
@@ -84,9 +88,10 @@ public class HistorialMedico {
 
     @Override
     public String toString() {
-        return "Historial_MedicoDAO{" +
+        return "HistorialMedico{" +
                 "id=" + id +
                 ", mascota_id=" + mascota_id +
+                ", veterinario_id=" + veterinario_id +
                 ", fecha_evento=" + fecha_evento +
                 ", evento_tipo_id=" + evento_tipo_id +
                 ", descripcion='" + descripcion + '\'' +

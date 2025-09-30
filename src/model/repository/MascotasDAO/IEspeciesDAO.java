@@ -5,7 +5,7 @@ import model.entities.Mascotas.Especie;
 import java.util.List;
 
 public interface IEspeciesDAO {
-    void agregarEspecie(Especie especie);
+    Especie agregarEspecie(Especie especie);
     Especie obtenerPorId(Integer id);
     List<Especie> obtenerTodos();
     void actualizarEspecie(Especie especie);

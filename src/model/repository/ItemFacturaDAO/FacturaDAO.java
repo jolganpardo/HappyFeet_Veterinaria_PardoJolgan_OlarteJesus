@@ -1,8 +1,7 @@
 package model.repository.ItemFacturaDAO;
 
 import model.ConexionSingleton;
-import model.entities.Duenos.Dueno;
-import model.entities.Items_Factura.Facturas;
+import model.entities.Items_Factura.Factura;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,36 +15,37 @@ public class FacturaDAO implements IFacturaDAO {
     }
 
     @Override
-    public void insertar(Facturas factura) {
+    public Factura insertar(Factura f) {
         String sql = "INSERT INTO factura (dueno_id, fecha_emision, total, metodo_pago) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, factura.getDueno_id().getId());
-            pstmt.setTimestamp(2, Timestamp.valueOf(factura.getFecha_emision()));
-            pstmt.setDouble(3, factura.getTotal());
-            pstmt.setString(4, factura.getMetodo_pago());
-            pstmt.executeUpdate();
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, f.getDueno_id());
+            ps.setTimestamp(2, Timestamp.valueOf(f.getFecha_emision()));
+            ps.setDouble(3, f.getTotal());
+            ps.setString(4, f.getMetodo_pago());
 
-            try (ResultSet keys = pstmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    factura.setId(keys.getInt(1));
-                }
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                f.setId(rs.getInt(1)); // asigna el ID generado al objeto
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar factura", e);
         }
+        return f;
     }
 
     @Override
-    public Facturas obtenerPorId(Integer id) {
-        Facturas factura = null;
+    public Factura obtenerPorId(Integer id) {
+        Factura factura = null;
         String sql = "SELECT * FROM factura WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    factura = new Facturas(
+                    factura = new Factura(
                             rs.getInt("id"),
-                            new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                            rs.getInt("dueno_id"),
                             rs.getTimestamp("fecha_emision").toLocalDateTime(),
                             rs.getDouble("total"),
                             rs.getString("metodo_pago")
@@ -58,16 +58,17 @@ public class FacturaDAO implements IFacturaDAO {
         return factura;
     }
 
+
     @Override
-    public List<Facturas> obtenerTodas() {
-        List<Facturas> facturas = new ArrayList<>();
+    public List<Factura> obtenerTodas() {
+        List<Factura> facturas = new ArrayList<>();
         String sql = "SELECT * FROM factura";
         try (Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Facturas factura = new Facturas(
+                Factura factura = new Factura(
                         rs.getInt("id"),
-                        new Dueno(rs.getInt("dueno_id"), null, null, null, null, null),
+                        rs.getInt("dueno_id"),
                         rs.getTimestamp("fecha_emision").toLocalDateTime(),
                         rs.getDouble("total"),
                         rs.getString("metodo_pago")
@@ -80,11 +81,12 @@ public class FacturaDAO implements IFacturaDAO {
         return facturas;
     }
 
+
     @Override
-    public void actualizar(Facturas factura) {
+    public void actualizar(Factura factura) {
         String sql = "UPDATE factura SET dueno_id = ?, fecha_emision = ?, total = ?, metodo_pago = ? WHERE id = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, factura.getDueno_id().getId());
+            pstmt.setInt(1, factura.getDueno_id());
             pstmt.setTimestamp(2, Timestamp.valueOf(factura.getFecha_emision()));
             pstmt.setDouble(3, factura.getTotal());
             pstmt.setString(4, factura.getMetodo_pago());

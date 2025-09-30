@@ -7,64 +7,44 @@ import java.time.LocalDateTime;
 
 public class Cita {
     private Integer id;
-    private Mascota mascota_id;
+    private Integer mascota_id;
     private LocalDateTime fecha_hora;
     private String motivo;
-    private CitaEstado estado_id;
-    private Veterinario veterianrio_id;
+    private Integer estado_id;
+    private Integer veterinario_id;
 
-    public Cita(Integer id, Mascota mascota_id, LocalDateTime fecha_hora, String motivo, CitaEstado estado_id, Veterinario veterianrio_id) {
+    public Cita(Integer id, Integer mascota_id, LocalDateTime fecha_hora, String motivo, Integer estado_id, Integer veterinario_id) {
         this.id = id;
         this.mascota_id = mascota_id;
         this.fecha_hora = fecha_hora;
         this.motivo = motivo;
         this.estado_id = estado_id;
-        this.veterianrio_id = veterianrio_id;
+        this.veterinario_id = veterinario_id;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() {return id;}
 
-    public Mascota getMascota_id() {
-        return mascota_id;
-    }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setMascota_id(Mascota mascota_id) {
-        this.mascota_id = mascota_id;
-    }
+    public Integer getMascota_id() {return mascota_id;}
 
-    public LocalDateTime getFecha_hora() {
-        return fecha_hora;
-    }
+    public void setMascota_id(Integer mascota_id) {this.mascota_id = mascota_id;}
 
-    public void setFecha_hora(LocalDateTime fecha_hora) {
-        this.fecha_hora = fecha_hora;
-    }
+    public LocalDateTime getFecha_hora() {return fecha_hora;}
 
-    public String getMotivo() {
-        return motivo;
-    }
+    public void setFecha_hora(LocalDateTime fecha_hora) {this.fecha_hora = fecha_hora;}
 
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
+    public String getMotivo() {return motivo;}
 
-    public CitaEstado getEstado_id() {
-        return estado_id;
-    }
+    public void setMotivo(String motivo) {this.motivo = motivo;}
 
-    public void setEstado_id(CitaEstado estado_id) {
-        this.estado_id = estado_id;
-    }
+    public Integer getEstado_id() {return estado_id;}
 
-    public Veterinario getVeterianrio_id() {
-        return veterianrio_id;
-    }
+    public void setEstado_id(Integer estado_id) {this.estado_id = estado_id;}
 
-    public void setVeterianrio_id(Veterinario veterianrio_id) {
-        this.veterianrio_id = veterianrio_id;
-    }
+    public Integer getVeterinario_id() {return veterinario_id;}
+
+    public void setVeterinario_id(Integer veterianrio_id) {this.veterinario_id = veterianrio_id;}
 
     @Override
     public String toString() {
@@ -74,7 +54,7 @@ public class Cita {
                 ", fecha_hora=" + fecha_hora +
                 ", motivo='" + motivo + '\'' +
                 ", estado_id=" + estado_id +
-                ", veterianrio_id=" + veterianrio_id +
+                ", veterianrio_id=" + veterinario_id +
                 '}';
     }
 }
