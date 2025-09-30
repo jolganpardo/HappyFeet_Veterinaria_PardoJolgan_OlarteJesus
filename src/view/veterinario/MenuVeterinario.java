@@ -1,6 +1,7 @@
 package view.veterinario;
 
 import controller.veterinarioController.VeterinarioController;
+import model.entities.Duenos.Dueno;
 import model.entities.Veterinarios.Veterinario;
 import model.repository.VeterinariosDAO.IVeterinariosDAO;
 import model.repository.VeterinariosDAO.VeterinarioDAO;
@@ -60,9 +61,13 @@ public class MenuVeterinario {
         String email = input.nextLine();
 
         Veterinario v = new Veterinario(null, nombre, especialidad, telefono, email);
-        veterinariosDAO.insertar(v);
-        System.out.println("Veterinario agregado con éxito.");
+        Integer idGenerado = veterinariosDAO.insertar(v);
+        v.setId(idGenerado);
+
+        System.out.println("✓ Veterinario agregado con éxito. ID: " + idGenerado);
+        imprimirVeterinario(v);
     }
+
 
     public void actualizarVeterinario() {
         System.out.print("ID del veterinario a actualizar: ");
@@ -99,7 +104,7 @@ public class MenuVeterinario {
         int id = input.nextInt();
         input.nextLine();
         veterinariosDAO.eliminar(id);
-        System.out.println("🗑️ Veterinario eliminado con éxito.");
+        System.out.println("Veterinario eliminado con éxito.");
     }
 
     public void buscarPorId() {
@@ -109,7 +114,7 @@ public class MenuVeterinario {
 
         Veterinario v = veterinariosDAO.buscarPorId(id);
         if (v != null) {
-            System.out.println("🔎Veterinario encontrado: " + v);
+            imprimirVeterinario(v);
         } else {
             System.out.println("No existe veterinario con ese ID.");
         }
@@ -119,7 +124,23 @@ public class MenuVeterinario {
         List<Veterinario> lista = veterinariosDAO.listarTodos();
         System.out.println("\n📋 Lista de veterinarios:");
         for (Veterinario v : lista) {
-            System.out.println(v);
+            imprimirVeterinario(v);
         }
     }
+
+    public void imprimirVeterinario(Veterinario veterinario) {
+        if (veterinario == null) {
+            System.out.println("No se encontró el veterinario.");
+            return;
+        }
+
+        System.out.println("------ INFORMACION DEL VETERINARIO ------");
+        System.out.println("ID: " + veterinario.getId());
+        System.out.println("Nombre completo: " + veterinario.getNombre_completo());
+        System.out.println("Especialidad: " + veterinario.getEspecialidad());
+        System.out.println("Telefono: " + veterinario.getTelefono());;
+        System.out.println("Email: " + veterinario.getEmail());
+        System.out.println("----------------------------------");
+    }
+
 }

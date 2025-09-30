@@ -19,6 +19,8 @@ public class Veterinario {
         return id;
     }
 
+    public void setId(Integer id) {this.id=id;}
+
     public String getNombre_completo() {
         return nombre_completo;
     }

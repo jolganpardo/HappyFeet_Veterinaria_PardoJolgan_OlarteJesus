@@ -97,7 +97,7 @@ public class DuenoController {
             return;
         }
 
-        System.out.println("------ Información del dueño ------");
+        System.out.println("------ INFORMACION DEL DUEÑO ------");
         System.out.println("ID: " + dueno.getId());
         System.out.println("Nombre completo: " + dueno.getNombre_completo());
         System.out.println("Documento de identidad: " + dueno.getDocumento_identidad());
@@ -106,5 +106,6 @@ public class DuenoController {
         System.out.println("Email: " + dueno.getEmail());
         System.out.println("----------------------------------");
     }
+
 
 }
