@@ -61,7 +61,7 @@ public class MenuPrincipal {
                     break;
                 case 7:
                     MenuProveedor menuProveedor = new MenuProveedor();
-                    menuProveedor.mostrarMenuProveedor();
+                    menuProveedor.MenuProveedor();
                     break;
                 case 0:
                     System.out.println("Saliendo... Hasta pronto.");
