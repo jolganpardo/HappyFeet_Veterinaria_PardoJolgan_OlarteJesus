@@ -1,6 +1,8 @@
 package controller.mascotaController;
 
+import model.entities.Mascotas.Especie;
 import model.entities.Mascotas.Mascota;
+import model.entities.Mascotas.Raza;
 import service.MascotaService;
 
 import java.util.List;
@@ -22,13 +24,49 @@ public class MascotaController {
         System.out.print("Documento del dueño: ");
         String documento = input.nextLine().trim();
 
-        System.out.print("Ingrese el ID de la especie: ");
-        String especieStr = input.nextLine().trim();
-        int especieId = Integer.parseInt(especieStr);
+        // Mostrar especies disponibles
+        List<Especie> especies = mascotaService.listarEspecies();
+        if (especies.isEmpty()) {
+            System.out.println("No hay especies registradas.");
+            return;
+        }
 
-        System.out.print("Ingrese el ID de la raza: ");
+        System.out.println("=== ESPECIES DISPONIBLES ===");
+        for (Especie especie : especies) {
+            System.out.println(especie.getId() + " - " + especie.getNombre());
+        }
+
+        System.out.print("Seleccione el ID de la especie: ");
+        String especieStr = input.nextLine().trim();
+        int especieId;
+        try {
+            especieId = Integer.parseInt(especieStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: ID de especie inválido");
+            return;
+        }
+
+        // Mostrar razas filtradas por especie
+        List<Raza> razas = mascotaService.listarRazasPorEspecie(especieId);
+        if (razas.isEmpty()) {
+            System.out.println("No hay razas registradas para esta especie.");
+            return;
+        }
+
+        System.out.println("=== RAZAS DISPONIBLES ===");
+        for (Raza raza : razas) {
+            System.out.println(raza.getId() + " - " + raza.getNombre());
+        }
+
+        System.out.print("Seleccione el ID de la raza: ");
         String razaStr = input.nextLine().trim();
-        int razaId = Integer.parseInt(razaStr);
+        int razaId;
+        try {
+            razaId = Integer.parseInt(razaStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: ID de raza inválido");
+            return;
+        }
 
         System.out.print("Nombre de la mascota: ");
         String nombre = input.nextLine().trim();
@@ -42,7 +80,7 @@ public class MascotaController {
         System.out.print("URL de la foto (opcional): ");
         String urlFoto = input.nextLine().trim();
 
-        System.out.print("Microchip (opcional): ");
+        System.out.print("Microchip (opcional, si lo deja vacío se generará automáticamente): ");
         String microchip = input.nextLine().trim();
 
         try {
@@ -58,9 +96,15 @@ public class MascotaController {
     }
 
     public void actualizarMascota() {
-        System.out.println("=== ACTUALIZAR MASCOTA ===");
+        System.out.println("=== ACTUALIZAR MASCOTA (ADOPCIÓN) ===");
         System.out.print("Ingrese ID de la mascota: ");
-        int id = Integer.parseInt(input.nextLine().trim());
+        int id;
+        try {
+            id = Integer.parseInt(input.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: ID inválido");
+            return;
+        }
 
         try {
             Mascota mascota = mascotaService.obtenerPorId(id);
@@ -86,9 +130,15 @@ public class MascotaController {
     }
 
     public void cambiarEstadoMascota() {
-        System.out.println("=== CAMBIAR ESTADO DE MASCOTA ===");
+        System.out.println("=== CAMBIAR ESTADO DE MASCOTA (INACTIVA) ===");
         System.out.print("Ingrese ID de la mascota: ");
-        int id = Integer.parseInt(input.nextLine().trim());
+        int id;
+        try {
+            id = Integer.parseInt(input.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: ID inválido");
+            return;
+        }
 
         try {
             mascotaService.cambiarEstadoMascota(id);
@@ -114,7 +164,14 @@ public class MascotaController {
 
     public void buscarPorId() {
         System.out.print("Ingrese ID de la mascota: ");
-        int id = Integer.parseInt(input.nextLine().trim());
+        int id;
+        try {
+            id = Integer.parseInt(input.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Error: ID inválido");
+            return;
+        }
+
         try {
             Mascota mascota = mascotaService.obtenerPorId(id);
             if (mascota != null) imprimirMascota(mascota);
@@ -141,6 +198,18 @@ public class MascotaController {
     }
 
     public void obtenerPorRazaId() {
+        // Mostrar razas disponibles
+        List<Raza> razas = mascotaService.listarRazas();
+        if (razas.isEmpty()) {
+            System.out.println("No hay razas registradas");
+            return;
+        }
+
+        System.out.println("=== LISTA DE RAZAS DISPONIBLES ===");
+        for (Raza r : razas) {
+            System.out.println(r.getId() + " - " + r.getNombre());
+        }
+
         System.out.print("Ingrese ID de la raza: ");
         String idStr = input.nextLine().trim();
 
@@ -149,6 +218,7 @@ public class MascotaController {
             if (mascotas.isEmpty()) {
                 System.out.println("No se encontraron mascotas para esta raza");
             } else {
+                System.out.println("=== Mascotas de la raza ID " + idStr + " ===");
                 for (Mascota m : mascotas) imprimirMascota(m);
             }
         } catch (Exception e) {
@@ -157,6 +227,18 @@ public class MascotaController {
     }
 
     public void obtenerPorEspecieId() {
+        // Mostrar especies disponibles
+        List<Especie> especies = mascotaService.listarEspecies();
+        if (especies.isEmpty()) {
+            System.out.println("No hay especies registradas");
+            return;
+        }
+
+        System.out.println("=== LISTA DE ESPECIES DISPONIBLES ===");
+        for (Especie e : especies) {
+            System.out.println(e.getId() + " - " + e.getNombre());
+        }
+
         System.out.print("Ingrese ID de la especie: ");
         String idStr = input.nextLine().trim();
 
@@ -165,6 +247,7 @@ public class MascotaController {
             if (mascotas.isEmpty()) {
                 System.out.println("No se encontraron mascotas para esta especie");
             } else {
+                System.out.println("=== Mascotas de la especie ID " + idStr + " ===");
                 for (Mascota m : mascotas) imprimirMascota(m);
             }
         } catch (Exception e) {
