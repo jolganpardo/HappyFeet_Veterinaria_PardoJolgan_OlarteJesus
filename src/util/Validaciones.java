@@ -55,6 +55,18 @@ public class Validaciones {
         return telefono;
     }
 
+    public String leerTextoOpcional(String mensaje) {
+        String valor;
+        do {
+            System.out.print(mensaje);
+            valor = input.nextLine().trim();
+            if (valor.isEmpty()) {
+                return "";
+            };
+        } while (valor.isEmpty());
+        return valor;
+    }
+
     public String validarEmailOpcional(String mensaje) {
         String email;
         while (true) {

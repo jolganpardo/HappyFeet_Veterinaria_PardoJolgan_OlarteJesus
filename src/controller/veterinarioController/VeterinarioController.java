@@ -42,10 +42,10 @@ public class VeterinarioController {
         }
 
         System.out.println("Deje vacío para mantener el valor actual.");
-        String nombre = validador.leerTexto("Nuevo nombre (" + veterinario.getNombre_completo() + "): ");
+        String nombre = validador.leerTextoOpcional("Nuevo nombre (" + veterinario.getNombre_completo() + "): ");
         if (!nombre.isEmpty()) veterinario.setNombre_completo(nombre);
 
-        String especialidad = validador.leerTexto("Nueva especialidad (" + veterinario.getEspecialidad() + "): ");
+        String especialidad = validador.leerTextoOpcional("Nueva especialidad (" + veterinario.getEspecialidad() + "): ");
         if (!especialidad.isEmpty()) veterinario.setEspecialidad(especialidad);
 
         String telefono = validador.validarTelefonoOpcional("Nuevo teléfono (" + veterinario.getTelefono() + "): ");

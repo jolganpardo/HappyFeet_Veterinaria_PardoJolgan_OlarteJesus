@@ -36,10 +36,10 @@ public class DuenoController {
         }
 
         System.out.println("Deje vacío para mantener el valor actual.");
-        String nuevoNombre = validador.leerTexto("Nuevo nombre completo (" + dueno.getNombre_completo() + "): ");
+        String nuevoNombre = validador.leerTextoOpcional("Nuevo nombre completo (" + dueno.getNombre_completo() + "): ");
         if (!nuevoNombre.isEmpty()) dueno.setNombre_completo(nuevoNombre);
 
-        String nuevaDireccion = validador.leerTexto("Nueva dirección (" + dueno.getDireccion() + "): ");
+        String nuevaDireccion = validador.leerTextoOpcional("Nueva dirección (" + dueno.getDireccion() + "): ");
         if (!nuevaDireccion.isEmpty()) dueno.setDireccion(nuevaDireccion);
 
         String nuevoTelefono = validador.validarTelefonoOpcional("Nuevo teléfono (" + dueno.getTelefono() + "): ");

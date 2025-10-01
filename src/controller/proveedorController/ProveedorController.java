@@ -41,10 +41,10 @@ public class ProveedorController {
         }
 
         System.out.println("Deje vacío para mantener el valor actual.");
-        String nombre = validador.leerTexto("Nuevo nombre de la empresa (" + proveedor.getNombre() + "): ");
+        String nombre = validador.leerTextoOpcional("Nuevo nombre de la empresa (" + proveedor.getNombre() + "): ");
         if (!nombre.isEmpty()) proveedor.setNombre(nombre);
 
-        String contacto = validador.leerTexto("Nuevo contacto (" + proveedor.getContacto() + "): ");
+        String contacto = validador.leerTextoOpcional("Nuevo contacto (" + proveedor.getContacto() + "): ");
         if (!contacto.isEmpty()) proveedor.setContacto(contacto);
 
         String telefono = validador.validarTelefonoOpcional("Nuevo teléfono (" + proveedor.getTelefono() + "): ");
@@ -53,7 +53,7 @@ public class ProveedorController {
         String email = validador.validarEmailOpcional("Nuevo email (" + proveedor.getEmail() + "): ");
         if (!email.isEmpty()) proveedor.setEmail(email);
 
-        String direccion = validador.leerTexto("Nueva dirección (" + proveedor.getDireccion() + "): ");
+        String direccion = validador.leerTextoOpcional("Nueva dirección (" + proveedor.getDireccion() + "): ");
         if (!direccion.isEmpty()) proveedor.setDireccion(direccion);
 
         try {
